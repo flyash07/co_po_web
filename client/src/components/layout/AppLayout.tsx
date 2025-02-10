@@ -10,9 +10,9 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children, isLoggedIn, onLogout }) => {
   return (
-    <div>
-      <Header/>
-      <main>{children}</main>
+    <div className="flex flex-col min-h-screen">
+      <Header isLoggedIn={isLoggedIn} onLogout={onLogout}/>
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );

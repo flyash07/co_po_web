@@ -1,0 +1,62 @@
+.header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: rgb(122, 180, 238);
+    color: white;
+    padding: 10px 20px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures left and right alignment */
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+/* Ensures flexbox layout is respected */
+.header-content {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+/* Keeps logo on the left */
+.logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Adjust the logo size */
+.logo-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Pushes login/logout button to the right */
+.auth {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Fix button size issues */
+.auth-button {
+    font-size: 1rem;
+    color: #000000;
+    background-color: white;
+    border-radius: 20px;
+    padding: 8px 16px; /* Adjusted padding */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    white-space: nowrap; /* Prevents text from breaking */
+    border: 1px solidrgb(0, 0, 0);
+}
+
+.auth-button:hover {
+    background-color: #a64712;
+    color: white;
+}

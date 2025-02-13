@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <AppLayout isLoggedIn={isLoggedIn} onLogout={handleLogout}>
         <Routes>
           <Route path="/" element = {<LandingPage />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
 
           {/* <Route
             path="smtg"

@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "./Header.css"; // Import CSS for styling
+import { Link, useNavigate } from "react-router-dom";
+import "./Header.css";
+
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -8,6 +9,9 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
+
+  const navigate = useNavigate();
+
   return (
     <header className="header">
       <div className="header-content">
@@ -16,13 +20,12 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
         </Link>
 
         <div className="auth">
-          {isLoggedIn ? (
-            <button onClick={onLogout} className="auth-button">
-              Logout
-            </button>
-          ) : (
-            <Link to="/login"> Login</Link>
-          )}
+          <button
+            onClick={isLoggedIn ? onLogout : () => navigate("/login")}
+            className="auth-button"
+          >
+            {isLoggedIn ? "Logout" : "Login"}
+          </button>
         </div>
       </div>
     </header>

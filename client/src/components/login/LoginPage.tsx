@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useUser } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./LoginPage.css"; 
 
 interface LoginPageProps {
@@ -11,6 +12,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,11 +26,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
     console.log("Logging in with:", { email, password });
 
-    setUser("professor");
+    setUser("Professor");
 
     if (onLogin) {
       onLogin();
     }
+    navigate("/dashboard");
 
     setEmail("");
     setPassword("");

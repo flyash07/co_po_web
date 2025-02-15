@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
 import LoginPage from "./components/login/LoginPage";
-import LandingPage from "./LandingPage"
+import LandingPage from "./LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/dashboard/Dashboard";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,16 +16,23 @@ const App: React.FC = () => {
     <Router>
       <AppLayout isLoggedIn={isLoggedIn} onLogout={handleLogout}>
         <Routes>
-          <Route path="/" element = {<LandingPage />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
 
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           {/* <Route
             path="smtg"
             element={
               <ProtectedRoute>{ call another component here okay}</ProtectedRoute>
             }
           /> */}
-
         </Routes>
       </AppLayout>
     </Router>

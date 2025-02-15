@@ -1,13 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 interface ProtectedRouteProps {
-  isAuthenticated: boolean;
+  requiredRole: string;
   children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isAuthenticated, children }) => {
-  return isAuthenticated ? children : <Navigate to="/login" />;
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole, children }) => {
+  const { user } = useUser(); 
+  return user === requiredRole ? children : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

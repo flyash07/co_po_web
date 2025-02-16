@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './targets.css';
+import './Targets.css';
 
 const Targets: React.FC = () => {
     // Default empty values for CO Attainment table

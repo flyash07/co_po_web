@@ -1,26 +1,37 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import "./Dashboard.css";
+// import GeneralInstructions from "./GeneralInstructions";
+import Targets from "./Targets";
+// import CoPoMapping from "./CoPoMapping";
+// import CieMarks from "./CieMarks";
+// import SeeMarks from "./SeeMarks";
+// import CourseFeedback from "./CourseFeedback";
+// import CoAttainment from "./CoAttainment";
+// import CoRootCause from "./CoRootCause";
+// import CoActionPlan from "./CoActionPlan";
+// import PoPsoAttainment from "./PoPsoAttainment";
+// import PoRootCause from "./PoRootCause";
+// import PoActionPlan from "./PoActionPlan";
 
 const Dashboard: React.FC = () => {
-  const { user } = useUser(); // Get current user role
+  const { user } = useUser();
+  const [selectedPage, setSelectedPage] = useState<null | string>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Define all links with role-based visibility
   const links = [
-    { name: "General Instructions", path: "/dashboard/general-instructions", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Targets", path: "/dashboard/targets", visibleTo: ["Professor"] }, //to be changed to Coordinator
-    { name: "CO to PO Mapping", path: "/dashboard/co-po-mapping", visibleTo: ["Coordinator"] },
-    { name: "CIE Assessment Marks & Attainment", path: "/dashboard/cie-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "SEE Marks & Attainment", path: "/dashboard/see-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Course Feedback", path: "/dashboard/course-feedback", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Direct and Overall CO Attainment", path: "/dashboard/co-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for CO", path: "/dashboard/co-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for CO", path: "/dashboard/co-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "PO and PSO Attainment", path: "/dashboard/po-pso-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for PSO and PO", path: "/dashboard/po-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for PO", path: "/dashboard/po-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "General Instructions", key: "general-instructions", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Targets", key: "targets", visibleTo: ["Professor"] },  //to be changed to Coordinator
+    { name: "CO to PO Mapping", key: "co-po-mapping", visibleTo: ["Coordinator"] },
+    { name: "CIE Assessment Marks & Attainment", key: "cie-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "SEE Marks & Attainment", key: "see-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Course Feedback", key: "course-feedback", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Direct and Overall CO Attainment", key: "co-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Root Cause Analysis for CO", key: "co-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Action Plan for CO", key: "co-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "PO and PSO Attainment", key: "po-pso-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Root Cause Analysis for PSO and PO", key: "po-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    { name: "Action Plan for PO", key: "po-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
   ];
 
   return (
@@ -37,8 +48,8 @@ const Dashboard: React.FC = () => {
             <div className="dropdown">
               <button className="dropdown-btn">Options ▼</button>
               <div className="dropdown-content">
-                <Link to="#">Option 1</Link>
-                <Link to="#">Option 2</Link>
+                <button onClick={() => alert("Option 1 Selected")}>Option 1</button>
+                <button onClick={() => alert("Option 2 Selected")}>Option 2</button>
               </div>
             </div>
           </>
@@ -47,21 +58,48 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="main-content">
-        <h1>Dashboard</h1>
-        <table className="dashboard-table">
-          <tbody>
-            {links.map(
-              (link) =>
-                link.visibleTo.includes(user) && (
-                  <tr key={link.path}>
-                    <td>
-                      <Link to={link.path}>{link.name}</Link>
-                    </td>
-                  </tr>
-                )
-            )}
-          </tbody>
-        </table>
+        {/* Back Button - Show when inside a subpage */}
+        {selectedPage && (
+          <div className="back-button-container">
+            <button className="back-button" onClick={() => setSelectedPage(null)}>← Back</button>
+          </div>
+        )}
+
+        {/* Show Dashboard Links ONLY on the main dashboard */}
+        {!selectedPage && (
+          <>
+            <h1>Dashboard</h1>
+            <table className="dashboard-table">
+              <tbody>
+                {links.map(
+                  (link) =>
+                    link.visibleTo.includes(user) && (
+                      <tr key={link.key}>
+                        <td>
+                          <button onClick={() => setSelectedPage(link.key)}>{link.name}</button>
+                        </td>
+                      </tr>
+                    )
+                )}
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {/* Render the selected page */}
+        {/* Uncomment the pages your putting */}
+        {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
+        {selectedPage === "targets" && <Targets />}
+        {/* {selectedPage === "co-po-mapping" && <CoPoMapping />}
+        {selectedPage === "cie-marks" && <CieMarks />}
+        {selectedPage === "see-marks" && <SeeMarks />}
+        {selectedPage === "course-feedback" && <CourseFeedback />}
+        {selectedPage === "co-attainment" && <CoAttainment />}
+        {selectedPage === "co-root-cause" && <CoRootCause />}
+        {selectedPage === "co-action-plan" && <CoActionPlan />}
+        {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
+        {selectedPage === "po-root-cause" && <PoRootCause />}
+        {selectedPage === "po-action-plan" && <PoActionPlan />} */}
       </div>
     </div>
   );

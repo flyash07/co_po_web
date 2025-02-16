@@ -13,7 +13,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, isLoggedIn, onLogout })
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header isLoggedIn={isLoggedIn} onLogout={onLogout} />
       <main style={{ flexGrow: 1 }}>{children}</main>
-      <div style={{ minHeight: "100px" }}></div> {/* Spacer to push footer down */}
       <Footer />
     </div>
   );

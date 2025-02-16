@@ -1,0 +1,68 @@
+.course-targets-container {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .course-info p {
+    margin: 5px 0;
+  }
+  
+  .targets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .targets-table th,
+  .targets-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .targets-table thead th {
+    background-color: #4e67e3;
+    color: white;
+  }
+  
+  .targets-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .targets-table input {
+    width: 60px;
+    padding: 4px;
+    text-align: center;
+  }
+  
+  .button-row{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .reset-button {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .reset-button:hover {
+    background-color: #d32f2f;
+  }
+
+  .save-button {
+    background-color: #24a332;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #0f6716;
+  }
+  
+  

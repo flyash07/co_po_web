@@ -5,6 +5,7 @@ import LoginPage from "./components/login/LoginPage";
 import LandingPage from "./LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import Targets from "./components/dashboard/Targets";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +25,15 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute requiredRole="Professor">
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/targets"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <Targets/>
               </ProtectedRoute>
             }
           />

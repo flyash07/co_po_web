@@ -10,9 +10,10 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children, isLoggedIn, onLogout }) => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header isLoggedIn={isLoggedIn} onLogout={onLogout}/>
-      <main className="flex-grow">{children}</main>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header isLoggedIn={isLoggedIn} onLogout={onLogout} />
+      <main style={{ flexGrow: 1 }}>{children}</main>
+      <div style={{ minHeight: "100px" }}></div> {/* Spacer to push footer down */}
       <Footer />
     </div>
   );

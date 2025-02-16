@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
   // Define all links with role-based visibility
   const links = [
     { name: "General Instructions", path: "/dashboard/general-instructions", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Targets", path: "/dashboard/targets", visibleTo: ["Coordinator"] },
+    { name: "Targets", path: "/dashboard/targets", visibleTo: ["Professor"] }, //to be changed to Coordinator
     { name: "CO to PO Mapping", path: "/dashboard/co-po-mapping", visibleTo: ["Coordinator"] },
     { name: "CIE Assessment Marks & Attainment", path: "/dashboard/cie-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
     { name: "SEE Marks & Attainment", path: "/dashboard/see-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="main-content">
-        <h1>Welcome to the Dashboard</h1>
+        <h1>Dashboard</h1>
         <table className="dashboard-table">
           <tbody>
             {links.map(

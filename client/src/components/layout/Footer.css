@@ -18,7 +18,7 @@ body, html {
     position: fixed;
     bottom: 0;
     width: 100%;
-    z-index: 10;
+    height:50px;
   }
   
   .footer-content {
@@ -47,7 +47,6 @@ body, html {
     margin: 0;
   }
   
-  /* Main Content Padding to Prevent Overlap */
   .main-content {
     padding-bottom: 80px; /* Adjust to match footer height */
   }

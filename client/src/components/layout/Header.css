@@ -5,11 +5,12 @@
     background: rgb(122, 180, 238);
     color: white;
     padding: 10px 20px;
-    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: space-between; 
     box-sizing: border-box;
+    height: 90px;
+    z-index: 10;
 }
 
 .header-content {

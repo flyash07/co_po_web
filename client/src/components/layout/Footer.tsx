@@ -3,7 +3,6 @@ import "./Footer.css"
 
 const Footer: React.FC = () => {
   return (
-    <div>
       <footer className="footer">
        <div className="footer-content">
         <p>
@@ -17,7 +16,6 @@ const Footer: React.FC = () => {
           </div>
        </div>
       </footer>
-    </div>
   );
 };
 

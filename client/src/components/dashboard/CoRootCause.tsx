@@ -16,7 +16,7 @@ const CoRootCause: React.FC = () => {
         Actions to be written as per table in the next page.
       </div>
 
-      <h2>Examples of Analysis and Proposed Actions</h2>
+      <h2 className="head">Examples of Analysis and Proposed Actions</h2>
       <div className="example">
         <h3>Sample 1:</h3>
         <p>

@@ -1,0 +1,73 @@
+/* General Page Styling */
+.po-root-cause-container {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #333;
+    background: #fff;
+    padding-bottom: 80px;
+}
+
+/* Main heading */
+.po-root-cause-container h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #002855;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Subtitle text */
+.subtitle {
+    font-size: 16px;
+    color: #444;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Note section */
+.note {
+    font-size: 14px;
+    color: #333;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+/* Section heading */
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #a00000;
+    margin-top: 30px;
+}
+
+/* Sample headings */
+.example h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d10000;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+/* Paragraph styling */
+.example p {
+    font-size: 15px;
+    color: #222;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+/* Bold text for actions */
+.example p strong {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Closing note */
+.closing-note {
+    font-size: 14px;
+    color: #555;
+    border-top: 1px solid #ccc;
+}

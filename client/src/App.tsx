@@ -6,7 +6,8 @@ import LandingPage from "./LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import Targets from "./components/dashboard/Targets";
-
+import CoRootCause from "./components/dashboard/CoRootCause";
+import PoRootCause from "./components/dashboard/PoRootCause"
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -37,6 +38,23 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/dashboard/CoRootCause"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <CoRootCause/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/PoRootCause"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <PoRootCause/>
+              </ProtectedRoute>
+            }
+          />
+          
           {/* <Route
             path="smtg"
             element={

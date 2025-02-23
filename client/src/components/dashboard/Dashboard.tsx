@@ -8,10 +8,10 @@ import Targets from "./Targets";
 // import SeeMarks from "./SeeMarks";
 // import CourseFeedback from "./CourseFeedback";
 // import CoAttainment from "./CoAttainment";
-// import CoRootCause from "./CoRootCause";
+import CoRootCause from "./CoRootCause";
 // import CoActionPlan from "./CoActionPlan";
 // import PoPsoAttainment from "./PoPsoAttainment";
-// import PoRootCause from "./PoRootCause";
+import PoRootCause from "./PoRootCause";
 // import PoActionPlan from "./PoActionPlan";
 
 const Dashboard: React.FC = () => {
@@ -90,15 +90,17 @@ const Dashboard: React.FC = () => {
         {/* Uncomment the pages your putting */}
         {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
         {selectedPage === "targets" && <Targets />}
+        {selectedPage === "co-root-cause" && <CoRootCause />}
+        {selectedPage === "po-root-cause" && <PoRootCause />}
         {/* {selectedPage === "co-po-mapping" && <CoPoMapping />}
         {selectedPage === "cie-marks" && <CieMarks />}
         {selectedPage === "see-marks" && <SeeMarks />}
         {selectedPage === "course-feedback" && <CourseFeedback />}
-        {selectedPage === "co-attainment" && <CoAttainment />}
-        {selectedPage === "co-root-cause" && <CoRootCause />}
+        {selectedPage === "co-attainment" && <CoAttainment />} 
+        
         {selectedPage === "co-action-plan" && <CoActionPlan />}
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
-        {selectedPage === "po-root-cause" && <PoRootCause />}
+        
         {selectedPage === "po-action-plan" && <PoActionPlan />} */}
       </div>
     </div>

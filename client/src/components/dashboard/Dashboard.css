@@ -81,14 +81,25 @@
   .main-content {
     flex-grow: 1;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
     background-color: #ecf0f1;
     transition: margin-left 0.3s ease;
   }
   
+  .content-wrapper {
+    flex-grow: 1; /* Takes up remaining space */
+    overflow: auto; /* Enables scrolling when needed */
+    padding: 20px;
+    border: 1px solid #ddd; /* Optional border for clarity */
+    background: #f9f9f9; /* Light background for readability */
+    margin-bottom: 30px;
+  }
+
   .main-content h1 {
     color: #2c3e50;
   }
-  
+
 
   /* Table Styles */
   .dashboard-table {

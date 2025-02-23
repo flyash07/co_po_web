@@ -20,25 +20,72 @@ const Dashboard: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const links = [
-    { name: "General Instructions", key: "general-instructions", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Targets", key: "targets", visibleTo: ["Professor"] },  //to be changed to Coordinator
-    { name: "CO to PO Mapping", key: "co-po-mapping", visibleTo: ["Coordinator"] },
-    { name: "CIE Assessment Marks & Attainment", key: "cie-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "SEE Marks & Attainment", key: "see-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Course Feedback", key: "course-feedback", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Direct and Overall CO Attainment", key: "co-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for CO", key: "co-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for CO", key: "co-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "PO and PSO Attainment", key: "po-pso-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for PSO and PO", key: "po-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for PO", key: "po-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    {
+      name: "General Instructions",
+      key: "general-instructions",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    { name: "Targets", key: "targets", visibleTo: ["Professor"] }, //to be changed to Coordinator
+    {
+      name: "CO to PO Mapping",
+      key: "co-po-mapping",
+      visibleTo: ["Coordinator"],
+    },
+    {
+      name: "CIE Assessment Marks & Attainment",
+      key: "cie-marks",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "SEE Marks & Attainment",
+      key: "see-marks",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Course Feedback",
+      key: "course-feedback",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Direct and Overall CO Attainment",
+      key: "co-attainment",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Root Cause Analysis for CO",
+      key: "co-root-cause",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Action Plan for CO",
+      key: "co-action-plan",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "PO and PSO Attainment",
+      key: "po-pso-attainment",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Root Cause Analysis for PSO and PO",
+      key: "po-root-cause",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Action Plan for PO",
+      key: "po-action-plan",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
   ];
 
   return (
     <div className="dashboard">
       {/* Sidebar */}
       <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <button
+          className="toggle-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           {isCollapsed ? "➤" : "✖"}
         </button>
 
@@ -48,8 +95,12 @@ const Dashboard: React.FC = () => {
             <div className="dropdown">
               <button className="dropdown-btn">Options ▼</button>
               <div className="dropdown-content">
-                <button onClick={() => alert("Option 1 Selected")}>Option 1</button>
-                <button onClick={() => alert("Option 2 Selected")}>Option 2</button>
+                <button onClick={() => alert("Option 1 Selected")}>
+                  Option 1
+                </button>
+                <button onClick={() => alert("Option 2 Selected")}>
+                  Option 2
+                </button>
               </div>
             </div>
           </>
@@ -61,30 +112,39 @@ const Dashboard: React.FC = () => {
         {/* Back Button - Show when inside a subpage */}
         {selectedPage && (
           <div className="back-button-container">
-            <button className="back-button" onClick={() => setSelectedPage(null)}>← Back</button>
+            <button
+              className="back-button"
+              onClick={() => setSelectedPage(null)}
+            >
+              ← Back
+            </button>
           </div>
         )}
 
-        {/* Show Dashboard Links ONLY on the main dashboard */}
-        {!selectedPage && (
-          <>
-            <h1>Dashboard</h1>
-            <table className="dashboard-table">
-              <tbody>
-                {links.map(
-                  (link) =>
-                    link.visibleTo.includes(user) && (
-                      <tr key={link.key}>
-                        <td>
-                          <button onClick={() => setSelectedPage(link.key)}>{link.name}</button>
-                        </td>
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </table>
-          </>
-        )}
+        {/* Content Wrapper with Scroll */}
+        <div className="content-wrapper">
+          {/* Show Dashboard Links ONLY on the main dashboard */}
+          {!selectedPage && (
+            <>
+              <h1>Dashboard</h1>
+              <table className="dashboard-table">
+                <tbody>
+                  {links.map(
+                    (link) =>
+                      link.visibleTo.includes(user) && (
+                        <tr key={link.key}>
+                          <td>
+                            <button onClick={() => setSelectedPage(link.key)}>
+                              {link.name}
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                  )}
+                </tbody>
+              </table>
+            </>
+          )}
 
         {/* Render the selected page */}
         {/* Uncomment the pages your putting */}
@@ -102,6 +162,8 @@ const Dashboard: React.FC = () => {
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
         
         {selectedPage === "po-action-plan" && <PoActionPlan />} */}
+          
+        </div>
       </div>
     </div>
   );

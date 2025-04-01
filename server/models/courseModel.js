@@ -6,7 +6,8 @@ const courseSchema=mongoose.Schema({
     type:String,
     coordinator:{
         type:mongoose.Schema.ObjectId,
-        default:""
+        default:"",
+        ref:"prof"
     },
     program:String,
     sem:String,
@@ -14,8 +15,89 @@ const courseSchema=mongoose.Schema({
     oddEven:String,
     coStatements:[
         {
-            description:{type:String},
-            bloomsLevel:{type:String}
+            description:String,
+            bloomsLevel:String
+        }
+    ],
+    coAttainment:[
+        {
+            targetSet:Number,
+            direct:{
+                inSem:Number,
+                endSem:Number,
+                finalCo:Number
+            },
+            overall:{
+                inSem:Number,
+                endSem:Number,
+                finalCo:Number
+            }
+        }
+    ],
+    coPoMapping:[
+        {
+            coNum:Number,
+            poNum:Number,
+            value:Number,
+        }
+    ],
+    coPsoMapping:[
+        {
+            coNum:Number,
+            psoNum:Number,
+            value:Number
+        }
+    ],
+    dept:{
+        type:mongoose.Schema.ObjectId,
+        ref:"dept"
+    },
+    ass1:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
+        }
+    ],
+    ass2:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
+        }
+    ],
+    ass3:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
+        }
+    ],
+    ass4:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
+        }
+    ],
+    midSem:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
+        }
+    ],
+    endSem:[
+        {
+            qNo:Number,
+            part:String,
+            co:Number,
+            maxMarks:Number
         }
     ]
 })

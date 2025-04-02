@@ -1,6 +1,7 @@
 // test-models.js
 const mongoose = require('mongoose');
 require('dotenv').config();
+const bcrypt=require('bcrypt')
 
 // Import all models
 const Course = require('../models/courseModel');
@@ -73,7 +74,7 @@ module.exports.test=async function testModels() {
         email: 'rajesh.kumar@university.edu',
         phoneNo: 9876543210,
         dept: csDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10)
       },
       {
         facultyID: 'CSE002',
@@ -81,7 +82,7 @@ module.exports.test=async function testModels() {
         email: 'priya.sharma@university.edu',
         phoneNo: 9876543211,
         dept: csDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10),
       },
       {
         facultyID: 'CSE003',
@@ -89,7 +90,7 @@ module.exports.test=async function testModels() {
         email: 'vikram.singh@university.edu',
         phoneNo: 9876543212,
         dept: csDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10),
       },
       {
         facultyID: 'ECE001',
@@ -97,7 +98,7 @@ module.exports.test=async function testModels() {
         email: 'ananya.mishra@university.edu',
         phoneNo: 9876543213,
         dept: eceDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10),
       },
       {
         facultyID: 'ECE002',
@@ -105,7 +106,7 @@ module.exports.test=async function testModels() {
         email: 'rajeev.gupta@university.edu',
         phoneNo: 9876543214,
         dept: eceDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10),
       },
       {
         facultyID: 'MECH001',
@@ -113,7 +114,7 @@ module.exports.test=async function testModels() {
         email: 'sanjay.verma@university.edu',
         phoneNo: 9876543215,
         dept: mechDepartment._id,
-        password: 'hashed_password_here',
+        password: await bcrypt.hash("password",10),
       }
     ];
     

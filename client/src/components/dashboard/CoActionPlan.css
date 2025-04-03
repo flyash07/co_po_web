@@ -1,0 +1,50 @@
+.course-targets-container {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .targets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .targets-table th,
+  .targets-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .targets-table thead th {
+    background-color: #4e67e3;
+    color: white;
+  }
+  
+  .targets-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .targets-table input {
+    width: 100%;
+    padding: 5px;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding-bottom: 20px;
+  }
+  
+  .save-button {
+    background-color: #24a332;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #0f6716;
+  }

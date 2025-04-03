@@ -9,10 +9,10 @@ import Targets from "./Targets";
 // import CourseFeedback from "./CourseFeedback";
 // import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
-// import CoActionPlan from "./CoActionPlan";
+import CoActionPlan from "./CoActionPlan";
 // import PoPsoAttainment from "./PoPsoAttainment";
 import PoRootCause from "./PoRootCause";
-// import PoActionPlan from "./PoActionPlan";
+import PoActionPlan from "./PoActionPlan";
 
 const Dashboard: React.FC = () => {
   const { user } = useUser();
@@ -152,16 +152,18 @@ const Dashboard: React.FC = () => {
         {selectedPage === "targets" && <Targets />}
         {selectedPage === "co-root-cause" && <CoRootCause />}
         {selectedPage === "po-root-cause" && <PoRootCause />}
+        {selectedPage === "co-action-plan" && <CoActionPlan />}
+        {selectedPage === "po-action-plan" && <PoActionPlan />}
         {/* {selectedPage === "co-po-mapping" && <CoPoMapping />}
         {selectedPage === "cie-marks" && <CieMarks />}
         {selectedPage === "see-marks" && <SeeMarks />}
         {selectedPage === "course-feedback" && <CourseFeedback />}
         {selectedPage === "co-attainment" && <CoAttainment />} 
         
-        {selectedPage === "co-action-plan" && <CoActionPlan />}
+        
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
         
-        {selectedPage === "po-action-plan" && <PoActionPlan />} */}
+         */}
           
         </div>
       </div>

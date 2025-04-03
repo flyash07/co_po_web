@@ -8,6 +8,8 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Targets from "./components/dashboard/Targets";
 import CoRootCause from "./components/dashboard/CoRootCause";
 import PoRootCause from "./components/dashboard/PoRootCause"
+import PoActionPlan from "./components/dashboard/PoActionPlan";
+import CoActionPlan from "./components/dashboard/CoActionPlan";
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -54,7 +56,22 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-          
+          <Route
+            path="/dashboard/PoActionPlan"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <PoActionPlan/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/CoActionPlan"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <CoActionPlan/>
+              </ProtectedRoute>
+            }
+          />
           {/* <Route
             path="smtg"
             element={

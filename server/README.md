@@ -46,3 +46,30 @@ The request body should be in JSON format and include the following fields:
     }
 }
 ```
+
+## `/index/logout` Endpoint
+
+### Description
+
+Logouts
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+Nothing req
+  
+### Response Type
+
+- `message`(String)
+
+### Example Response
+```
+{
+    "message": "Logged out successfully"
+}
+```
+
+

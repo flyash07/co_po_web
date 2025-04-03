@@ -28,17 +28,20 @@ The request body should be in JSON format and include the following fields:
 - `output`
           - `name` (String)
           - `email` (String)
-          - `courseName` (List of Strings)
+          - `courseName` (List of Objects with course name and id)
 
 ### Example Response
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhamVzaC5rdW1hckB1bml2ZXJzaXR5LmVkdSIsImlkIjoiNjdlY2MyMmRmZjljZjdhNmYzZjQyYWU2IiwiaWF0IjoxNzQzNjYxMzI5fQ.I-jEBgUrpXk9GYr1c1ntgKPMZfqo7JfjIQXD_jnyPvE",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhamVzaC5rdW1hckB1bml2ZXJzaXR5LmVkdSIsImlkIjoiNjdlY2MyMmRmZjljZjdhNmYzZjQyYWU2IiwiaWF0IjoxNzQzNjY1MTY4fQ.aS4sQl2BWPKKg3JUVbsnfy_90rEqUjU5vKT57Z1wEQg",
     "output": {
         "name": "Dr. Rajesh Kumar",
         "email": "rajesh.kumar@university.edu",
         "courseNames": [
-            "Data Structures and Algorithms"
+            {
+                "id": "67ecc22dff9cf7a6f3f42af0",
+                "name": "Data Structures and Algorithms"
+            }
         ]
     }
 }

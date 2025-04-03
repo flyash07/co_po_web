@@ -31,3 +31,8 @@ module.exports.login=async (req,res)=>{
     res.cookie("token",token)
     res.status(200).json({ token, output })
 }
+
+module.exports.logout=async (req,res)=>{
+    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'None' });
+    res.status(200).json({ message: 'Logged out successfully' });
+}

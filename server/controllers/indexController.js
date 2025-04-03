@@ -15,8 +15,10 @@ module.exports.login=async (req,res)=>{
     let temp=user.currentlyTeaching
     console.log(temp)
     const courseNames=[]
-    for(let i=0;i<temp.length;i++){
-        courseNames.push(await getCourseNameById(temp[i]));
+    for (let i = 0; i < temp.length; i++) {
+        const courseId = temp[i];
+        const courseName = await getCourseNameById(courseId);
+        courseNames.push({ id: courseId, name: courseName });
     }
 
     output={

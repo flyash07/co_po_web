@@ -137,3 +137,108 @@ Updates CO,PO,PSO targets
 }
 ```
 
+## `/cie/getCie` Endpoint
+
+### Description
+
+Gives u entire data for the cie page
+
+### HTTP Method
+
+`GET`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+    "courseId":"67efe64daf900bdf3332df7a",
+}
+```
+  
+### Response Type
+
+- `JSON`:Object has 2 attributes, students and summary
+
+### Example Response
+```
+{
+    "students": [
+        {
+            "name": "Student 2",
+            "regNo": 2300001,
+            "cie": {
+                "1": {
+                    "obtained": 10,
+                    "total": 20,
+                    "percentage": "50.00",
+                    "ala": 2
+                },
+                "2": {
+                    "obtained": 10,
+                    "total": 20,
+                    "percentage": "50.00",
+                    "ala": 2
+                },
+                "3": {
+                    "obtained": 0,
+                    "total": 40,
+                    "percentage": "0.00",
+                    "ala": 1
+                },
+                "4": {
+                    "obtained": 0,
+                    "total": 10,
+                    "percentage": "0.00",
+                    "ala": 1
+                },
+                "5": {
+                    "obtained": 0,
+                    "total": 10,
+                    "percentage": "0.00",
+                    "ala": 1
+                }
+            }
+        },
+        ...Multiple Students
+    ],
+    "summary": {
+        "1": {
+            "avgAla": "2.00",
+            "level1": 0,
+            "level2": 10,
+            "level3": 0,
+            "count": 10
+        },
+        "2": {
+            "avgAla": "2.00",
+            "level1": 0,
+            "level2": 10,
+            "level3": 0,
+            "count": 10
+        },
+        "3": {
+            "avgAla": "1.00",
+            "level1": 10,
+            "level2": 0,
+            "level3": 0,
+            "count": 10
+        },
+        "4": {
+            "avgAla": "1.00",
+            "level1": 10,
+            "level2": 0,
+            "level3": 0,
+            "count": 10
+        },
+        "5": {
+            "avgAla": "1.00",
+            "level1": 10,
+            "level2": 0,
+            "level3": 0,
+            "count": 10
+        }
+    }
+}
+```

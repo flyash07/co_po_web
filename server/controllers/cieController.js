@@ -2,59 +2,6 @@ const courseModel = require("../models/courseModel");
 const marksModel = require("../models/marksModel")
 const studentModel = require("../models/studentModel")
 
-// module.exports.getCie=async(req,res)=>{
-//     const {courseId}=req.body
-
-//     const secObj=req.user.section.find(sec=> sec.course==courseId)
-//     const sectionId=secObj?secObj.section:null
-//     console.log(sectionId)
-
-//     const students=await studentModel.find({section:sectionId});
-//     const stuIds = students.map(student => ({
-//         id: student._id,
-//         regNo: student.regNo,
-//         name: student.name
-//     }))
-//     const stuIdList = stuIds.map(s => s.id);
-
-//     const marks = await marksModel.find({
-//         course: courseId,
-//         student: { $in: stuIdList }
-//     });
-
-//     const result = [];
-
-//     marks.forEach(entry => {
-//         const studentId = entry.student.toString();
-
-//         const coTotals = {};
-
-//         const assessments = [
-//             ...entry.ass1,
-//             ...entry.ass2,
-//             ...entry.ass3,
-//             ...entry.ass4,
-//             ...entry.midSem
-//         ];
-
-//         assessments.forEach(q => {
-//             const co = q.co;
-//             if (!coTotals[co]) {
-//             coTotals[co] = 0;
-//             }
-//             coTotals[co] += q.maxMarks || 0;
-//         });
-
-//         result.push({
-//                 name: stuIds[studentId]?.name || "Unknown",
-//                 regNo: stuIds[studentId]?.regNo || "Unknown",
-//                 coMarks: coTotals
-//         });
-//     });
-
-//     res.json(result)
-// }
-
 module.exports.getCie = async (req, res) => {
         const { courseId } = req.body;
 

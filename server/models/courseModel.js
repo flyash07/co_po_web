@@ -19,31 +19,44 @@ const courseSchema=mongoose.Schema({
             bloomsLevel:String
         }
     ],
-    coAttainment:[
-        {
-            targetSet:Number,
-            direct:{
-                inSem:Number,
-                endSem:Number,
-                finalCo:Number
-            },
-            overall:{
-                inSem:Number,
-                endSem:Number,
-                finalCo:Number
+    coAttainment:{
+        type: [
+            {
+                targetSet: { type: Number, default: 0 },
+                direct: {
+                    inSem: { type: Number, default: 0 },
+                    endSem: { type: Number, default: 0 },
+                    finalCo: { type: Number, default: 0 }
+                },
+                overall: {
+                    inSem: { type: Number, default: 0 },
+                    endSem: { type: Number, default: 0 },
+                    finalCo: { type: Number, default: 0 }
+                }
             }
-        }
-    ],
-    poAttainment:[
-        {
-            targetSet:Number
-        }
-    ],
-    psoAttainment:[
-        {
-            targetSet:Number
-        }
-    ],
+        ],
+        default: () => Array.from({ length: 8 }, () => ({
+            targetSet: 0,
+            direct: { inSem: 0, endSem: 0, finalCo: 0 },
+            overall: { inSem: 0, endSem: 0, finalCo: 0 }
+        }))
+    },
+    poAttainment: {
+        type: [
+            {
+                targetSet: { type: Number, default: 0 }
+            }
+        ],
+        default: () => Array.from({ length: 12 }, () => ({ targetSet: 0 }))
+    },
+    psoAttainment: {
+        type: [
+            {
+                targetSet: { type: Number, default: 0 }
+            }
+        ],
+        default: () => Array.from({ length: 4 }, () => ({ targetSet: 0 }))
+    },
     coPoMapping:[
         {
             coNum:Number,

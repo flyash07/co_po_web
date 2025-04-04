@@ -103,4 +103,37 @@ Outputs CO,PO,PSO targets
 }
 ```
 
+## `/course/postTargets` Endpoint
+
+### Description
+
+Updates CO,PO,PSO targets
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+    "courseId":"67efe64daf900bdf3332df7a",
+    "coTargets": [1, 2, 3, 4, 5, 6, 7, 8],
+    "poTargets": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "psoTargets": [2, 1, 0, 0]
+}
+```
+  
+### Response Type
+
+- `Success Msg and status update`
+
+### Example Response
+```
+{
+    "message": "Target Updated"
+}
+```
 

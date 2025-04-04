@@ -6,7 +6,7 @@ const courseSchema=mongoose.Schema({
     type:String,
     coordinator:{
         type:mongoose.Schema.ObjectId,
-        default:"",
+        default:null,
         ref:"prof"
     },
     program:String,

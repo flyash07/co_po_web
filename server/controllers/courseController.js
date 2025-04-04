@@ -28,3 +28,36 @@ module.exports.getTargets=async (req,res)=>{
         res.status(500).json({'error':"InternalServerError"})
     }
 }
+
+module.exports.postTargets=async (req,res)=>{
+    try{
+        console.log(req.body)
+        const {courseId, coTargets, poTargets, psoTargets}=req.body
+
+        if(!coTargets||!poTargets||!psoTargets)
+            res.status(401).json({message:"No data"})
+
+        const course=await courseModel.findById(courseId)
+
+        if(!course)
+            res.status(404).json({message:"Course Not Found"})
+
+        course.coAttainment.forEach((item,index)=>{
+            item.targetSet=coTargets[index]
+        })
+
+        course.poAttainment.forEach((item,index)=>{
+            item.targetSet=poTargets[index]
+        })
+
+        course.psoAttainment.forEach((item,index)=>{
+            item.targetSet=psoTargets[index]
+        })
+
+        await course.save()
+        res.status(200).json({message:"Target Updated"})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({'error':"InternalServerError"})
+    }
+}

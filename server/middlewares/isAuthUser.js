@@ -10,7 +10,7 @@ module.exports.authUser=async (req,res,next)=>{
 
     try{
         const decoded=jwt.decode(token,process.env.JWT_KEY)
-        const user=userModel.findById(decoded._id)
+        const user=await userModel.findById(decoded.id)
         req.user=user
         next();
     }catch{

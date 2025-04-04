@@ -8,7 +8,7 @@ const profSchema=mongoose.Schema({
     dept:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"dept",
-        default:""
+        default:null
     },
     hasTaught:{
         type:[{

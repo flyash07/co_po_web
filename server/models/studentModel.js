@@ -6,7 +6,7 @@ const studentSchema=mongoose.Schema({
     section:{
         type:mongoose.Schema.ObjectId,
         ref:"section",
-        default:""
+        default:null
     },
     prevCourses:[
         {

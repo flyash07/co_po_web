@@ -10,6 +10,7 @@ const db=require('./config/mongoose-connection')
 const {test}=require("./utils/testModel")
 const indexRouter=require('./routes/indexRouter')
 const courseRouter=require('./routes/courseRouter')
+const cieRouter=require('./routes/cieRouter')
 
 const cors=require('cors')
 const corsParams={
@@ -27,5 +28,5 @@ app.use(cookieParser());
 // test(); //To test the Schema
 app.use('/index',indexRouter)
 app.use('/course',courseRouter)
-
+app.use('/cie',cieRouter)
 app.listen(8080)

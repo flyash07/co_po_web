@@ -34,6 +34,16 @@ const courseSchema=mongoose.Schema({
             }
         }
     ],
+    poAttainment:[
+        {
+            targetSet:Number
+        }
+    ],
+    psoAttainment:[
+        {
+            targetSet:Number
+        }
+    ],
     coPoMapping:[
         {
             coNum:Number,

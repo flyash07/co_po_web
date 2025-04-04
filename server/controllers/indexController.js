@@ -29,6 +29,7 @@ module.exports.login=async (req,res)=>{
 
     let token=generateToken(user)
     res.cookie("token",token)
+    console.log(token)
     res.status(200).json({ token, output })
 }
 

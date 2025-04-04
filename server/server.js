@@ -9,6 +9,7 @@ const cookieParser=require('cookie-parser')
 const db=require('./config/mongoose-connection')
 const {test}=require("./utils/testModel")
 const indexRouter=require('./routes/indexRouter')
+const courseRouter=require('./routes/courseRouter')
 
 const cors=require('cors')
 const corsParams={
@@ -25,5 +26,6 @@ app.use(cookieParser());
 
 // test(); //To test the Schema
 app.use('/index',indexRouter)
+app.use('/course',courseRouter)
 
 app.listen(8080)

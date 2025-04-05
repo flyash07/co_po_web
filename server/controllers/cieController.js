@@ -56,9 +56,6 @@ module.exports.getCie = async (req, res) => {
                     coTotals[q.co] += q.maxMarks || 0;
                 });
             });
-            console.log("++++++++++++++++++++")
-            console.log(coTotals)
-            console.log("++++++++++++++++++++")
             const coResult = {};
         
             Object.keys(maxPerCO).forEach(co => {
@@ -108,3 +105,124 @@ module.exports.getCie = async (req, res) => {
     
         res.json({ students: result, summary });
 };
+
+module.exports.postCie=async(req,res)=>{
+    //console.log(req.body)
+    const {data,courseId,assignmentType}=req.body
+    if (!['ass1', 'ass2', 'ass3', 'ass4', 'midSem', 'endSem'].includes(assignmentType)) {
+        throw new Error('Invalid assignment type');
+    }
+
+    const maxMarksRow = data[0];
+    console.log(maxMarksRow)
+    const qnosRow = data[1];
+    const partsExist = Object.values(qnosRow).some(val => typeof val === 'string' && /[a-zA-Z]/.test(val));
+
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+
+    const course = await courseModel.findById(courseId); // Don't forget `await` here
+
+    const maxMarksC = [];
+
+    for (const key in maxMarksRow) {
+        if (!key.startsWith('co')) continue;
+
+        const coMatch = key.match(/co(\d+)/);
+        if (!coMatch) continue;
+
+        const co = parseInt(coMatch[1]);
+        const maxMarks = maxMarksRow[key];
+        const qRaw = qnosRow[key];
+
+        let qNo, part = '';
+
+        if (partsExist && typeof qRaw === 'string') {
+            const match = qRaw.match(/^(\d+)([a-zA-Z]*)$/);
+            qNo = parseInt(match[1]);
+            part = match[2] || '';
+        } else {
+            qNo = parseInt(qRaw);
+        }
+
+        maxMarksC.push({
+            qNo,
+            part,
+            co,
+            maxMarks
+        });
+    }
+
+    // Save this structure to the course object under the relevant assignmentType
+    course[assignmentType] = maxMarksC;
+    await course.save();
+
+    for (let i = 2; i < data.length; i++) {
+        const row = data[i];
+        const regno = row.regno;
+        const name = row.name || `Student_${regno}`;
+        let student = await studentModel.findOne({ regNo: regno });
+
+        // Create student if not found
+        if (!student) {
+            student = new studentModel({
+                regNo: regno,
+                name,
+                section: sectionId,
+                currentCourses: [courseId]
+            });
+            await student.save();
+        } else {
+            // Ensure course is in currentCourses
+            if (!student.currentCourses.includes(courseId)) {
+                student.currentCourses.push(courseId);
+                await student.save();
+            }
+        }
+
+        const marksData = [];
+
+        for (const key in row) {
+            if (!key.startsWith('co')) continue;
+
+            const coMatch = key.match(/co(\d+)/);
+            if (!coMatch) continue;
+
+            const co = parseInt(coMatch[1]);
+            const maxMarks = row[key];
+            //const maxMarks = maxMarksRow[key] ?? 0;
+            const qRaw = qnosRow[key];
+
+            let qNo, part = '';
+
+            if (partsExist && typeof qRaw === 'string') {
+                const match = qRaw.match(/^(\d+)([a-zA-Z]*)$/);
+                qNo = parseInt(match[1]);
+                part = match[2] || '';
+            } else {
+                qNo = parseInt(qRaw);
+            }
+
+            marksData.push({
+                qNo,
+                part,
+                co,
+                maxMarks
+            });
+        }
+
+        // Find or create marks document
+        let marksDoc = await marksModel.findOne({ student: student._id, course: courseId });
+        if (!marksDoc) {
+            marksDoc = new marksModel({
+                student: student._id,
+                course: courseId
+            });
+        }
+
+        marksDoc[assignmentType] = marksData;
+        await marksDoc.save();
+    }
+
+    res.status(200).json({message:"Updated DB"})
+}

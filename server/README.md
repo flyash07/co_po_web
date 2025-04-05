@@ -242,3 +242,76 @@ Gives u entire data for the cie page
     }
 }
 ```
+
+## `/cie/postCie` Endpoint
+
+### Description
+
+Excel data to populate the db
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+"data":[
+  {
+    "co2": 0.5,
+    "co2_1": 0.5,
+    "co2_2": 0.5,
+    "co2_3": 0.5,
+    "co2_4": 0.5,
+    "co2_5": 0.5,
+    "co2_6": 0.5,
+    "co2_7": 0.5,
+    "co2_8": 0.5,
+    "co2_9": 0.5
+  },
+  {
+    "co2": 1,
+    "co2_1": 2,
+    "co2_2": 3,
+    "co2_3": 4,
+    "co2_4": 5,
+    "co2_5": 6,
+    "co2_6": 7,
+    "co2_7": 8,
+    "co2_8": 9,
+    "co2_9": 10
+  },
+  {
+    "name": "Aanya",
+    "regno": 395820614,
+    "co2": 0.5,
+    "co2_1": 0.5,
+    "co2_2": 0,
+    "co2_3": 0,
+    "co2_4": 0.5,
+    "co2_5": 0.5,
+    "co2_6": 0.5,
+    "co2_7": 0,
+    "co2_8": 0.5,
+    "co2_9": 0.5
+  },
+  ..Multiple Students
+],
+"courseId":"67f169134671cad48f7ba7e5",
+"assignmentType":"ass2"
+}
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "Updated DB"
+}
+```

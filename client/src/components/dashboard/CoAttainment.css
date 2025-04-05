@@ -1,0 +1,26 @@
+.co-attainment-container {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.attainment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.attainment-table th,
+.attainment-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.attainment-table thead th {
+    background-color: #222;
+    color: white;
+}
+
+.attainment-table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}

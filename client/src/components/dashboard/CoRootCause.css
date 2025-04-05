@@ -1,4 +1,4 @@
-/* General Page Styling */
+
 .co-root-cause-container {
     padding: 40px;
     font-family: Arial, sans-serif;
@@ -9,7 +9,7 @@
     padding-bottom: 80px;
 }
 
-/* Main heading */
+
 .co-root-cause-container h1 {
     font-size: 28px;
     font-weight: bold;
@@ -18,7 +18,7 @@
     text-align: center;
 }
 
-/* Subtitle text */
+
 .subtitle {
     font-size: 16px;
     color: #444;
@@ -26,7 +26,7 @@
     margin-bottom: 20px;
 }
 
-/* Note section */
+
 .note {
     font-size: 14px;
     color: #333;
@@ -34,7 +34,7 @@
     margin-bottom: 20px;
 }
 
-/* Section heading */
+
 .head {
     font-size: 22px;
     font-weight: bold;
@@ -42,7 +42,7 @@
     margin-top: 30px;
 }
 
-/* Sample headings */
+
 .example h3 {
     font-size: 18px;
     font-weight: bold;
@@ -51,7 +51,7 @@
     margin-bottom: 5px;
 }
 
-/* Paragraph styling */
+
 .example p {
     font-size: 15px;
     color: #222;
@@ -59,13 +59,13 @@
     margin-bottom: 10px;
 }
 
-/* Bold text for actions */
+
 .example p strong {
     font-weight: bold;
     color: #000;
 }
 
-/* Closing note */
+
 .closing-note {
     font-size: 14px;
     color: #555;

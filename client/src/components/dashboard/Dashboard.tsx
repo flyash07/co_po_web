@@ -3,14 +3,14 @@ import { useUser } from "../../context/UserContext";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
-// import CoPoMapping from "./CoPoMapping";
+import CoPoMapping from "./CoPoMapping"; 
 // import CieMarks from "./CieMarks";
 // import SeeMarks from "./SeeMarks";
 // import CourseFeedback from "./CourseFeedback";
-// import CoAttainment from "./CoAttainment";
+import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
-// import PoPsoAttainment from "./PoPsoAttainment";
+// import PoPsoAttainment from "./PoPsoAttainment"; //tonight
 import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
 
@@ -150,15 +150,17 @@ const Dashboard: React.FC = () => {
         {/* Uncomment the pages your putting */}
         {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
         {selectedPage === "targets" && <Targets />}
+        {selectedPage === "co-po-mapping" && <CoPoMapping />}
         {selectedPage === "co-root-cause" && <CoRootCause />}
         {selectedPage === "po-root-cause" && <PoRootCause />}
         {selectedPage === "co-action-plan" && <CoActionPlan />}
         {selectedPage === "po-action-plan" && <PoActionPlan />}
-        {/* {selectedPage === "co-po-mapping" && <CoPoMapping />}
+        {selectedPage === "co-attainment" && <CoAttainment />}
+        {/* 
         {selectedPage === "cie-marks" && <CieMarks />}
         {selectedPage === "see-marks" && <SeeMarks />}
         {selectedPage === "course-feedback" && <CourseFeedback />}
-        {selectedPage === "co-attainment" && <CoAttainment />} 
+         
         
         
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}

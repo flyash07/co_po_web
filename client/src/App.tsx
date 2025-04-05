@@ -10,6 +10,8 @@ import CoRootCause from "./components/dashboard/CoRootCause";
 import PoRootCause from "./components/dashboard/PoRootCause"
 import PoActionPlan from "./components/dashboard/PoActionPlan";
 import CoActionPlan from "./components/dashboard/CoActionPlan";
+import CoAttainment from "./components/dashboard/CoAttainment";
+import CoPoMapping from "./components/dashboard/CoPoMapping";
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -69,6 +71,22 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute requiredRole="Professor">
                 <CoActionPlan/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/CoAttainment"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <CoAttainment/>
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/dashboard/CoPoMapping"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <CoPoMapping/>
               </ProtectedRoute>
             }
           />

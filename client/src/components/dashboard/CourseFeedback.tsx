@@ -9,8 +9,20 @@ type StudentFeedback = {
     coValues: { [key: number]: number };
 };
 
+type COSummary = {
+    counts: { [rating: number]: number };
+    totalStudents: number;
+    weightedScore: string;
+    attainmentLevel: string;
+};
+
+type COSummaryRow = {
+    label: string;
+    values: (number | string)[];
+};
+
 type FeedbackResponse = {
-    coSummary: COSummaryRow[];
+    coSummary: COSummary[];
     courseCF: string;
     courseAttainment: string;
     studentFeedbackData: StudentFeedback[];
@@ -20,42 +32,62 @@ const CO_HEADERS = Array.from({ length: 8 }, (_, i) => `CO${i + 1}`);
 
 const CourseFeedback: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
-    const [coSummary, setCoSummary] = useState([]);
-    const [courseCF, setCourseCF] = useState();
+    const [coSummaryRows, setCoSummaryRows] = useState<COSummaryRow[]>([]);
+    const [courseCF, setCourseCF] = useState('');
     const [courseAttainment, setCourseAttainment] = useState('');
     const [studentFeedback, setStudentFeedback] = useState<StudentFeedback[]>([]);
-    const [excelFile, setExcelFile] = useState<File | null>(null);
 
     const courseId = localStorage.getItem('currentCourse');
-    const token = document.cookie.split('; ')
-        .find(row => row.startsWith('jwtToken='))?.split('=')[1];
+    const token = document.cookie.split('; ').find(row => row.startsWith('jwtToken='))?.split('=')[1];
 
     const fetchFeedback = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/feedback/getFeedback", {
-                headers: {
-                    Authorization: `${token}`,
-                },
-                params: {
-                    courseId,
-                },
+            const res = await axios.get<FeedbackResponse>('http://localhost:8080/feedback/getFeedback', {
+                headers: { Authorization: `${token}` },
+                params: { courseId },
             });
 
-            const data = res.data;
-            setCoSummary(data.coSummary);
-            setCourseCF(data.courseCF);
-            setCourseAttainment(data.courseAttainment);
-            setStudentFeedback(data.studentFeedbackData || []);
+            const { coSummary, courseCF, courseAttainment, studentFeedbackData } = res.data;
+            const ratingLabels = [1, 2, 3, 4, 5];
 
-            console.log(coSummary)
-            console.log(data.coSummary)
+            const summaryRows: COSummaryRow[] = [];
+
+            // Ratings 1-5
+            ratingLabels.forEach((rating) => {
+                summaryRows.push({
+                    label: `No. of Students graded ${rating}`,
+                    values: coSummary.map(co => co.counts[rating] ?? 0),
+                });
+            });
+
+            summaryRows.push(
+                {
+                    label: 'Total Students',
+                    values: coSummary.map(co => co.totalStudents),
+                },
+                {
+                    label: 'Weighted Average',
+                    values: coSummary.map(co => parseFloat(co.weightedScore).toFixed(2)),
+                },
+                {
+                    label: 'Attainment Level',
+                    values: coSummary.map(co => co.attainmentLevel || 'NA'),
+                }
+            );
+
+            setCoSummaryRows(summaryRows);
+            setCourseCF(courseCF);
+            setCourseAttainment(courseAttainment);
+            setStudentFeedback(studentFeedbackData || []);
         } catch (err) {
             console.error('Error fetching feedback:', err);
         }
     };
 
     useEffect(() => {
-        fetchFeedback();
+        if (courseId && token) {
+            fetchFeedback();
+        }
     }, [courseId, token]);
 
     const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,10 +103,7 @@ const CourseFeedback: React.FC = () => {
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-                const payload = {
-                    data: jsonData,
-                    courseId: courseId,
-                };
+                const payload = { data: jsonData, courseId };
 
                 const res = await axios.post('http://localhost:8080/feedback/postFeedback', payload, {
                     headers: {
@@ -82,15 +111,15 @@ const CourseFeedback: React.FC = () => {
                         Authorization: `${token}`,
                     },
                 });
-                console.log(res.data.message)
-                alert(res.data.message || 'Upload successful');
-                fetchFeedback(); // Refresh the data
 
+                alert(res.data.message || 'Upload successful');
+                fetchFeedback();
             } catch (error) {
-                console.error('Error uploading file', error);
+                console.error('Error uploading file:', error);
                 alert('Upload failed');
             }
         };
+
         reader.readAsBinaryString(file);
     };
 
@@ -99,48 +128,21 @@ const CourseFeedback: React.FC = () => {
             <h1 className="feedback-title">MANIPAL INSTITUTE OF TECHNOLOGY, MANIPAL</h1>
             <h2 className="feedback-subtitle">Course Feedback (Course End Survey(CES))</h2>
 
+            {/* Header Table */}
             <table className="feedback-table">
                 <tbody>
-                    <tr>
-                        <td className="label">Department:</td>
-                        <td>Computer Science and Engineering</td>
-                        <td className="label">Program:</td>
-                        <td>B.Tech</td>
-                    </tr>
-                    <tr>
-                        <td className="label">Faculty Name:</td>
-                        <td>Manamohana Krishna</td>
-                        <td className="label">Semester:</td>
-                        <td>IV</td>
-                    </tr>
-                    <tr>
-                        <td className="label">Course Code:</td>
-                        <td>{courseId}</td>
-                        <td className="label">Section:</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td className="label">Course Name:</td>
-                        <td>Embedded Systems</td>
-                        <td className="label">Odd/Even:</td>
-                        <td>ODD</td>
-                    </tr>
-                    <tr>
-                        <td className="label">Type Of Course:</td>
-                        <td>CORE</td>
-                        <td className="label">Year:</td>
-                        <td>2023-24</td>
-                    </tr>
+                    <tr><td className="label">Department:</td><td>Computer Science and Engineering</td><td className="label">Program:</td><td>B.Tech</td></tr>
+                    <tr><td className="label">Faculty Name:</td><td>Manamohana Krishna</td><td className="label">Semester:</td><td>IV</td></tr>
+                    <tr><td className="label">Course Code:</td><td>{courseId}</td><td className="label">Section:</td><td>C</td></tr>
+                    <tr><td className="label">Course Name:</td><td>Embedded Systems</td><td className="label">Odd/Even:</td><td>ODD</td></tr>
+                    <tr><td className="label">Type Of Course:</td><td>CORE</td><td className="label">Year:</td><td>2023-24</td></tr>
                 </tbody>
             </table>
 
+            {/* Attainment Level Table */}
             <table className="ces-table">
                 <thead>
-                    <tr>
-                        <th colSpan={4} className="ces-header">
-                            Course Feedback (CES) ATTAINMENT LEVEL
-                        </th>
-                    </tr>
+                    <tr><th colSpan={4} className="ces-header">Course Feedback (CES) ATTAINMENT LEVEL</th></tr>
                 </thead>
                 <tbody>
                     {[
@@ -157,54 +159,38 @@ const CourseFeedback: React.FC = () => {
                 </tbody>
             </table>
 
+            {/* CO Summary Table */}
             <table className="ces-data-table">
                 <thead>
-                    <tr>
-                        <th></th>
-                        {CO_HEADERS.map((co, i) => (
-                            <th key={i}>{co}</th>
-                        ))}
-                    </tr>
+                    <tr><th></th>{CO_HEADERS.map((co, i) => <th key={i}>{co}</th>)}</tr>
                 </thead>
                 <tbody>
-                    {coSummary.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
+                    {coSummaryRows.map((row, idx) => (
+                        <tr key={idx}>
                             <td className="label-cell">{row.label}</td>
-                            { row.values && row.values.length ? (
-                                row.values.map((val, i) => (
-                                    <td
-                                        key={i}
-                                        className={
-                                            row.label.includes('Average')
-                                                ? 'cf-average-cell'
-                                                : row.label.includes('Attainment')
-                                                    ? 'cf-attainment-cell'
-                                                    : ''
-                                        }
-                                        style={{
-                                            backgroundColor:
-                                                row.label.includes('Attainment') && val === 'NA' ? 'yellow' : undefined,
-                                            color:
-                                                typeof val === 'string' && val === 'NA'
-                                                    ? 'red'
-                                                    : undefined,
-                                        }}
-                                    >
-                                        {val}
-                                    </td>
-                                ))
-                            ) : (
-                                <td colSpan={CO_HEADERS.length}></td>
-                            )}
+                            {row.values.map((val, i) => (
+                                <td
+                                    key={i}
+                                    className={
+                                        row.label.includes('Average') ? 'cf-average-cell' :
+                                        row.label.includes('Attainment') ? 'cf-attainment-cell' : ''
+                                    }
+                                    style={{
+                                        backgroundColor: row.label.includes('Attainment') && val === 'NA' ? 'yellow' : undefined,
+                                        color: val === 'NA' ? 'red' : undefined,
+                                    }}
+                                >
+                                    {val}
+                                </td>
+                            ))}
                         </tr>
                     ))}
                 </tbody>
             </table>
 
+            {/* Excel Upload Section */}
             <div className="excel-upload-container">
-                <label htmlFor="excel-upload" className="upload-label">
-                    Upload Excel File:
-                </label>
+                <label htmlFor="excel-upload" className="upload-label">Upload Excel File:</label>
                 <input
                     type="file"
                     id="excel-upload"
@@ -213,23 +199,21 @@ const CourseFeedback: React.FC = () => {
                     onChange={handleExcelUpload}
                     onClick={(e) => (e.currentTarget.value = '')}
                 />
-                <button className="hint-button" onClick={() => setShowModal(true)}>
-                    Hint
-                </button>
+                <button className="hint-button" onClick={() => setShowModal(true)}>Hint</button>
             </div>
 
+            {/* Modal */}
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h2 className="modal-title">Ideal Excel Format</h2>
                         {/* <img src="/example.png" alt="Format" className="modal-image" /> */}
-                        <button className="close-button" onClick={() => setShowModal(false)}>
-                            Close
-                        </button>
+                        <button className="close-button" onClick={() => setShowModal(false)}>Close</button>
                     </div>
                 </div>
             )}
 
+            {/* Individual Student Responses */}
             <h2 className="section-title">Course Feedback (CES): Individual Student Responses</h2>
             <table className="student-response-table">
                 <thead>
@@ -237,10 +221,7 @@ const CourseFeedback: React.FC = () => {
                         <th>Sl. No</th>
                         <th>Name</th>
                         <th>Reg Number</th>
-                        <th>Time Stamp</th>
-                        {CO_HEADERS.map((co, i) => (
-                            <th key={i}>{co}</th>
-                        ))}
+                        {CO_HEADERS.map((co, i) => <th key={i}>{co}</th>)}
                     </tr>
                 </thead>
                 <tbody>
@@ -249,7 +230,6 @@ const CourseFeedback: React.FC = () => {
                             <td>{idx + 1}</td>
                             <td>{student.name}</td>
                             <td>{student.regNo}</td>
-                            <td>–</td>
                             {CO_HEADERS.map((_, i) => (
                                 <td key={i}>{student.coValues[i + 1] ?? 0}</td>
                             ))}

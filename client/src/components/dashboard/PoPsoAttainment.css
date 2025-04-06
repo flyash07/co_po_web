@@ -1,0 +1,76 @@
+.matrix-container {
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  .matrix-section {
+    margin-bottom: 3rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+    padding: 1rem;
+  }
+  
+  .matrix-section h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.4rem;
+    border-left: 5px solid #4caf50;
+    padding-left: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+  }
+  
+  th {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    font-weight: bold;
+  }
+  
+  td {
+    background-color: #fefefe;
+  }
+  
+  tr:nth-child(even) td:not(.highlight-row td) {
+    background-color: #f5f5f5;
+  }
+  
+  .highlight-row td {
+    font-weight: bold;
+    background-color: #f1f8e9;
+    color: #1b5e20;
+  }
+  
+  .status {
+    font-weight: bold;
+    color: white;
+    border-radius: 4px;
+    padding: 0.3rem;
+  }
+  
+  .status.Y {
+    background-color: #4caf50;
+  }
+  
+  .status.N {
+    background-color: #f44336;
+  }
+  
+  .status.NA {
+    background-color: #9e9e9e;
+  }
+  

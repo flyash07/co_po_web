@@ -11,7 +11,7 @@ import SeeMarks from "./SeeMarks";
 import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
-// import PoPsoAttainment from "./PoPsoAttainment";
+import PoPsoAttainment from "./PoPsoAttainment";
 import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
 
@@ -184,16 +184,7 @@ const Dashboard: React.FC = () => {
         {selectedPage === "course-feedback" && <CourseFeedback />}
         {selectedPage === "cie-marks" && <CieMarks />}
         {selectedPage === "see-marks" && <SeeMarks />}
-        {/* 
-       
-        
-        
-         
-        
-        
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
-        
-         */}
           
         </div>
       </div>

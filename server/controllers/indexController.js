@@ -6,6 +6,7 @@ const { getCourseNameById } = require('../utils/getCourseNameById')
 module.exports.login=async (req,res)=>{
     console.log("hell")
     let {email,password}=req.body
+    console.log(email, password)
     let user=await profModel.findOne({email:email})
     if(!user)
         return res.status(401).json({ message: 'Invalid email or password' })

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./PoPsoAttainment.css";
-// import axios from "axios"; // Uncomment when real API is used
 
 const COs = ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8"];
 const PO_PSO = [
@@ -16,29 +16,45 @@ const PoPsoAttainment = () => {
   const [directCOAttain, setDirectCOAttain] = useState<number[]>([]);
   const [overallCOAttain, setOverallCOAttain] = useState<number[]>([]);
   const [targetSet, setTargetSet] = useState<number[]>([]);
-
+  const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+    
+        const courseId = localStorage.getItem('currentCourse');
   useEffect(() => {
-    // Uncomment this section for real API
-    /*
-    axios.get('/api/copopso')
-      .then(res => {
-        const data = res.data;
-        setMatrix(data.mappingMatrix);
-        setDirectPOAttain(data.directPOAttainment);
-        setOverallPOAttain(data.overallPOAttainment);
-        setDirectCOAttain(data.directCOAttainment);
-        setOverallCOAttain(data.overallCOAttainment);
-        setTargetSet(data.targetSet);
-      });
-    */
+    const fetchPoAttainment = async () => {
+      try {
+        
+        const response = await axios.get("http://localhost:8080/final/poAtt", {
+          headers: {
+            Authorization: `${token}`
+          },
+          params: {
+            courseId
+          }
+        });
 
-    // Dummy placeholder data for development
-    setMatrix(Array(8).fill(0).map(() => Array(16).fill(0).map(() => Math.floor(Math.random() * 4))));
-    setDirectCOAttain([2.03, 1.26, 1.49, 2.14, 1.38, 1.0, 1.17, 0]);
-    setOverallCOAttain([2.22, 1.6, 1.79, 2.3, 1.71, 1.62, 0, 1.7]);
-    setDirectPOAttain([1.4, 1.32, 1.25, 1.19, 1.19, 1.0, 0.0, 1.38, 1.19, 1.17, 0.0, 1.38, 1.38, 0.0, 0.0, 0.0]);
-    setOverallPOAttain([1.66, 1.6, 1.55, 1.55, 1.55, 1.7, 1.0, 1.7, 1.7, 1.53, 0.0, 1.7, 3.0, 0.0, 0.0, 0.0]);
-    setTargetSet([1.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0]);
+        const data = response.data;
+        console.log(response.data.overallPso)
+        const combinedMatrix = data.po.map((poRow: number[], idx: number) => (
+          [...poRow, ...data.pso[idx]]
+        ));
+        const directCombined = [...data.directPo, ...data.directPso];
+        const overallCombined = [...data.overallPo, ...data.overallPso];
+        const targetCombined = [...data.targetPo, ...data.targetPso];
+
+        setMatrix(combinedMatrix);
+        setDirectCOAttain(data.directCo);
+        setOverallCOAttain(data.overallCo);
+        setDirectPOAttain(directCombined);
+        setOverallPOAttain(overallCombined);
+        setTargetSet(targetCombined);
+      } catch (err) {
+        console.error("Error fetching PO/PSO attainment data:", err);
+      }
+    };
+
+    fetchPoAttainment();
   }, []);
 
   const getTargetStatus = (val: number, target: number): string => {

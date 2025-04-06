@@ -1,7 +1,7 @@
 const courseModel = require("../models/courseModel")
 
 module.exports.getCoAtt=async (req,res)=>{
-    const {courseId}=req.body
+    const {courseId}=req.query
     let data=[]
     for(let i=0;i<8;i++){
         let course=await courseModel.findById(courseId)
@@ -32,7 +32,7 @@ module.exports.getCoAtt=async (req,res)=>{
 }
 
 module.exports.getCoPlan=async (req,res)=>{
-    const {courseId}=req.body
+    const {courseId}=req.query
     const course=await courseModel.findById(courseId)
 
     data=[]

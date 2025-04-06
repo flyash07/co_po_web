@@ -5,9 +5,9 @@ import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
 import CoPoMapping from "./CoPoMapping"; 
-// import CieMarks from "./CieMarks";
-// import SeeMarks from "./SeeMarks";
-import CourseFeedback from "./CourseFeedback";
+import CieMarks from "./CieMarks";
+import SeeMarks from "./SeeMarks";
+  import CourseFeedback from "./CourseFeedback";
 import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
@@ -39,18 +39,62 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const links = [
-    { name: "General Instructions", key: "general-instructions", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Targets", key: "targets", visibleTo: ["Professor"] }, // to be changed to Coordinator
-    { name: "CO to PO Mapping", key: "co-po-mapping", visibleTo: ["Coordinator"] },
-    { name: "CIE Assessment Marks & Attainment", key: "cie-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "SEE Marks & Attainment", key: "see-marks", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Course Feedback", key: "course-feedback", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Direct and Overall CO Attainment", key: "co-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for CO", key: "co-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for CO", key: "co-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "PO and PSO Attainment", key: "po-pso-attainment", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Root Cause Analysis for PSO and PO", key: "po-root-cause", visibleTo: ["Professor", "Coordinator", "HOD"] },
-    { name: "Action Plan for PO", key: "po-action-plan", visibleTo: ["Professor", "Coordinator", "HOD"] },
+    {
+      name: "General Instructions",
+      key: "general-instructions",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    { name: "Targets", key: "targets", visibleTo: ["Professor"] }, //to be changed to Coordinator
+    {
+      name: "CO to PO Mapping",
+      key: "co-po-mapping",
+      visibleTo: ["Coordinator","Professor"],
+    },
+    {
+      name: "CIE Assessment Marks & Attainment",
+      key: "cie-marks",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "SEE Marks & Attainment",
+      key: "see-marks",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Course Feedback",
+      key: "course-feedback",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Direct and Overall CO Attainment",
+      key: "co-attainment",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Root Cause Analysis for CO",
+      key: "co-root-cause",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Action Plan for CO",
+      key: "co-action-plan",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "PO and PSO Attainment",
+      key: "po-pso-attainment",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Root Cause Analysis for PSO and PO",
+      key: "po-root-cause",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
+    {
+      name: "Action Plan for PO",
+      key: "po-action-plan",
+      visibleTo: ["Professor", "Coordinator", "HOD"],
+    },
   ];
 
   return (
@@ -127,21 +171,30 @@ const Dashboard: React.FC = () => {
             </>
           )}
 
-          {/* Render the selected page */}
-          {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
-          {selectedPage === "targets" && <Targets />}
-          {selectedPage === "co-po-mapping" && <CoPoMapping />}
-          {selectedPage === "co-root-cause" && <CoRootCause />}
-          {selectedPage === "po-root-cause" && <PoRootCause />}
-          {selectedPage === "co-action-plan" && <CoActionPlan />}
-          {selectedPage === "po-action-plan" && <PoActionPlan />}
-          {selectedPage === "co-attainment" && <CoAttainment />}
-          {selectedPage === "course-feedback" && <CourseFeedback />}
-          {/* 
-          {selectedPage === "cie-marks" && <CieMarks />}
-          {selectedPage === "see-marks" && <SeeMarks />}
-          {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
-          */}
+        {/* Render the selected page */}
+        {/* Uncomment the pages your putting */}
+        {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
+        {selectedPage === "targets" && <Targets />}
+        {selectedPage === "co-po-mapping" && <CoPoMapping />}
+        {selectedPage === "co-root-cause" && <CoRootCause />}
+        {selectedPage === "po-root-cause" && <PoRootCause />}
+        {selectedPage === "co-action-plan" && <CoActionPlan />}
+        {selectedPage === "po-action-plan" && <PoActionPlan />}
+        {selectedPage === "co-attainment" && <CoAttainment />}
+        {selectedPage === "course-feedback" && <CourseFeedback />}
+        {selectedPage === "cie-marks" && <CieMarks />}
+        {selectedPage === "see-marks" && <SeeMarks />}
+        {/* 
+       
+        
+        
+         
+        
+        
+        {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
+        
+         */}
+          
         </div>
       </div>
     </div>

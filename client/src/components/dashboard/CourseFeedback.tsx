@@ -170,6 +170,55 @@ const CourseFeedback = () => {
                     </div>
                 </div>
             )}
+
+
+
+            <h2 className="section-title">Course Feedback (CES) : Individual Student Responses</h2>
+            <table className="student-response-table">
+                <thead>
+                    <tr>
+                        <th>Sl. No</th>
+                        <th>Name</th>
+                        <th>Reg Number</th>
+                        <th>Time Stamp</th>
+                        {["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8"].map((co, idx) => (
+                            <th key={idx}>{co}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {[
+                        {
+                            name: "VEDANT JAIN",
+                            reg: "200905182",
+                            time: "4-10-24 10:23:18",
+                            co: [4, 4, 4, 3, 4, 3, 0, 0]
+                        },
+                        {
+                            name: "SOUMYAJIT SAHA",
+                            reg: "200905378",
+                            time: "4-10-24 10:34:18",
+                            co: [4, 4, 4, 4, 4, 2, 0, 0]
+                        },
+                        {
+                            name: "RISHABH RANJAN",
+                            reg: "210905051",
+                            time: "4-10-24 11:06:21",
+                            co: [5, 5, 5, 5, 5, 5, 0, 0]
+                        }
+                    ].map((student, idx) => (
+                        <tr key={idx}>
+                            <td>{idx + 1}</td>
+                            <td>{student.name}</td>
+                            <td>{student.reg}</td>
+                            <td>{student.time}</td>
+                            {student.co.map((val, index) => (
+                                <td key={index}>{val}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
 
     );

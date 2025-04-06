@@ -8,8 +8,15 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole, children }) => {
-  const { user } = useUser(); 
+  const { user } = useUser();
+
+  if (user === "") {
+    // Optional: Show loading indicator while restoring user
+    return <div>Loading...</div>;
+  }
+
   return user === requiredRole ? children : <Navigate to="/login" />;
 };
+
 
 export default ProtectedRoute;

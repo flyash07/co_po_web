@@ -6,7 +6,7 @@ import Targets from "./Targets";
 import CoPoMapping from "./CoPoMapping"; 
 // import CieMarks from "./CieMarks";
 // import SeeMarks from "./SeeMarks";
-// import CourseFeedback from "./CourseFeedback";
+  import CourseFeedback from "./CourseFeedback";
 import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
@@ -156,10 +156,11 @@ const Dashboard: React.FC = () => {
         {selectedPage === "co-action-plan" && <CoActionPlan />}
         {selectedPage === "po-action-plan" && <PoActionPlan />}
         {selectedPage === "co-attainment" && <CoAttainment />}
+        {selectedPage === "course-feedback" && <CourseFeedback />}
         {/* 
         {selectedPage === "cie-marks" && <CieMarks />}
         {selectedPage === "see-marks" && <SeeMarks />}
-        {selectedPage === "course-feedback" && <CourseFeedback />}
+        
          
         
         

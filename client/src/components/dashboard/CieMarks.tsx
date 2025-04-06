@@ -200,6 +200,7 @@ const CieMarks: React.FC = () => {
                         <option value="ass2">Assessment 2</option>
                         <option value="ass3">Assessment 3</option>
                         <option value="ass4">Assessment 4</option>
+                        <option value="midSem">Midsems</option>
                     </select>
                 </label>
 

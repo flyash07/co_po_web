@@ -1,53 +1,102 @@
 import React, { useEffect, useState } from 'react';
-import './CoAttainment.css'; // Reuse existing CSS
+import './CoAttainment.css';
+import axios from 'axios';
 
 const CoPoMapping: React.FC = () => {
     const [mappingMatrix, setMappingMatrix] = useState<number[][]>([]);
     const [coList, setCoList] = useState<string[]>([]);
     const [poPsoList, setPoPsoList] = useState<string[]>([]);
-    const [Averages, setAverages] = useState<number[]>([]);
-
+    const [averages, setAverages] = useState<number[]>([]);
+    const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+    
+    const courseId = localStorage.getItem('currentCourse');
+    
     useEffect(() => {
-        //get api call instead
-        const COs = ['CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6','CO7','CO8'];
-        const POs = [
-            'PO1', 'PO2', 'PO3', 'PO4', 'PO5', 'PO6',
-            'PO7', 'PO8', 'PO9', 'PO10', 'PO11', 'PO12',
-            'PSO1', 'PSO2', 'PSO3', 'PSO4'
-        ];
-
-        const Matrix = [
-            [3, 2, 1, 0, 2, 3, 1, 0, 2, 1, 0, 1, 2, 1, 0, 1,0,0],
-            [2, 2, 2, 1, 1, 2, 0, 1, 1, 0, 1, 2, 0, 1, 2, 0,0,0],
-            [1, 1, 0, 3, 3, 2, 2, 0, 1, 2, 1, 0, 1, 0, 2, 1,0,0],
-            [2, 0, 1, 1, 2, 3, 1, 1, 0, 1, 2, 2, 1, 1, 1, 0,0,0],
-            [0, 2, 1, 1, 0, 1, 2, 2, 3, 1, 1, 0, 0, 1, 1, 2,0,0],
-            [3, 3, 2, 2, 1, 1, 0, 2, 0, 3, 1, 1, 2, 2, 1, 1,0,0],
-        ];
-
-        const Avg = [2.3, 1.8, 1.2, 1.5, 1.6, 2.0, 1.0, 1.2, 1.5, 1.3, 1.0, 1.2, 1.2, 1.0, 1.3, 1.1,0,0];
-
-        setCoList(COs);
-        setPoPsoList(POs);
-        setMappingMatrix(Matrix);
-        setAverages(Avg);
+        const fetchMapping = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/course/getCoPo', {
+                    headers: {
+                        Authorization: `${token}`
+                    },
+                    params: {
+                        courseId
+                    }
+                });
+    
+                let matrix: number[][] = response.data;
+    
+                // If matrix is empty or invalid, set default 8x16 matrix of zeros
+                if (!Array.isArray(matrix) || matrix.length === 0) {
+                    matrix = Array.from({ length: 8 }, () =>
+                        Array(16).fill(0)
+                    );
+                }
+    
+                setMappingMatrix(matrix);
+    
+                // Set CO and PO/PSO labels
+                setCoList(matrix.map((_, i) => `CO${i + 1}`));
+                setPoPsoList(matrix[0].map((_, i) => i < 12 ? `PO${i + 1}` : `PSO${i - 11}`));
+    
+                // Calculate averages
+                const colCount = matrix[0].length;
+                const colSums = Array(colCount).fill(0);
+                matrix.forEach(row => {
+                    row.forEach((val, colIdx) => {
+                        colSums[colIdx] += val;
+                    });
+                });
+                const avg = colSums.map(sum => sum / matrix.length);
+                setAverages(avg);
+            } catch (err) {
+                console.error('Error fetching mapping matrix:', err);
+            }
+        };
+    
+        fetchMapping();
     }, []);
+    
 
     const handleChange = (rowIndex: number, colIndex: number, value: string) => {
         const updated = [...mappingMatrix];
         updated[rowIndex][colIndex] = Number(value);
         setMappingMatrix(updated);
+
+        // Update averages
+        const colCount = updated[0].length;
+        const colSums = Array(colCount).fill(0);
+        updated.forEach(row => {
+            row.forEach((val, colIdx) => {
+                colSums[colIdx] += val;
+            });
+        });
+        const avg = colSums.map(sum => sum / updated.length);
+        setAverages(avg);
     };
 
-    const handleSubmit = () => {
-        //post api call
-        console.log('Submitted matrix:', mappingMatrix);
-        setTimeout(() => {
-            
-        }, 2000);
-
-        //get api call
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/course/postPoCo',
+                {
+                    inputArray: mappingMatrix,
+                    courseId: courseId
+                },
+                {
+                    headers: {
+                        Authorization: `${token}`
+                    }
+                }
+            );
+    
+            console.log('Response message:', response.data.message);
+        } catch (error) {
+            console.error('Error submitting matrix:', error);
+        }
     };
+    
 
     return (
         <div className="co-attainment-container">
@@ -81,7 +130,7 @@ const CoPoMapping: React.FC = () => {
                     ))}
                     <tr>
                         <td style={{ fontWeight: 'bold' }}>Average</td>
-                        {Averages.map((avg, idx) => (
+                        {averages.map((avg, idx) => (
                             <td key={idx} style={{ fontWeight: 'bold', backgroundColor: '#f2f2f2' }}>
                                 {avg.toFixed(2)}
                             </td>

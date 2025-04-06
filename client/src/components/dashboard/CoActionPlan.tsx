@@ -40,7 +40,7 @@ const CoActionPlan: React.FC = () => {
                         attained,
                         target,
                         achieved: attained >= target ? 'Y' : 'N',
-                        actionPlan: item.action.stat
+                        actionPlan: item.action ? item.action.stat : " ",
                     };
                 });
 

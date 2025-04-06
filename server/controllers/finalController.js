@@ -49,6 +49,24 @@ module.exports.getCoPlan=async (req,res)=>{
     res.status(200).json(data)
 }
 
+module.exports.getPoPlan=async (req,res)=>{
+    const {courseId}=req.query
+    const course=await courseModel.findById(courseId)
+
+    data=[]
+    console.log(course.coStatements)
+    for(let i=0;i<12;i++){
+        data.push({
+            stat:course.coStatements[i].description,
+            targetSet:course.coAttainment[i].targetSet,
+            attained:(80*course.coAttainment[i].overall.inSem+20*course.coAttainment[i].overall.endSem)/100,
+            action:course.coActionPlans[i]
+        })
+    }
+
+    res.status(200).json(data)
+}
+
 // module.exports.postCoPlan=async (req,res)=>{
 //     const {courseId,stats}=req.body
 //     let course=await courseModel.findById(courseId)
@@ -136,8 +154,8 @@ module.exports.getPoAtt=async (req,res)=>{
     for(let i=0;i<4;i++){
         let mulP=0,cP=0,mulPs=0
         for(let j=0;j<8;j++){
-            mulP=mulP+directCo[j]*po[j][i]
-            mulPs=mulPs+overallCo[j]*po[j][i]
+            mulP=mulP+directCo[j]*pso[j][i]
+            mulPs=mulPs+overallCo[j]*pso[j][i]
             cP=cP+po[j][i]
         }
         directPso.push(mulP/cP)

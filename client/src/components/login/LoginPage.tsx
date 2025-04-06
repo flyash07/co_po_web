@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"
 import "./LoginPage.css";
 
 interface LoginPageProps {
@@ -40,7 +41,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       localStorage.setItem("userName", output.name);
 
       setUser("Professor"); // You can dynamically determine role here if needed
+      if(onLogin){onLogin()}
       navigate("/dashboard");
+
+      Cookies.set("jwtToken", token, { expires: 1 }); // expires in 1 day
 
       // Reset
       setEmail("");

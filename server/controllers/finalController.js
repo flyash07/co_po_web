@@ -41,17 +41,36 @@ module.exports.getCoPlan=async (req,res)=>{
         data.push({
             stat:course.coStatements[i].description,
             targetSet:course.coAttainment[i].targetSet,
-            attained:(80*course.coAttainment[i].overall.inSem+20*course.coAttainment[i].overall.endSem)/100
+            attained:(80*course.coAttainment[i].overall.inSem+20*course.coAttainment[i].overall.endSem)/100,
+            action:course.coActionPlans[i]
         })
     }
 
     res.status(200).json(data)
 }
 
-module.exports.postCoPlan=async (req,res)=>{
-    const {courseId,stats}=req.body
-    let course=await courseModel.findById(courseId)
-    course.coActionPlans=stats
-    await course.save()
-    res.json({message:"Done"})
-}
+// module.exports.postCoPlan=async (req,res)=>{
+//     const {courseId,stats}=req.body
+//     let course=await courseModel.findById(courseId)
+//     course.coActionPlans=stats
+//     await course.save()
+//     res.json({message:"Done"})
+// }
+
+module.exports.postCoPlan = async (req, res) => {
+    try {
+        const { courseId, stats } = req.body;
+        let course = await courseModel.findById(courseId);
+
+        if (!course) return res.status(404).json({ message: "Course not found" });
+
+        // Ensure proper format
+        course.coActionPlans = stats.map(s => typeof s === 'string' ? { stat: s } : s);
+
+        await course.save();
+        res.json({ message: "Done" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};

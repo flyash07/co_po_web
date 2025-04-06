@@ -3,7 +3,7 @@ const marksModel = require("../models/marksModel")
 const studentModel = require("../models/studentModel")
 
 module.exports.getCie = async (req, res) => {
-        const { courseId } = req.body;
+        const { courseId } = req.query;
 
         const secObj = req.user.section.find(sec => sec.course == courseId);
         const sectionId = secObj ? secObj.section : null;

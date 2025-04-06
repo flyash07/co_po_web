@@ -10,7 +10,9 @@ const CoActionPlan: React.FC = () => {
         {name: "CO3",statement: "temp co 3",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
         {name: "CO4",statement: "temp co 4",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
         {name: "CO5",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO6",statement: "temp co 6",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""}
+        {name: "CO6",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
+        {name: "CO7",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
+        {name: "CO8",statement: "temp co 6",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""}
     ];
 
     const [coData, setCOData] = useState(temp_val);

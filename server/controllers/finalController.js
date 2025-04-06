@@ -59,14 +59,14 @@ module.exports.getPoPlan=async (req,res)=>{
         data.push({
             targetSet:course.poAttainment[i].targetSet,
             attained:course.poAttainment[i].attained,
-            action:course.poActionPlans[i] ? course.poActionPlans[i] : ' '
+            action:course.poActionPlans[i]
         })
     }
     for(let i=0;i<4;i++){
         data.push({
             targetSet:course.psoAttainment[i].targetSet,
             attained:course.psoAttainment[i].attained,
-            action:course.psoActionPlans[i]  ? course.psoActionPlans[i] : ' '
+            action:course.psoActionPlans[i]
         })
     }
 

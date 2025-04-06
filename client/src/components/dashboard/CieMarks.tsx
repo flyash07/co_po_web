@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, PureComponent } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import './CieMarks.css';
@@ -10,58 +10,35 @@ const CieMarks: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     useEffect(() => {
-        /*
-        axios.get('/cie/getCie', {
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+    
+        const courseId = localStorage.getItem('currentCourse'); // Ensure this is set correctly
+        console.log(courseId)
+        if (!token || !courseId) {
+            console.error("Missing token or courseId");
+            return;
+        }
+    
+        axios.get('http://localhost:8080/cie/getCie', {
             headers: {
-                'Authorization': 'Bearer JWT'
+                'Content-Type': 'application/json',
+                Authorization: `${token}`
             },
             params: {
-                courseId: 'course_id'
+                "courseId":courseId,
             }
         })
         .then(res => {
-            setStudents(res.data.students);
-            setSummary(res.data.summary);
+            setStudents(res.data.students || []);
+            setSummary(res.data.summary || {});
         })
-        .catch(err => console.error(err));
-        */
-
-        const dummySummary = {
-            "1": { avgAla: "2.00", level1: 0, level2: 10, level3: 0, count: 10 },
-            "2": { avgAla: "2.00", level1: 0, level2: 10, level3: 0, count: 10 },
-            "3": { avgAla: "1.00", level1: 10, level2: 0, level3: 0, count: 10 },
-            "4": { avgAla: "1.00", level1: 10, level2: 0, level3: 0, count: 10 },
-            "5": { avgAla: "1.00", level1: 10, level2: 0, level3: 0, count: 10 },
-        };
-
-        const dummyStudents = [
-            {
-                name: "Vedant Jain",
-                regNo: "200905182",
-                cie: {
-                    "1": { obtained: 5, total: 10, percentage: "50.00", ala: 2 },
-                    "2": { obtained: 2.5, total: 5, percentage: "50.00", ala: 2 },
-                    "3": { obtained: 2.5, total: 5, percentage: "50.00", ala: 2 },
-                    "4": { obtained: 2.5, total: 5, percentage: "50.00", ala: 2 },
-                    "5": { obtained: 2.5, total: 5, percentage: "50.00", ala: 2 },
-                }
-            },
-            {
-                name: "Soumyajit Saha",
-                regNo: "200905378",
-                cie: {
-                    "1": { obtained: 4, total: 10, percentage: "40.00", ala: 1 },
-                    "2": { obtained: 2, total: 5, percentage: "40.00", ala: 1 },
-                    "3": { obtained: 2, total: 5, percentage: "40.00", ala: 1 },
-                    "4": { obtained: 2, total: 5, percentage: "40.00", ala: 1 },
-                    "5": { obtained: 2, total: 5, percentage: "40.00", ala: 1 },
-                }
-            }
-        ];
-
-        setSummary(dummySummary);
-        setStudents(dummyStudents);
+        .catch(err => {
+            console.error("Failed to fetch CIE data:", err);
+        });
     }, []);
+    
 
     const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setAssignmentType(e.target.value);
@@ -78,38 +55,51 @@ const CieMarks: React.FC = () => {
             alert('Please select a file before submitting.');
             return;
         }
-
+    
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+    
+        const courseId = localStorage.getItem('currentCourse');
+    
+        if (!token || !courseId) {
+            console.error("Missing token or courseId");
+            alert("You're missing token or courseId. Please re-authenticate or refresh.");
+            return;
+        }
+    
         const reader = new FileReader();
         reader.onload = async (evt) => {
             try {
-                // const data = evt.target?.result;
-                // const workbook = XLSX.read(data, { type: 'binary' });
-                // const sheetName = workbook.SheetNames[0];
-                // const sheet = workbook.Sheets[sheetName];
-                // const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-                // const payload = {
-                //     data: jsonData,
-                //     courseId: '67f169134671cad48f7ba7e5', // Replace as needed
-                //     assignmentType: assignmentType
-                // };
-
-                // const res = await axios.post('/cie/postCie', payload, {
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'Authorization': 'Bearer YOUR_JWT_TOKEN'
-                //     }
-                // });
-
-                // alert(res.data.message || 'Upload successful');
+                const data = evt.target?.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(sheet);
+    
+                const payload = {
+                    data: jsonData,
+                    courseId: courseId,
+                    assignmentType: assignmentType
+                };
+    
+                const res = await axios.post('http://localhost:8080/cie/postCie', payload, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `${token}`
+                    }
+                });
+                console.log(res.data.message)
+                alert(res.data.message || 'Upload successful');
             } catch (error) {
                 console.error('Error uploading file', error);
                 alert('Upload failed');
             }
         };
-
+    
         reader.readAsBinaryString(selectedFile);
     };
+    
 
     const coKeys = students[0] ? Object.keys(students[0].cie) : [];
 

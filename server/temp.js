@@ -46,115 +46,151 @@
 
 //DB
 
-// const mongoose = require("mongoose");
-// const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-// const Prof = require("./models/proffesorModel");
-// const Course = require("./models/courseModel");
-// const Section = require("./models/sectionModel");
-// const Dept = require("./models/departmentModel"); // assuming you'll use some dept
+const Prof = require("./models/proffesorModel");
+const Course = require("./models/courseModel");
+const Section = require("./models/sectionModel");
+const Dept = require("./models/departmentModel"); // assuming you'll use some dept
 
-// async function createProfWithCourseAndSection() {
-//     try {
-//         await mongoose.connect("mongodb://localhost:27017/copo");
+async function createProfWithCourseAndSection() {
+    try {
+        await mongoose.connect("mongodb://localhost:27017/copo");
 
-//         // Use an existing dept or create one for demo
-//         let dept = await Dept.findOne();
-//         if (!dept) {
-//             dept = await Dept.create({ name: "CSE" });
-//         }
+        // Use an existing dept or create one for demo
+        let dept = await Dept.findOne();
+        if (!dept) {
+            dept = await Dept.create({ name: "CSE" });
+        }
 
-//         const hashedPassword = await bcrypt.hash("pass", 10);
+        const hashedPassword = await bcrypt.hash("pass", 10);
 
-//         // Create professor
-//         const prof = await Prof.create({
-//             facultyID: "pp01",
-//             name: "pp",
-//             email: "pp@university.edu",
-//             phoneNo: 1234567890,
-//             dept: dept._id,
-//             password: hashedPassword
-//         });
+        // Create professor
+        const prof = await Prof.create({
+            facultyID: "pp01",
+            name: "pp",
+            email: "pp@university.edu",
+            phoneNo: 1234567890,
+            dept: dept._id,
+            password: hashedPassword
+        });
 
-//         // Create course
-//         const course = await Course.create({
-//             courseID: "CS101",
-//             name: "Intro to CS",
-//             type: "Theory",
-//             coordinator: prof._id,
-//             program: "B.Tech",
-//             sem: "2",
-//             year: 2025,
-//             oddEven: "Even",
-//             dept: dept._id
-//         });
+        // Create course
+        const course = await Course.create({
+            courseID: "CS101",
+            name: "Intro to CS",
+            type: "Theory",
+            coordinator: prof._id,
+            program: "B.Tech",
+            sem: "2",
+            year: 2025,
+            oddEven: "Even",
+            dept: dept._id,
+            coStatements: [
+              { description: "Understand basic programming concepts", bloomsLevel: "L1" },
+              { description: "Apply logic to solve computational problems", bloomsLevel: "L2" },
+              { description: "Analyze algorithms for efficiency", bloomsLevel: "L3" },
+              { description: "Design simple software applications", bloomsLevel: "L4" },
+              { description: "Evaluate different data structures", bloomsLevel: "L5" },
+              { description: "Implement modular programming techniques", bloomsLevel: "L3" },
+              { description: "Communicate technical ideas clearly", bloomsLevel: "L2" },
+              { description: "Work effectively in team-based environments", bloomsLevel: "L1" }
+          ]
+        });
 
-//         // Add course to dept and prof
-//         dept.courses.push(course._id);
-//         await dept.save();
+        const course2 = await Course.create({
+          courseID: "CS102",
+          name: "ES",
+          type: "Theory",
+          coordinator: prof._id,
+          program: "B.Tech",
+          sem: "2",
+          year: 2025,
+          oddEven: "Even",
+          dept: dept._id,
+          coStatements: [
+            { description: "Understand basic programming concepts", bloomsLevel: "L1" },
+            { description: "Apply logic to solve computational problems", bloomsLevel: "L2" },
+            { description: "Analyze algorithms for efficiency", bloomsLevel: "L3" },
+            { description: "Design simple software applications", bloomsLevel: "L4" },
+            { description: "Evaluate different data structures", bloomsLevel: "L5" },
+            { description: "Implement modular programming techniques", bloomsLevel: "L3" },
+            { description: "Communicate technical ideas clearly", bloomsLevel: "L2" },
+            { description: "Work effectively in team-based environments", bloomsLevel: "L1" }
+        ]
+      });
 
-//         prof.currentlyTeaching.push(course._id);
-//         prof.hasTaught.push(course._id);
-//         await prof.save();
+        // Add course to dept and prof
+        dept.courses.push(course._id,course2._id);
+        await dept.save();
 
-//         // Create section
-//         const section = await Section.create({
-//             name: "A",
-//             dept: dept._id,
-//             program: "B.Tech",
-//             batch: "2024",
-//             sem: "2"
-//         });
+        prof.currentlyTeaching.push(course._id,course2._id);
+        prof.hasTaught.push(course._id);
+        await prof.save();
 
-//         // Link section to prof
-//         prof.section.push({
-//             course: course._id,
-//             section: section._id
-//         });
-//         await prof.save();
+        // Create section
+        const section = await Section.create({
+            name: "A",
+            dept: dept._id,
+            program: "B.Tech",
+            batch: "2024",
+            sem: "2"
+        });
 
-//         console.log("Professor, course, and section created successfully.");
-//         mongoose.disconnect();
-//     } catch (err) {
-//         console.error("Error:", err);
-//         mongoose.disconnect();
-//     }
-// }
+        // Link section to prof
+        prof.section.push({
+            course: course._id,
+            section: section._id
+        },{
+          course: course2._id,
+          section: section._id
+      }
+      );
+        await prof.save();
 
-// createProfWithCourseAndSection();
+        console.log("Professor, course, and section created successfully.");
+        mongoose.disconnect();
+    } catch (err) {
+        console.error("Error:", err);
+        mongoose.disconnect();
+    }
+}
 
-const mongoose = require('mongoose')
-const Course = require("./models/courseModel"); // adjust path as needed
-mongoose.connect("mongodb://localhost:27017/copo");
-const updateCourseWithCOs = async () => {
-    const courseId = "67f169134671cad48f7ba7e5"; // Replace with actual ObjectId
-    const randomDescriptions = [
-        "Understand basic programming concepts",
-        "Apply logic to solve computational problems",
-        "Analyze algorithms for efficiency",
-        "Design simple software applications",
-        "Evaluate different data structures",
-        "Implement modular programming techniques",
-        "Communicate technical ideas clearly",
-        "Work effectively in team-based environments"
-    ];
+createProfWithCourseAndSection();
 
-    const bloomsLevels = ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"];
+// const mongoose = require('mongoose')
+// const Course = require("./models/courseModel"); // adjust path as needed
+// mongoose.connect("mongodb://localhost:27017/copo");
+// const updateCourseWithCOs = async () => {
+//     const courseId = "67f169134671cad48f7ba7e5"; // Replace with actual ObjectId
+//     const randomDescriptions = [
+//         "Understand basic programming concepts",
+//         "Apply logic to solve computational problems",
+//         "Analyze algorithms for efficiency",
+//         "Design simple software applications",
+//         "Evaluate different data structures",
+//         "Implement modular programming techniques",
+//         "Communicate technical ideas clearly",
+//         "Work effectively in team-based environments"
+//     ];
 
-    const coStatements = randomDescriptions.map(desc => ({
-        description: desc,
-        bloomsLevel: bloomsLevels[Math.floor(Math.random() * bloomsLevels.length)]
-    }));
+//     const bloomsLevels = ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"];
 
-    await Course.findByIdAndUpdate(courseId, { coStatements });
+//     const coStatements = randomDescriptions.map(desc => ({
+//         description: desc,
+//         bloomsLevel: bloomsLevels[Math.floor(Math.random() * bloomsLevels.length)]
+//     }));
 
-    console.log("Course updated with CO statements!");
-};
+//     await Course.findByIdAndUpdate(courseId, { coStatements });
 
-updateCourseWithCOs()
-  .then(() => mongoose.disconnect())
-  .catch(err => {
-    console.error(err);
-    mongoose.disconnect(); // Ensure disconnection even on error
-  });
+//     console.log("Course updated with CO statements!");
+// };
+
+// updateCourseWithCOs()
+//   .then(() => mongoose.disconnect())
+//   .catch(err => {
+//     console.error(err);
+//     mongoose.disconnect(); // Ensure disconnection even on error
+//   });
 

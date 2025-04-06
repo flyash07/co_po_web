@@ -11,6 +11,7 @@ const {test}=require("./utils/testModel")
 const indexRouter=require('./routes/indexRouter')
 const courseRouter=require('./routes/courseRouter')
 const cieRouter=require('./routes/cieRouter')
+const feedbackRouter=require('./routes/feedbackRouter')
 
 const cors=require('cors')
 const corsParams={
@@ -29,4 +30,5 @@ app.use(cookieParser());
 app.use('/index',indexRouter)
 app.use('/course',courseRouter)
 app.use('/cie',cieRouter)
+app.use('/feedback',feedbackRouter)
 app.listen(8080)

@@ -4,7 +4,7 @@ import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
 import CoPoMapping from "./CoPoMapping"; 
-// import CieMarks from "./CieMarks";
+import CieMarks from "./CieMarks";
 // import SeeMarks from "./SeeMarks";
   import CourseFeedback from "./CourseFeedback";
 import CoAttainment from "./CoAttainment";
@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
     {
       name: "CO to PO Mapping",
       key: "co-po-mapping",
-      visibleTo: ["Coordinator"],
+      visibleTo: ["Coordinator","Professor"],
     },
     {
       name: "CIE Assessment Marks & Attainment",
@@ -157,8 +157,9 @@ const Dashboard: React.FC = () => {
         {selectedPage === "po-action-plan" && <PoActionPlan />}
         {selectedPage === "co-attainment" && <CoAttainment />}
         {selectedPage === "course-feedback" && <CourseFeedback />}
-        {/* 
         {selectedPage === "cie-marks" && <CieMarks />}
+        {/* 
+       
         {selectedPage === "see-marks" && <SeeMarks />}
         
          

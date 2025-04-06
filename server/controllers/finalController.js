@@ -198,7 +198,7 @@ module.exports.getPoAtt=async (req,res)=>{
         for(let j=0;j<8;j++){
             mulP=mulP+directCo[j]*pso[j][i]
             mulPs=mulPs+overallCo[j]*pso[j][i]
-            cP=cP+po[j][i]
+            cP=cP+pso[j][i]
         }
         directPso.push(mulP/cP)
         overallPso.push(mulPs/cP)

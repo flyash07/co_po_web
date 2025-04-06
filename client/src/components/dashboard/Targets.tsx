@@ -79,6 +79,60 @@ const Targets: React.FC = () => {
         setPoTargets(newArr);
     };
 
+    const handleSave = async () => {
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))?.split('=')[1];
+        const courseId = localStorage.getItem('currentCourse');
+
+        if (!token || !courseId) {
+            console.error("Missing token or courseId");
+            return;
+        }
+
+        try {
+            // POST to /course/postTargets
+            const response = await axios.post(
+                "http://localhost:8080/course/postTargets",
+                {
+                    courseId,
+                    coTargets: coCurrent.co.map(val => parseInt(val) || 0),
+                    poTargets: poTargets.slice(0, 12).map(val => parseInt(val) || 0),
+                    psoTargets: poTargets.slice(12).map(val => parseInt(val) || 0),
+                },
+                {
+                    headers: {
+                        Authorization: `${token}`
+                    }
+                }
+            );
+
+            console.log(response.data.message); // Should log "Target Updated"
+
+            // Fetch updated targets
+            const getResponse = await axios.get("http://localhost:8080/course/getTargets", {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${token}`
+                },
+                params: {
+                    courseId
+                }
+            });
+
+            const data = getResponse.data;
+            if (data) {
+                setCoPrev({ co: data.coPrevTargets.map(String) });
+                setCoAttained({ co: data.coPrevAttained.map(String) });
+                setCoCurrent({ co: data.coTargets.map(String) });
+                const fullPoTargets = [...data.poTargets, ...data.psoTargets].map(String);
+                setPoTargets(fullPoTargets);
+            }
+
+        } catch (error) {
+            console.error("Error saving targets:", error);
+        }
+    };
+
     const resetAll = () => {
         setCoPrev(defaultCOPrev);
         setCoAttained(defaultCOAttained);
@@ -151,7 +205,7 @@ const Targets: React.FC = () => {
             </table>
             <div className='button-row'>
                 <button className="reset-button" onClick={resetAll}>Reset All</button>
-                <button className="save-button">Save</button>
+                <button className="save-button" onClick={handleSave}>Save</button>
             </div>
         </div>
     );

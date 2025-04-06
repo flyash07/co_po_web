@@ -1,33 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Targets.css';
 
 const Targets: React.FC = () => {
-    // Default empty values for CO Attainment table
     const defaultCOPrev = { co: Array(8).fill('') };
     const defaultCOAttained = { co: Array(8).fill('') };
     const defaultCOCurrent = { co: Array(8).fill('') };
+    const defaultPO = Array(16).fill('');
 
     const [coPrev, setCoPrev] = useState(defaultCOPrev);
     const [coAttained, setCoAttained] = useState(defaultCOAttained);
     const [coCurrent, setCoCurrent] = useState(defaultCOCurrent);
-
-    const defaultPO = Array(16).fill('');
     const [poTargets, setPoTargets] = useState<string[]>(defaultPO);
 
+    // Fetch data when component mounts
+    useEffect(() => {
+        const fetchTargets = async () => {
+            const token = document.cookie.split('; ')
+                .find(row => row.startsWith('jwtToken='))
+                ?.split('=')[1];
+
+            const courseId = localStorage.getItem('currentCourse'); // Ensure this is set correctly
+
+            if (!token || !courseId) {
+                console.error("Missing token or courseId");
+                return;
+            }
+
+
+            console.log(token, courseId)
+
+            try {
+                const response = await axios.get("http://localhost:8080/course/getTargets", {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `${token}`
+                    },
+                    params: {
+                        courseId
+                    }
+                });
+                
+
+                const data = response.data;
+
+                if (data) {
+                    setCoPrev({ co: data.coPrevTargets.map(String) });
+                    setCoAttained({ co: data.coPrevAttained.map(String) });
+                    setCoCurrent({ co: data.coTargets.map(String) });
+
+                    const fullPoTargets = [...data.poTargets, ...data.psoTargets].map(String);
+                    setPoTargets(fullPoTargets);
+                }
+
+            } catch (error) {
+                console.error("Error fetching targets:", error);
+            }
+        };
+
+        fetchTargets();
+    }, []);
+
     const handleCOChange = (row: 'prev' | 'attained' | 'current', index: number, value: string) => {
-        if (row === 'prev') {
-            const newArr = [...coPrev.co];
+        const update = (coArr: string[], setter: (val: { co: string[] }) => void) => {
+            const newArr = [...coArr];
             newArr[index] = value;
-            setCoPrev({ co: newArr });
-        } else if (row === 'attained') {
-            const newArr = [...coAttained.co];
-            newArr[index] = value;
-            setCoAttained({ co: newArr });
-        } else if (row === 'current') {
-            const newArr = [...coCurrent.co];
-            newArr[index] = value;
-            setCoCurrent({ co: newArr });
-        }
+            setter({ co: newArr });
+        };
+
+        if (row === 'prev') update(coPrev.co, setCoPrev);
+        else if (row === 'attained') update(coAttained.co, setCoAttained);
+        else if (row === 'current') update(coCurrent.co, setCoCurrent);
     };
 
     const handlePOChange = (index: number, value: string) => {

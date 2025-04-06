@@ -1,4 +1,4 @@
-import React, { useState, useEffect, PureComponent } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import './CieMarks.css';
@@ -8,36 +8,38 @@ const CieMarks: React.FC = () => {
     const [students, setStudents] = useState<any[]>([]);
     const [summary, setSummary] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-    useEffect(() => {
+    const fetchCieData = async () => {
         const token = document.cookie.split('; ')
             .find(row => row.startsWith('jwtToken='))
             ?.split('=')[1];
     
-        const courseId = localStorage.getItem('currentCourse'); // Ensure this is set correctly
-        console.log(courseId)
+        const courseId = localStorage.getItem('currentCourse');
+    
         if (!token || !courseId) {
             console.error("Missing token or courseId");
             return;
         }
     
-        axios.get('http://localhost:8080/cie/getCie', {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `${token}`
-            },
-            params: {
-                "courseId":courseId,
-            }
-        })
-        .then(res => {
+        try {
+            const res = await axios.get('http://localhost:8080/cie/getCie', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${token}`
+                },
+                params: { courseId }
+            });
+    
             setStudents(res.data.students || []);
             setSummary(res.data.summary || {});
-        })
-        .catch(err => {
+        } catch (err) {
             console.error("Failed to fetch CIE data:", err);
-        });
+        }
+    };
+    
+    useEffect(() => {
+        fetchCieData();
     }, []);
+    
     
 
     const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -91,6 +93,7 @@ const CieMarks: React.FC = () => {
                 });
                 console.log(res.data.message)
                 alert(res.data.message || 'Upload successful');
+                await fetchCieData();
             } catch (error) {
                 console.error('Error uploading file', error);
                 alert('Upload failed');

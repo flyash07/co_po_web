@@ -1,32 +1,81 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './CoActionPlan.css';
 
+interface CODataItem {
+    name: string;
+    statement: string;
+    attained: number;
+    target: number;
+    achieved: string;
+    actionPlan: string;
+}
+
 const CoActionPlan: React.FC = () => {
-    //get api call
+    const [coData, setCOData] = useState<CODataItem[]>([]);
 
-    const temp_val = [
-        {name: "CO1",statement: "temp co 1",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO2",statement: "temp co 2",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO3",statement: "temp co 3",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO4",statement: "temp co 4",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO5",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO6",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO7",statement: "temp co 5",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""},
-        {name: "CO8",statement: "temp co 6",attained: 2.0,target: 2.0,achieved: "Y",actionPlan: ""}
-    ];
+    useEffect(() => {
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+    
+        const courseId = localStorage.getItem('currentCourse');
+        axios.get('http://localhost:8080/final/getCoPlan', {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${token}`
+            },
+            params: { courseId }
+        })  
+            .then(res => {
+                const data = res.data;
 
-    const [coData, setCOData] = useState(temp_val);
+                const mappedCOs: CODataItem[] = data.map((item: any, index: number) => {
+                    const target = item.targetSet ?? 0;
+                    const attained = item.attained ?? 0;
+
+                    return {
+                        name: `CO${index + 1}`,
+                        statement: item.stat ,
+                        attained,
+                        target,
+                        achieved: attained >= target ? 'Y' : 'N',
+                        actionPlan: item.action.stat
+                    };
+                });
+
+                setCOData(mappedCOs);
+            })
+            .catch(err => {
+                console.error("Error fetching CO data:", err);
+            });
+    }, []);
 
     const handleActionPlanChange = (index: number, value: string) => {
-        const updatedData = [...coData];
-        updatedData[index].actionPlan = value;
-        setCOData(updatedData);
+        const updated = [...coData];
+        updated[index].actionPlan = value;
+        setCOData(updated);
     };
 
-    const handleSave = () => {
-        console.log("saved");
-        // post api call
+    const handleSave = async () => {
+        const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+        const courseId = localStorage.getItem('currentCourse');
+        const payload = {
+            stats: coData.map(co => co.actionPlan),
+            courseId: courseId, 
+        };
+    
+        const res=await axios.post('http://localhost:8080/final/postAction', payload, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${token}`
+            }
+        });
+        console.log(res.data.message)
     };
+    
 
     return (
         <div className="course-targets-container">
@@ -47,9 +96,11 @@ const CoActionPlan: React.FC = () => {
                         <tr key={index}>
                             <td>{co.name}</td>
                             <td>{co.statement}</td>
-                            <td>{co.target}</td>
-                            <td>{co.attained}</td>
-                            <td>{co.achieved}</td>
+                            <td>{co.target.toFixed(2)}</td>
+                            <td>{co.attained.toFixed(2)}</td>
+                            <td style={{ color: co.achieved === 'Y' ? 'green' : 'red', fontWeight: 'bold' }}>
+                                {co.achieved}
+                            </td>
                             <td>
                                 <input
                                     type="text"

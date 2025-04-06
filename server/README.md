@@ -719,3 +719,158 @@ courseId:67f259f677f31bdad6d1dc16
     ]
 }
 ```
+## `/final/getPoPlan` Endpoint
+
+### Description
+
+GET PO ACTION PLAN PAGE
+
+### HTTP Method
+
+`GET`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `params`(Sample below)
+```
+courseId:67f259f677f31bdad6d1dc16
+```
+  
+### Response Type
+
+- `JSON`:Object
+
+### Example Response
+```
+[
+    {
+        "targetSet": 1,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 1,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 1,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 2,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 1,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 1,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    },
+    {
+        "targetSet": 0,
+        "attained": 0,
+        "action": " "
+    }
+]
+```
+## `final/postPoPlan` Endpoint
+
+### Description
+
+GET PO ACTION PLAN PAGE
+
+### HTTP Method
+
+`GET`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+    "updates":[
+  "Improve syllabus clarity",
+  "Conduct remedial classes",
+  "Use case-based teaching",
+  "Organize coding contests",
+  "Introduce quizzes",
+  "Invite guest lectures",
+  "Hands-on lab sessions",
+  "Weekly assignments",
+  "Peer assessments",
+  "Encourage research projects",
+  "Soft skill workshops",
+  "Extra problem-solving sessions",
+  "Bridge course for weak students",
+  "Industry-based projects",
+  "Advanced lab training",
+  "One-on-one mentoring"
+],
+"courseId":"67f284aefae8a333cd2bf532"
+}
+```
+  
+### Response Type
+
+- `JSON`:Object
+
+### Example Response
+```
+{
+    "message": "Action plans updated successfully",
+}
+```

@@ -54,13 +54,19 @@ module.exports.getPoPlan=async (req,res)=>{
     const course=await courseModel.findById(courseId)
 
     data=[]
-    console.log(course.coStatements)
     for(let i=0;i<12;i++){
+        console.log(course.poActionPlans[i])
         data.push({
-            stat:course.coStatements[i].description,
-            targetSet:course.coAttainment[i].targetSet,
-            attained:(80*course.coAttainment[i].overall.inSem+20*course.coAttainment[i].overall.endSem)/100,
-            action:course.coActionPlans[i]
+            targetSet:course.poAttainment[i].targetSet,
+            attained:course.poAttainment[i].attained,
+            action:course.poActionPlans[i] ? course.poActionPlans[i] : ' '
+        })
+    }
+    for(let i=0;i<4;i++){
+        data.push({
+            targetSet:course.psoAttainment[i].targetSet,
+            attained:course.psoAttainment[i].attained,
+            action:course.psoActionPlans[i]  ? course.psoActionPlans[i] : ' '
         })
     }
 
@@ -92,6 +98,42 @@ module.exports.postCoPlan = async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 };
+
+module.exports.postPoPlan=async(req,res)=>{
+    const { courseId, updates } = req.body;
+
+        if (!Array.isArray(updates) || updates.length !== 16) {
+            return res.status(400).json({ message: 'Expected array of 16 strings' });
+        }
+
+        const poActionPlans = [];
+        const psoActionPlans = [];
+
+        // First 12 for PO
+        for (let i = 0; i < 12; i++) {
+            poActionPlans.push({ stat: updates[i] });
+        }
+
+        // Next 4 for PSO
+        for (let i = 12; i < 16; i++) {
+            psoActionPlans.push({ stat: updates[i] });
+        }
+
+        const updatedCourse = await courseModel.findByIdAndUpdate(
+            courseId,
+            {
+                poActionPlans,
+                psoActionPlans
+            },
+            { new: true, upsert: false }
+        );
+
+        if (!updatedCourse) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        res.status(200).json({ message: 'Action plans updated successfully'});
+}
 
 module.exports.getPoAtt=async (req,res)=>{
     const {courseId}=req.query

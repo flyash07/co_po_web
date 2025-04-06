@@ -74,3 +74,88 @@ module.exports.postCoPlan = async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 };
+
+module.exports.getPoAtt=async (req,res)=>{
+    const {courseId}=req.query
+    const course=await courseModel.findById(courseId)
+
+    const directCo=[]
+    const overallCo=[]
+    const po=[]
+    const pso=[]
+    const targetPo=[]
+    const targetPso=[]
+    const directPo=[]
+    const overallPo=[]
+    const directPso=[]
+    const overallPso=[]
+
+    for(let i=0;i<8;i++){
+        directCo.push(course.coAttainment[i].direct.finalCo)
+        overallCo.push(course.coAttainment[i].overall.finalCo)
+    }
+
+    for(let i=0;i<8;i++){
+        let temp=[]
+        for(let j=0;j<12;j++){
+            temp.push(course.coPoMapping[i*12+j].value)
+        }
+        po.push(temp)
+    }
+
+    for(let i=0;i<8;i++){
+        let temp=[]
+        for(let j=0;j<4;j++){
+            console.log(i*4+j)
+            temp.push(course.coPsoMapping[i*4+j].value)
+        }
+        pso.push(temp)
+    }
+
+    for(let i=0;i<12;i++){
+        targetPo.push(course.poAttainment[i].targetSet)
+    }
+
+    for(let i=0;i<4;i++){
+        targetPso.push(course.psoAttainment[i].targetSet)
+    }
+
+    for(let i=0;i<12;i++){
+        let mulP=0,cP=0,mulPs=0
+        for(let j=0;j<8;j++){
+            mulP=mulP+directCo[j]*po[j][i]
+            mulPs=mulPs+overallCo[j]*po[j][i]
+            cP=cP+po[j][i]
+        }
+        directPo.push(mulP/cP)
+        overallPo.push(mulPs/cP)
+        course.poAttainment[i].attained=mulPs/cP
+        await course.save()
+    }
+
+    for(let i=0;i<4;i++){
+        let mulP=0,cP=0,mulPs=0
+        for(let j=0;j<8;j++){
+            mulP=mulP+directCo[j]*po[j][i]
+            mulPs=mulPs+overallCo[j]*po[j][i]
+            cP=cP+po[j][i]
+        }
+        directPso.push(mulP/cP)
+        overallPso.push(mulPs/cP)
+        course.psoAttainment[i].attained=mulPs/cP
+        await course.save()
+    }
+
+    res.status(200).json({
+        directCo,
+        overallCo,
+        po,
+        pso,
+        targetPo,
+        targetPso,
+        directPo,
+        overallPo,
+        directPso,
+        overallPso
+    })
+}

@@ -44,7 +44,8 @@ const courseSchema=mongoose.Schema({
     poAttainment: {
         type: [
             {
-                targetSet: { type: Number, default: 0 }
+                targetSet: { type: Number, default: 0 },
+                attained: {type:Number, default:0}
             }
         ],
         default: () => Array.from({ length: 12 }, () => ({ targetSet: 0 }))
@@ -52,7 +53,8 @@ const courseSchema=mongoose.Schema({
     psoAttainment: {
         type: [
             {
-                targetSet: { type: Number, default: 0 }
+                targetSet: { type: Number, default: 0 },
+                attained: {type:Number, default:0}
             }
         ],
         default: () => Array.from({ length: 4 }, () => ({ targetSet: 0 }))

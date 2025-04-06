@@ -1,11 +1,9 @@
-// This file defines a UserContext for managing the logged-in user's role (e.g., Prof, HOD, Subject Coordinator).
-// It provides a UserProvider to wrap the application and a useUser hook for accessing and updating the user role.
-
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
 interface UserContextType {
   user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
+  setUser: (user: string) => void;
+  logout: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -15,10 +13,28 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<string>("");
+  const [user, setUserState] = useState<string>("");
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserState(storedUser);
+    }
+  }, []);
+
+  const setUser = (user: string) => {
+    setUserState(user);
+    localStorage.setItem("user", user);
+  };
+
+  const logout = () => {
+    setUserState("");
+    localStorage.removeItem("user");
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, logout }}>
       {children}
     </UserContext.Provider>
   );

@@ -1,23 +1,42 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
 import CoPoMapping from "./CoPoMapping"; 
 import CieMarks from "./CieMarks";
-// import SeeMarks from "./SeeMarks";
+import SeeMarks from "./SeeMarks";
   import CourseFeedback from "./CourseFeedback";
 import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
-// import PoPsoAttainment from "./PoPsoAttainment"; //tonight
+// import PoPsoAttainment from "./PoPsoAttainment";
 import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
+
+interface Course {
+  id: string;
+  name: string;
+}
 
 const Dashboard: React.FC = () => {
   const { user } = useUser();
   const [selectedPage, setSelectedPage] = useState<null | string>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [courseNames, setCourseNames] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const storedCourses = localStorage.getItem("courseNames");
+    if (storedCourses) {
+      try {
+        const parsedCourses = JSON.parse(storedCourses);
+        setCourseNames(parsedCourses);
+      } catch (err) {
+        console.error("Failed to parse courseNames from localStorage");
+      }
+    }
+  }, []);
 
   const links = [
     {
@@ -93,14 +112,23 @@ const Dashboard: React.FC = () => {
           <>
             <h2 className="prof-name">{user}</h2>
             <div className="dropdown">
-              <button className="dropdown-btn">Options ▼</button>
+              <button className="dropdown-btn">Courses ▼</button>
               <div className="dropdown-content">
-                <button onClick={() => alert("Option 1 Selected")}>
-                  Option 1
-                </button>
-                <button onClick={() => alert("Option 2 Selected")}>
-                  Option 2
-                </button>
+                {courseNames.length > 0 ? (
+                  courseNames.map((course) => (
+                    <button
+                      key={course.id}
+                      onClick={() => {
+                        localStorage.setItem("currentCourse", course.id);
+                        alert(`Selected course: ${course.name}`);
+                      }}
+                    >
+                      {course.name}
+                    </button>
+                  ))
+                ) : (
+                  <p style={{ padding: "0.5rem" }}>No Courses Found</p>
+                )}
               </div>
             </div>
           </>
@@ -109,7 +137,6 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Back Button - Show when inside a subpage */}
         {selectedPage && (
           <div className="back-button-container">
             <button
@@ -121,9 +148,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Content Wrapper with Scroll */}
         <div className="content-wrapper">
-          {/* Show Dashboard Links ONLY on the main dashboard */}
           {!selectedPage && (
             <>
               <h1>Dashboard</h1>
@@ -158,9 +183,10 @@ const Dashboard: React.FC = () => {
         {selectedPage === "co-attainment" && <CoAttainment />}
         {selectedPage === "course-feedback" && <CourseFeedback />}
         {selectedPage === "cie-marks" && <CieMarks />}
+        {selectedPage === "see-marks" && <SeeMarks />}
         {/* 
        
-        {selectedPage === "see-marks" && <SeeMarks />}
+        
         
          
         

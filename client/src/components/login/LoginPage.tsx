@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
+import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import "./LoginPage.css"; 
+import "./LoginPage.css";
 
 interface LoginPageProps {
   onLogin?: () => void;
@@ -14,7 +17,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!email || !password) {
@@ -22,20 +25,33 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       return;
     }
 
-    //API CALL
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/index/login",
+        { email, password }
+      );
 
-    console.log("Logging in with:", { email, password });
+      const {token, output} = response.data;
+      console.log("Login successful:", output);
 
-    setUser("Professor");
+      // Store course names and user role/info
+      localStorage.setItem("courseNames", JSON.stringify(output.courseNames));
+      localStorage.setItem("userEmail", output.email);
+      localStorage.setItem("userName", output.name);
 
-    if (onLogin) {
-      onLogin();
+      setUser("Professor"); // You can dynamically determine role here if needed
+      navigate("/dashboard");
+
+      // Reset
+      setEmail("");
+      setPassword("");
+      setErrorMessage("");
+    } catch (error: any) {
+      console.error("Login failed:", error);
+      setErrorMessage(
+        error.response?.data?.message || "Login failed. Try again."
+      );
     }
-    navigate("/dashboard");
-
-    setEmail("");
-    setPassword("");
-    setErrorMessage("");
   };
 
   return (
@@ -57,7 +73,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="submit-button">Login</button>
+        <button type="submit" className="submit-button">
+          Login
+        </button>
       </form>
     </div>
   );

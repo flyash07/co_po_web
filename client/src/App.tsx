@@ -90,6 +90,14 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+            <Route
+            path="/dashboard/CourseFeedback"
+            element={
+              <ProtectedRoute requiredRole="Professor">
+                <CoPoMapping/>
+              </ProtectedRoute>
+            }
+          />
           {/* <Route
             path="smtg"
             element={

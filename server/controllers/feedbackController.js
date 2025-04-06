@@ -1,5 +1,6 @@
 const marksModel = require("../models/marksModel");
 const studentModel = require("../models/studentModel");
+const courseModel = require("../models/courseModel")
 
 module.exports.getFeedback=async (req,res)=>{
     const { courseId } = req.body;
@@ -68,6 +69,13 @@ module.exports.getFeedback=async (req,res)=>{
             attainmentLevel
         });
     }
+
+    let course=await courseModel.findById(courseId)
+    for(let i=0;i<summary.length;i++){
+      console.log(summary[i].coNum)
+      course.coAttainment[summary[i].coNum-1].overall.endSem=summary[i].attainmentLevel
+    }
+    await course.save()
 
     // Course Weighted Average (CF)
     const courseCF = summary.length ? (cfSum / summary.length).toFixed(2) : 0;

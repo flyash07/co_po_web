@@ -122,6 +122,10 @@ const courseSchema=mongoose.Schema({
             co:Number,
             maxMarks:Number
         }
+    ],
+    coActionPlans:[{
+        stat:String
+    }
     ]
 })
 

@@ -102,7 +102,20 @@ module.exports.getCie = async (req, res) => {
                 count:coStudentCounts[co]
             };
         });
-    
+        console.log("Updating coursee")
+        Object.keys(summary).forEach(co => {
+            const index = parseInt(co);
+            const coData = summary[co];
+        
+            // Make sure index is in bounds
+            if (index >= 0 && index < course.coAttainment.length) {
+                console.log(index)
+                course.coAttainment[index-1].direct.inSem = parseFloat(coData.avgAla); // or coData.level1, etc.
+            }
+        });
+        
+        await course.save();
+
         res.json({ students: result, summary });
 };
 
@@ -206,6 +219,19 @@ module.exports.getSee = async (req, res) => {
             count:coStudentCounts[co]
         };
     });
+
+    Object.keys(summary).forEach(co => {
+        const index = parseInt(co);
+        const coData = summary[co];
+    
+        // Make sure index is in bounds
+        if (index >= 0 && index < course.coAttainment.length) {
+            console.log(index)
+            course.coAttainment[index-1].direct.endSem = parseFloat(coData.avgAla); // or coData.level1, etc.
+        }
+    });
+    
+    await course.save();
 
     res.json({ students: result, summary });
 };

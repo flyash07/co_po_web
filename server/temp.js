@@ -46,80 +46,115 @@
 
 //DB
 
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+// const mongoose = require("mongoose");
+// const bcrypt = require("bcrypt");
 
-const Prof = require("./models/proffesorModel");
-const Course = require("./models/courseModel");
-const Section = require("./models/sectionModel");
-const Dept = require("./models/departmentModel"); // assuming you'll use some dept
+// const Prof = require("./models/proffesorModel");
+// const Course = require("./models/courseModel");
+// const Section = require("./models/sectionModel");
+// const Dept = require("./models/departmentModel"); // assuming you'll use some dept
 
-async function createProfWithCourseAndSection() {
-    try {
-        await mongoose.connect("mongodb://localhost:27017/copo");
+// async function createProfWithCourseAndSection() {
+//     try {
+//         await mongoose.connect("mongodb://localhost:27017/copo");
 
-        // Use an existing dept or create one for demo
-        let dept = await Dept.findOne();
-        if (!dept) {
-            dept = await Dept.create({ name: "CSE" });
-        }
+//         // Use an existing dept or create one for demo
+//         let dept = await Dept.findOne();
+//         if (!dept) {
+//             dept = await Dept.create({ name: "CSE" });
+//         }
 
-        const hashedPassword = await bcrypt.hash("pass", 10);
+//         const hashedPassword = await bcrypt.hash("pass", 10);
 
-        // Create professor
-        const prof = await Prof.create({
-            facultyID: "pp01",
-            name: "pp",
-            email: "pp@university.edu",
-            phoneNo: 1234567890,
-            dept: dept._id,
-            password: hashedPassword
-        });
+//         // Create professor
+//         const prof = await Prof.create({
+//             facultyID: "pp01",
+//             name: "pp",
+//             email: "pp@university.edu",
+//             phoneNo: 1234567890,
+//             dept: dept._id,
+//             password: hashedPassword
+//         });
 
-        // Create course
-        const course = await Course.create({
-            courseID: "CS101",
-            name: "Intro to CS",
-            type: "Theory",
-            coordinator: prof._id,
-            program: "B.Tech",
-            sem: "2",
-            year: 2025,
-            oddEven: "Even",
-            dept: dept._id
-        });
+//         // Create course
+//         const course = await Course.create({
+//             courseID: "CS101",
+//             name: "Intro to CS",
+//             type: "Theory",
+//             coordinator: prof._id,
+//             program: "B.Tech",
+//             sem: "2",
+//             year: 2025,
+//             oddEven: "Even",
+//             dept: dept._id
+//         });
 
-        // Add course to dept and prof
-        dept.courses.push(course._id);
-        await dept.save();
+//         // Add course to dept and prof
+//         dept.courses.push(course._id);
+//         await dept.save();
 
-        prof.currentlyTeaching.push(course._id);
-        prof.hasTaught.push(course._id);
-        await prof.save();
+//         prof.currentlyTeaching.push(course._id);
+//         prof.hasTaught.push(course._id);
+//         await prof.save();
 
-        // Create section
-        const section = await Section.create({
-            name: "A",
-            dept: dept._id,
-            program: "B.Tech",
-            batch: "2024",
-            sem: "2"
-        });
+//         // Create section
+//         const section = await Section.create({
+//             name: "A",
+//             dept: dept._id,
+//             program: "B.Tech",
+//             batch: "2024",
+//             sem: "2"
+//         });
 
-        // Link section to prof
-        prof.section.push({
-            course: course._id,
-            section: section._id
-        });
-        await prof.save();
+//         // Link section to prof
+//         prof.section.push({
+//             course: course._id,
+//             section: section._id
+//         });
+//         await prof.save();
 
-        console.log("Professor, course, and section created successfully.");
-        mongoose.disconnect();
-    } catch (err) {
-        console.error("Error:", err);
-        mongoose.disconnect();
-    }
-}
+//         console.log("Professor, course, and section created successfully.");
+//         mongoose.disconnect();
+//     } catch (err) {
+//         console.error("Error:", err);
+//         mongoose.disconnect();
+//     }
+// }
 
-createProfWithCourseAndSection();
+// createProfWithCourseAndSection();
+
+const mongoose = require('mongoose')
+const Course = require("./models/courseModel"); // adjust path as needed
+mongoose.connect("mongodb://localhost:27017/copo");
+const updateCourseWithCOs = async () => {
+    const courseId = "67f169134671cad48f7ba7e5"; // Replace with actual ObjectId
+    const randomDescriptions = [
+        "Understand basic programming concepts",
+        "Apply logic to solve computational problems",
+        "Analyze algorithms for efficiency",
+        "Design simple software applications",
+        "Evaluate different data structures",
+        "Implement modular programming techniques",
+        "Communicate technical ideas clearly",
+        "Work effectively in team-based environments"
+    ];
+
+    const bloomsLevels = ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"];
+
+    const coStatements = randomDescriptions.map(desc => ({
+        description: desc,
+        bloomsLevel: bloomsLevels[Math.floor(Math.random() * bloomsLevels.length)]
+    }));
+
+    await Course.findByIdAndUpdate(courseId, { coStatements });
+
+    console.log("Course updated with CO statements!");
+};
+
+updateCourseWithCOs()
+  .then(() => mongoose.disconnect())
+  .catch(err => {
+    console.error(err);
+    mongoose.disconnect(); // Ensure disconnection even on error
+  });
 

@@ -315,3 +315,198 @@ Excel data to populate the db
     "message": "Updated DB"
 }
 ```
+
+## `/cie/getSee` Endpoint
+
+### Description
+
+Show see
+
+### HTTP Method
+
+`Get`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+    courseId:String
+}
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "students": [
+        {
+            "name": "Aanya",
+            "regNo": 395820614,
+            "cie": {
+                "1": {
+                    "obtained": 7.5,
+                    "total": 11,
+                    "percentage": "68.18",
+                    "ala": 2
+                },
+                "2": {
+                    "obtained": 8.5,
+                    "total": 11,
+                    "percentage": "77.27",
+                    "ala": 3
+                },
+                "3": {
+                    "obtained": 9,
+                    "total": 11,
+                    "percentage": "81.82",
+                    "ala": 3
+                },
+                "4": {
+                    "obtained": 9,
+                    "total": 11,
+                    "percentage": "81.82",
+                    "ala": 3
+                },
+                "5": {
+                    "obtained": 7,
+                    "total": 11,
+                    "percentage": "63.64",
+                    "ala": 2
+                }
+            }
+        },
+        ..Multiple students
+    ],
+    "summary": {
+        "1": {
+            "avgAla": "2.70",
+            "level1": 0,
+            "level2": 3,
+            "level3": 7,
+            "count": 10
+        },
+        ..Co levels
+    }
+}
+```
+## `/feedback/getFeedback` Endpoint
+
+### Description
+
+show feedback
+
+### HTTP Method
+
+`Get`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+    courseId:String
+}
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "coSummary": [
+        {
+            "coNum": 1,
+            "counts": {
+                "1": 0,
+                "2": 0,
+                "3": 2,
+                "4": 5,
+                "5": 3
+            },
+            "totalStudents": 10,
+            "weightedScore": "4.10",
+            "attainmentLevel": 3
+        },
+        ..Other COs
+    ],
+    "courseCF": "4.01",
+    "courseAttainment": 3,
+    "studentFeedbackData": [
+        {
+            "name": "Aanya",
+            "regNo": 395820614,
+            "coValues": {
+                "1": 4,
+                "2": 5,
+                "3": 3,
+                "4": 4,
+                "5": 4,
+                "6": 3,
+                "7": 4
+            }
+        },
+        ..Other students
+    ]
+}
+```
+## `/feedback/postFeedback` Endpoint
+
+### Description
+
+send feedback
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+"data":[
+  {
+    "co1": 5,
+    "co2": 5,
+    "co3": 5,
+    "co4": 5,
+    "co5": 5,
+    "co6": 5,
+    "co7": 5
+  },
+  {
+    "name": "Aanya",
+    "regno": 395820614,
+    "co1": 4,
+    "co2": 5,
+    "co3": 3,
+    "co4": 4,
+    "co5": 4,
+    "co6": 3,
+    "co7": 4
+  },
+  ..Other students
+],
+"courseId":"67f169134671cad48f7ba7e5"
+}
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "Feedback submitted successfully."
+}
+```

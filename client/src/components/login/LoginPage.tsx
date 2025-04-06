@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"
 import "./LoginPage.css";
 
@@ -44,7 +44,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       if(onLogin){onLogin()}
       navigate("/dashboard");
 
-      Cookies.set("jwtToken", token, { expires: 1 }); // expires in 1 day
+      console.log(token,output)
+
+      Cookies.set("jwtToken", token); // expires in 1 day
 
       // Reset
       setEmail("");

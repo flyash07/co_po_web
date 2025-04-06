@@ -27,15 +27,20 @@ const Targets: React.FC = () => {
                 return;
             }
 
+
+            console.log(token, courseId)
+
             try {
-                const response = await axios.get("http://localhost:8080/targets", {
+                const response = await axios.get("http://localhost:8080/course/getTargets", {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        'Content-Type': 'application/json',
+                        Authorization: `${token}`
                     },
-                    data: {
+                    params: {
                         courseId
                     }
                 });
+                
 
                 const data = response.data;
 

@@ -510,3 +510,79 @@ send feedback
     "message": "Feedback submitted successfully."
 }
 ```
+## `/course/postPoCo` Endpoint
+
+### Description
+
+Send Po, PSO, CO Mapping
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+   "inputArray":[
+  [1, 2, 0, 1, 3, 0, 2, 0, 1, 0, 2, 1,  1, 0, 2, 1],
+  [0, 1, 3, 2, 0, 1, 1, 0, 0, 1, 2, 0,  2, 1, 0, 0],
+  [2, 0, 1, 3, 1, 2, 0, 2, 1, 0, 1, 3,  1, 1, 0, 2],
+  [0, 0, 0, 1, 2, 1, 3, 0, 0, 2, 1, 1,  0, 2, 1, 0],
+  [3, 1, 2, 0, 0, 1, 0, 2, 3, 0, 1, 2,  1, 0, 0, 1],
+  [1, 3, 0, 0, 2, 2, 1, 0, 1, 1, 0, 3,  3, 2, 1, 0],
+  [0, 0, 1, 2, 1, 0, 2, 1, 0, 3, 2, 1,  2, 1, 3, 0],
+  [2, 2, 0, 1, 3, 1, 0, 0, 1, 2, 0, 1,  1, 2, 0, 2]
+],
+"courseId":"67f259f677f31bdad6d1dc16"
+}
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "Mappings saved successfully"
+}
+```
+
+## `/course/getCoPo` Endpoint
+
+### Description
+
+RECV Po, PSO, CO Mapping
+
+### HTTP Method
+
+`GET`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `params`(Sample below)
+```
+courseId:67f259f677f31bdad6d1dc16
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+[
+  [1, 2, 0, 1, 3, 0, 2, 0, 1, 0, 2, 1,  1, 0, 2, 1],
+  [0, 1, 3, 2, 0, 1, 1, 0, 0, 1, 2, 0,  2, 1, 0, 0],
+  [2, 0, 1, 3, 1, 2, 0, 2, 1, 0, 1, 3,  1, 1, 0, 2],
+  [0, 0, 0, 1, 2, 1, 3, 0, 0, 2, 1, 1,  0, 2, 1, 0],
+  [3, 1, 2, 0, 0, 1, 0, 2, 3, 0, 1, 2,  1, 0, 0, 1],
+  [1, 3, 0, 0, 2, 2, 1, 0, 1, 1, 0, 3,  3, 2, 1, 0],
+  [0, 0, 1, 2, 1, 0, 2, 1, 0, 3, 2, 1,  2, 1, 3, 0],
+  [2, 2, 0, 1, 3, 1, 0, 0, 1, 2, 0, 1,  1, 2, 0, 2]
+]
+```

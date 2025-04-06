@@ -128,7 +128,15 @@ const courseSchema=mongoose.Schema({
     coActionPlans:[{
         stat:String
     }
-    ]
+    ],
+    poActionPlans:[{
+        stat:String
+    }
+    ],
+    psoActionPlans:[{
+        stat:String
+    }
+    ],
 })
 
 module.exports=mongoose.model("course",courseSchema)

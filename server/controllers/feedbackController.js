@@ -3,7 +3,7 @@ const studentModel = require("../models/studentModel");
 const courseModel = require("../models/courseModel")
 
 module.exports.getFeedback=async (req,res)=>{
-    const { courseId } = req.body;
+    const { courseId } = req.query;
 
     const secObj = req.user.section.find(sec => sec.course == courseId);
     const sectionId = secObj ? secObj.section : null;

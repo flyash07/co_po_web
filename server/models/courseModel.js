@@ -13,51 +13,17 @@ const courseSchema=mongoose.Schema({
     sem:String,
     year:Number,
     oddEven:String,
-    coStatements:[
-        {
-            description:String,
-            bloomsLevel:String
-        }
-    ],
-    coAttainment:{
-        type: [
+    coStatements:{
+        type:[
             {
-                targetSet: { type: Number, default: 0 },
-                direct: {
-                    inSem: { type: Number, default: 0 },
-                    endSem: { type: Number, default: 0 },
-                    finalCo: { type: Number, default: 0 }
-                },
-                overall: {
-                    inSem: { type: Number, default: 0 },
-                    endSem: { type: Number, default: 0 },
-                    finalCo: { type: Number, default: 0 }
-                }
+                description: { type: String, default: null },
+                bloomsLevel: { type: String, default: null }
             }
         ],
         default: () => Array.from({ length: 8 }, () => ({
-            targetSet: 0,
-            direct: { inSem: 0, endSem: 0, finalCo: 0 },
-            overall: { inSem: 0, endSem: 0, finalCo: 0 }
+            description: null,
+            bloomsLevel: null
         }))
-    },
-    poAttainment: {
-        type: [
-            {
-                targetSet: { type: Number, default: 0 },
-                attained: {type:Number, default:0}
-            }
-        ],
-        default: () => Array.from({ length: 12 }, () => ({ targetSet: 0 }))
-    },
-    psoAttainment: {
-        type: [
-            {
-                targetSet: { type: Number, default: 0 },
-                attained: {type:Number, default:0}
-            }
-        ],
-        default: () => Array.from({ length: 4 }, () => ({ targetSet: 0 }))
     },
     coPoMapping:[
         {
@@ -124,18 +90,6 @@ const courseSchema=mongoose.Schema({
             co:Number,
             maxMarks:Number
         }
-    ],
-    coActionPlans:[{
-        stat:String
-    }
-    ],
-    poActionPlans:[{
-        stat:String
-    }
-    ],
-    psoActionPlans:[{
-        stat:String
-    }
     ],
 })
 

@@ -17,13 +17,6 @@ const profSchema=mongoose.Schema({
         }],
         default:[]
     },
-    currentlyTeaching:{
-        type:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"courses"
-        }],
-        default:[]
-    },
     password:String,
     section:[
         {

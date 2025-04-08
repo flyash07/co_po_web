@@ -9,6 +9,14 @@ const marksSchema=mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:"course"
     },
+    status: {
+        ass1: { type: Boolean, default: false },
+        ass2: { type: Boolean, default: false },
+        ass3: { type: Boolean, default: false },
+        ass4: { type: Boolean, default: false },
+        midSem: { type: Boolean, default: false },
+        endSem: { type: Boolean, default: false }
+    },
     ass1:[
         {
             qNo:Number,
@@ -62,7 +70,8 @@ const marksSchema=mongoose.Schema({
             coNum:Number,
             value:Number
         }
-    ]
+    ],
+    grade:String
 })
 
 module.exports=mongoose.model("marks",marksSchema)

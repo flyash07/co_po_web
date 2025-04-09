@@ -24,25 +24,26 @@ The request body should be in JSON format and include the following fields:
   
 ### Response Type
 
-- `token` (string, JWT token)
-- `output`
-  - `name` (String)
-  - `email` (String)
-  - `courseName` (List of Objects with course name and id)
+see below
 
 ### Example Response
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhamVzaC5rdW1hckB1bml2ZXJzaXR5LmVkdSIsImlkIjoiNjdlY2MyMmRmZjljZjdhNmYzZjQyYWU2IiwiaWF0IjoxNzQzNjY1MTY4fQ.aS4sQl2BWPKKg3JUVbsnfy_90rEqUjU5vKT57Z1wEQg",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsaWNlQHVuaXYuZWR1IiwiaWQiOiI2N2Y2NWIzMzlmY2EwMjkxNmIwYWY2ZDUiLCJpYXQiOjE3NDQxOTg1NTh9.nscBHcZPC4Y7ywX4rNxGD78VglrTtx3R90m5ck6AI1U",
     "output": {
-"name": "Dr. Rajesh Kumar",
-"email": "rajesh.kumar@university.edu",
-"courseNames": [
-    {
-"id": "67ecc22dff9cf7a6f3f42af0",
-"name": "Data Structures and Algorithms"
-    }
-]
+        "name": "Dr. Alice",
+        "designation": "Associate Professor",
+        "code": "P001",
+        "email": "alice@univ.edu",
+        "courseNames": [
+            {
+                "id": "67f65b339fca02916b0af6dd",
+                "name": "Operating Systems",
+                "sem": "4",
+                "secName": "A",
+                "role": "coordinator"
+            }
+        ]
     }
 }
 ```

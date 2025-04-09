@@ -10,7 +10,7 @@ const departmentScheme=mongoose.Schema({
             type:mongoose.Schema.ObjectId
         }
     ],
-    poStatements:[
+    psoStatements:[
         {
             description:{type:String},
             number:{type:Number}

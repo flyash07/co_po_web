@@ -1,7 +1,9 @@
 const bcrypt=require('bcrypt')
 let profModel=require('../models/proffesorModel')
+const sectionModel=require('../models/sectionModel')
 const { generateToken } = require('../utils/generateToken')
 const { getCourseNameById } = require('../utils/getCourseNameById')
+const courseModel = require('../models/courseModel')
 
 module.exports.login=async (req,res)=>{
     console.log("hell")
@@ -13,17 +15,21 @@ module.exports.login=async (req,res)=>{
     const result=await bcrypt.compare(password,user.password)
     if(!result)
         return res.status(401).json({ message: 'Invalid email or password' })
-    let temp=user.currentlyTeaching
+    let temp=user.section
     console.log(temp)
     const courseNames=[]
     for (let i = 0; i < temp.length; i++) {
-        const courseId = temp[i];
-        const courseName = await getCourseNameById(courseId);
-        courseNames.push({ id: courseId, name: courseName });
+        const courseId = temp[i].course;
+        const sectionId=temp[i].section
+        const course=await courseModel.findById(courseId)
+        const section= await sectionModel.findById(sectionId)
+        courseNames.push({ id: courseId, name: course.name,sem:course.sem,secName:section.name,role:temp[i].role});
     }
 
     output={
         'name':user.name,
+        'designation':user.designation,
+        'code':user.facultyID,
         'email':user.email,
         'courseNames':courseNames
     }

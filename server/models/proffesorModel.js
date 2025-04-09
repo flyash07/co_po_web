@@ -5,6 +5,7 @@ const profSchema=mongoose.Schema({
     name:String,
     email:String,
     phoneNo:Number,
+    designation:String,
     dept:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"dept",
@@ -27,7 +28,8 @@ const profSchema=mongoose.Schema({
             section:{
                 type:mongoose.Schema.ObjectId,
                 ref:"section"
-            }
+            },
+            role:String,
         }
     ]
 })

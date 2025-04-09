@@ -1,66 +1,62 @@
 .co-attainment-container {
-    padding: 40px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .co-attainment-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .attainment-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-    table-layout: fixed;
-  }
-  
-  .attainment-table th,
-  .attainment-table td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    word-wrap: break-word;
-  }
-  
-  .attainment-table thead th {
-    background-color: #4e67e3;
-    color: white;
-  }
-  
-  .attainment-table input[type="number"] {
-    width: 50px;
-    padding: 4px;
-    text-align: center;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-  }
-  
-  .attainment-table input[type="number"]:focus {
-    border-color: #4e67e3;
-    outline: none;
-  }
-  
-  .attainment-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .attainment-table tbody tr td:first-child {
-    font-weight: bold;
-    background-color: #f0f0f0;
-  }
-  
-  .save-button {
-    padding: 10px 20px;
-    background-color: #24a332;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .save-button:hover {
-    background-color: #0f6716;
-  }
-  
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.co-attainment-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.attainment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.attainment-table th,
+.attainment-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.attainment-table th {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+}
+
+.attainment-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.attainment-table tbody td div {
+  padding: 4px;
+}
+
+.attainment-table tbody tr:last-child {
+  background-color: #e8f0fe;
+}
+
+.save-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #155fa0;
+}

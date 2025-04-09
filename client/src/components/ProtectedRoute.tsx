@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 interface ProtectedRouteProps {
-  requiredRole: string;
+  requiredRole: string[];
   children: React.ReactNode;
 }
 
@@ -15,7 +15,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole, children 
     return <div>Loading...</div>;
   }
 
-  return user === requiredRole ? children : <Navigate to="/login" />;
+  return requiredRole.includes(user) ? children : <Navigate to="/login" />;
+
 };
 
 

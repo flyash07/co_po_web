@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './CoPoMapping.css';
+import './MapCoPo.css';
 import axios from 'axios';
 
-const CoPoMapping: React.FC = () => {
+const MapCoPo: React.FC = () => {
     const [mappingMatrix, setMappingMatrix] = useState<number[][]>([]);
     const [coList, setCoList] = useState<string[]>([]);
     const [poPsoList, setPoPsoList] = useState<string[]>([]);
@@ -58,6 +58,46 @@ const CoPoMapping: React.FC = () => {
         fetchMapping();
     }, []);
     
+
+    const handleChange = (rowIndex: number, colIndex: number, value: string) => {
+        const updated = [...mappingMatrix];
+        updated[rowIndex][colIndex] = Number(value);
+        setMappingMatrix(updated);
+
+        // Update averages
+        const colCount = updated[0].length;
+        const colSums = Array(colCount).fill(0);
+        updated.forEach(row => {
+            row.forEach((val, colIdx) => {
+                colSums[colIdx] += val;
+            });
+        });
+        const avg = colSums.map(sum => sum / updated.length);
+        setAverages(avg);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/course/postPoCo',
+                {
+                    inputArray: mappingMatrix,
+                    courseId: courseId
+                },
+                {
+                    headers: {
+                        Authorization: `${token}`
+                    }
+                }
+            );
+    
+            console.log('Response message:', response.data.message);
+        } catch (error) {
+            console.error('Error submitting matrix:', error);
+        }
+    };
+    
+
     return (
         <div className="co-attainment-container">
             <h2>CO-PO/PSO Mapping</h2>
@@ -76,10 +116,14 @@ const CoPoMapping: React.FC = () => {
                             <td>{co}</td>
                             {poPsoList.map((_, colIdx) => (
                                 <td key={colIdx}>
-                                    {/* Display values without input fields */}
-                                    <div style={{ textAlign: 'center' }}>
-                                        {mappingMatrix[rowIdx]?.[colIdx] ?? 0}
-                                    </div>
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={3}
+                                        value={mappingMatrix[rowIdx]?.[colIdx] ?? 0}
+                                        onChange={(e) => handleChange(rowIdx, colIdx, e.target.value)}
+                                        style={{ width: '50px', textAlign: 'center' }}
+                                    />
                                 </td>
                             ))}
                         </tr>
@@ -94,8 +138,12 @@ const CoPoMapping: React.FC = () => {
                     </tr>
                 </tbody>
             </table>
+
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <button onClick={handleSubmit} className="save-button">Submit</button>
+            </div>
         </div>
     );
 };
 
-export default CoPoMapping;
+export default MapCoPo;

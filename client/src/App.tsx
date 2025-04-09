@@ -28,7 +28,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/*"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -37,7 +37,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/targets"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <Targets/>
               </ProtectedRoute>
             }
@@ -45,7 +45,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/CoRootCause"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <CoRootCause/>
               </ProtectedRoute>
             }
@@ -53,7 +53,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/PoRootCause"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <PoRootCause/>
               </ProtectedRoute>
             }
@@ -61,7 +61,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/PoActionPlan"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <PoActionPlan/>
               </ProtectedRoute>
             }
@@ -69,7 +69,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/CoActionPlan"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <CoActionPlan/>
               </ProtectedRoute>
             }
@@ -77,7 +77,7 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/CoAttainment"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <CoAttainment/>
               </ProtectedRoute>
             }
@@ -85,7 +85,7 @@ const App: React.FC = () => {
            <Route
             path="/dashboard/CoPoMapping"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <CoPoMapping/>
               </ProtectedRoute>
             }
@@ -93,7 +93,7 @@ const App: React.FC = () => {
             <Route
             path="/dashboard/CourseFeedback"
             element={
-              <ProtectedRoute requiredRole="Professor">
+              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
                 <CoPoMapping/>
               </ProtectedRoute>
             }

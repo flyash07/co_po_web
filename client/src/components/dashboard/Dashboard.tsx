@@ -1,30 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useUser } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
 import CoPoMapping from "./CoPoMapping"; 
 import CieMarks from "./CieMarks";
 import SeeMarks from "./SeeMarks";
-  import CourseFeedback from "./CourseFeedback";
+import CourseFeedback from "./CourseFeedback";
 import CoAttainment from "./CoAttainment";
 import CoRootCause from "./CoRootCause";
 import CoActionPlan from "./CoActionPlan";
 import PoPsoAttainment from "./PoPsoAttainment";
 import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
+import SetTargets from "./SetTargets";
 
 interface Course {
   id: string;
   name: string;
+  sem: string;
+  secName: string;
+  role: string;
 }
 
 const Dashboard: React.FC = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [selectedPage, setSelectedPage] = useState<null | string>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [courseNames, setCourseNames] = useState<Course[]>([]);
+  const [coSet, setCoSet] = useState<boolean>(false);
+  const [copoSet, setCopoSet] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
@@ -38,73 +46,127 @@ const Dashboard: React.FC = () => {
     }
   }, []);
 
+  const fetchCourseDetails = async (courseId: string) => {
+    const token = localStorage.getItem("token"); // Make sure token is stored here
+    try {
+      const response = await axios.get("/index/courseDet", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          courseId,
+        },
+      });
+      const { coSet, copoSet } = response.data;
+      console.log(response.data)
+      setCoSet(coSet);
+      setCopoSet(copoSet);
+    } catch (error) {
+      console.error("Failed to fetch course details", error);
+    }
+  };
+
+  const handleCourseSelect = (course: Course) => {
+    localStorage.setItem("currentCourse", course.id);
+    if (course.role === "coordinator") {
+      setUser("Coordinator");
+    } else if (course.role === "professor") {
+      setUser("Professor");
+    }
+    fetchCourseDetails(course.id);
+    alert(`Selected course: ${course.name}`);
+  };
+
   const links = [
-    {
+    /*{
       name: "General Instructions",
       key: "general-instructions",
       visibleTo: ["Professor", "Coordinator", "HOD"],
-    },
-    { name: "Targets", key: "targets", visibleTo: ["Professor"] }, //to be changed to Coordinator
+    },*/
     {
-      name: "CO to PO Mapping",
+      name: "Set Targets",
+      key: "set-targets",
+      visibleTo: ["Coordinator"],
+      enabled: () => !coSet,
+    },
+    {
+      name: "See Targets",
+      key: "targets",
+      visibleTo: ["Professor", "Coordinator"],
+      enabled: () => coSet,
+    },
+    {
+      name: "Map Co to Po",
+      key: "mapcopo",
+      visibleTo: ["Coordinator"],
+      enabled: () => !copoSet,
+    },
+    {
+      name: "See CO to PO Mapping",
       key: "co-po-mapping",
-      visibleTo: ["Coordinator","Professor"],
+      visibleTo: ["Professor", "Coordinator"],
+      enabled: () => copoSet,
     },
     {
       name: "CIE Assessment Marks & Attainment",
       key: "cie-marks",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "SEE Marks & Attainment",
       key: "see-marks",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Course Feedback",
       key: "course-feedback",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Direct and Overall CO Attainment",
       key: "co-attainment",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Root Cause Analysis for CO",
       key: "co-root-cause",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Action Plan for CO",
       key: "co-action-plan",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "PO and PSO Attainment",
       key: "po-pso-attainment",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Root Cause Analysis for PSO and PO",
       key: "po-root-cause",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
     {
       name: "Action Plan for PO",
       key: "po-action-plan",
       visibleTo: ["Professor", "Coordinator", "HOD"],
+      enabled: () => true,
     },
   ];
 
   return (
     <div className="dashboard">
-      {/* Sidebar */}
       <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        <button
-          className="toggle-btn"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
+        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
           {isCollapsed ? "➤" : "✖"}
         </button>
 
@@ -118,10 +180,7 @@ const Dashboard: React.FC = () => {
                   courseNames.map((course) => (
                     <button
                       key={course.id}
-                      onClick={() => {
-                        localStorage.setItem("currentCourse", course.id);
-                        alert(`Selected course: ${course.name}`);
-                      }}
+                      onClick={() => handleCourseSelect(course)}
                     >
                       {course.name}
                     </button>
@@ -135,14 +194,10 @@ const Dashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Main Content */}
       <div className="main-content">
         {selectedPage && (
           <div className="back-button-container">
-            <button
-              className="back-button"
-              onClick={() => setSelectedPage(null)}
-            >
+            <button className="back-button" onClick={() => setSelectedPage(null)}>
               ← Back
             </button>
           </div>
@@ -154,38 +209,55 @@ const Dashboard: React.FC = () => {
               <h1>Dashboard</h1>
               <table className="dashboard-table">
                 <tbody>
-                  {links.map(
-                    (link) =>
-                      link.visibleTo.includes(user) && (
-                        <tr key={link.key}>
-                          <td>
-                            <button onClick={() => setSelectedPage(link.key)}>
-                              {link.name}
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                  )}
+                  {links.map((link) => {
+                    const isVisible = link.visibleTo.includes(user);
+                    const isEnabled = link.enabled();
+
+                    if (!isVisible) return null;
+
+                    const shouldDisable =
+                      !isEnabled && user === "Professor"; // Only lock for professors
+
+                    return (
+                      <tr key={link.key}>
+                        <td>
+                          <button
+                            onClick={() => {
+                              if (!shouldDisable) setSelectedPage(link.key);
+                            }}
+                            disabled={shouldDisable}
+                            style={{
+                              opacity: shouldDisable ? 0.6 : 1,
+                              cursor: shouldDisable ? "not-allowed" : "pointer",
+                            }}
+                          >
+                            {link.name} {shouldDisable && "🔒"}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
+
             </>
           )}
 
-        {/* Render the selected page */}
-        {/* Uncomment the pages your putting */}
-        {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
-        {selectedPage === "targets" && <Targets />}
-        {selectedPage === "co-po-mapping" && <CoPoMapping />}
-        {selectedPage === "co-root-cause" && <CoRootCause />}
-        {selectedPage === "po-root-cause" && <PoRootCause />}
-        {selectedPage === "co-action-plan" && <CoActionPlan />}
-        {selectedPage === "po-action-plan" && <PoActionPlan />}
-        {selectedPage === "co-attainment" && <CoAttainment />}
-        {selectedPage === "course-feedback" && <CourseFeedback />}
-        {selectedPage === "cie-marks" && <CieMarks />}
-        {selectedPage === "see-marks" && <SeeMarks />}
-        {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
-          
+          {/* Page rendering based on selection */}
+          {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
+          {selectedPage === "targets" && <Targets />}
+          {selectedPage === "set-targets" && <SetTargets />}
+          {selectedPage === "co-po-mapping" && <CoPoMapping />}
+          {selectedPage === "mapcopo" && <Targets />}
+          {selectedPage === "co-root-cause" && <CoRootCause />}
+          {selectedPage === "po-root-cause" && <PoRootCause />}
+          {selectedPage === "co-action-plan" && <CoActionPlan />}
+          {selectedPage === "po-action-plan" && <PoActionPlan />}
+          {selectedPage === "co-attainment" && <CoAttainment />}
+          {selectedPage === "course-feedback" && <CourseFeedback />}
+          {selectedPage === "cie-marks" && <CieMarks />}
+          {selectedPage === "see-marks" && <SeeMarks />}
+          {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
         </div>
       </div>
     </div>

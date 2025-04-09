@@ -13,22 +13,18 @@ const Targets: React.FC = () => {
     const [coCurrent, setCoCurrent] = useState(defaultCOCurrent);
     const [poTargets, setPoTargets] = useState<string[]>(defaultPO);
 
-    // Fetch data when component mounts
     useEffect(() => {
         const fetchTargets = async () => {
             const token = document.cookie.split('; ')
                 .find(row => row.startsWith('jwtToken='))
                 ?.split('=')[1];
 
-            const courseId = localStorage.getItem('currentCourse'); // Ensure this is set correctly
+            const courseId = localStorage.getItem('currentCourse');
 
             if (!token || !courseId) {
                 console.error("Missing token or courseId");
                 return;
             }
-
-
-            console.log(token, courseId)
 
             try {
                 const response = await axios.get("http://localhost:8080/course/getTargets", {
@@ -36,11 +32,8 @@ const Targets: React.FC = () => {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`
                     },
-                    params: {
-                        courseId
-                    }
+                    params: { courseId }
                 });
-                
 
                 const data = response.data;
 
@@ -61,85 +54,6 @@ const Targets: React.FC = () => {
         fetchTargets();
     }, []);
 
-    const handleCOChange = (row: 'prev' | 'attained' | 'current', index: number, value: string) => {
-        const update = (coArr: string[], setter: (val: { co: string[] }) => void) => {
-            const newArr = [...coArr];
-            newArr[index] = value;
-            setter({ co: newArr });
-        };
-
-        if (row === 'prev') update(coPrev.co, setCoPrev);
-        else if (row === 'attained') update(coAttained.co, setCoAttained);
-        else if (row === 'current') update(coCurrent.co, setCoCurrent);
-    };
-
-    const handlePOChange = (index: number, value: string) => {
-        const newArr = [...poTargets];
-        newArr[index] = value;
-        setPoTargets(newArr);
-    };
-
-    const handleSave = async () => {
-        const token = document.cookie.split('; ')
-            .find(row => row.startsWith('jwtToken='))?.split('=')[1];
-        const courseId = localStorage.getItem('currentCourse');
-
-        if (!token || !courseId) {
-            console.error("Missing token or courseId");
-            return;
-        }
-
-        try {
-            // POST to /course/postTargets
-            const response = await axios.post(
-                "http://localhost:8080/course/postTargets",
-                {
-                    courseId,
-                    coTargets: coCurrent.co.map(val => parseInt(val) || 0),
-                    poTargets: poTargets.slice(0, 12).map(val => parseInt(val) || 0),
-                    psoTargets: poTargets.slice(12).map(val => parseInt(val) || 0),
-                },
-                {
-                    headers: {
-                        Authorization: `${token}`
-                    }
-                }
-            );
-
-            console.log(response.data.message); // Should log "Target Updated"
-
-            // Fetch updated targets
-            const getResponse = await axios.get("http://localhost:8080/course/getTargets", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `${token}`
-                },
-                params: {
-                    courseId
-                }
-            });
-
-            const data = getResponse.data;
-            if (data) {
-                setCoPrev({ co: data.coPrevTargets.map(String) });
-                setCoAttained({ co: data.coPrevAttained.map(String) });
-                setCoCurrent({ co: data.coTargets.map(String) });
-                const fullPoTargets = [...data.poTargets, ...data.psoTargets].map(String);
-                setPoTargets(fullPoTargets);
-            }
-
-        } catch (error) {
-            console.error("Error saving targets:", error);
-        }
-    };
-
-    const resetAll = () => {
-        setCoPrev(defaultCOPrev);
-        setCoAttained(defaultCOAttained);
-        setCoCurrent(defaultCOCurrent);
-        setPoTargets(defaultPO);
-    };
-
     return (
         <div className="course-targets-container">
             <h1>Course Targets</h1>
@@ -158,25 +72,19 @@ const Targets: React.FC = () => {
                     <tr>
                         <td>Target set in the previous cycle</td>
                         {coPrev.co.map((val, idx) => (
-                            <td key={`prev-co-${idx}`}>
-                                <input type="number" value={val} onChange={(e) => handleCOChange('prev', idx, e.target.value)} />
-                            </td>
+                            <td key={`prev-co-${idx}`}>{val}</td>
                         ))}
                     </tr>
                     <tr>
                         <td>Attained values in the previous cycle</td>
                         {coAttained.co.map((val, idx) => (
-                            <td key={`attained-co-${idx}`}>
-                                <input type="number" value={val} onChange={(e) => handleCOChange('attained', idx, e.target.value)} />
-                            </td>
+                            <td key={`attained-co-${idx}`}>{val}</td>
                         ))}
                     </tr>
                     <tr>
                         <td>Target for the current semester</td>
                         {coCurrent.co.map((val, idx) => (
-                            <td key={`current-co-${idx}`}>
-                                <input type="number" value={val} onChange={(e) => handleCOChange('current', idx, e.target.value)} />
-                            </td>
+                            <td key={`current-co-${idx}`}>{val}</td>
                         ))}
                     </tr>
                 </tbody>
@@ -196,17 +104,11 @@ const Targets: React.FC = () => {
                     <tr>
                         <td>Target</td>
                         {poTargets.map((val, idx) => (
-                            <td key={`po-${idx}`}>
-                                <input type="number" value={val} onChange={(e) => handlePOChange(idx, e.target.value)} />
-                            </td>
+                            <td key={`po-${idx}`}>{val}</td>
                         ))}
                     </tr>
                 </tbody>
             </table>
-            <div className='button-row'>
-                <button className="reset-button" onClick={resetAll}>Reset All</button>
-                <button className="save-button" onClick={handleSave}>Save</button>
-            </div>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { data, useNavigate } from "react-router-dom";
@@ -17,7 +17,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -39,6 +38,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       localStorage.setItem("courseNames", JSON.stringify(output.courseNames));
       localStorage.setItem("userEmail", output.email);
       localStorage.setItem("userName", output.name);
+      localStorage.setItem("designation",output.designation);
+      localStorage.setItem("empid",output.code);
 
       setUser("Professor"); // You can dynamically determine role here if needed
       if(onLogin){onLogin()}

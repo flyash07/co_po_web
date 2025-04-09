@@ -1,0 +1,66 @@
+.co-attainment-container {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .co-attainment-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .attainment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    table-layout: fixed;
+  }
+  
+  .attainment-table th,
+  .attainment-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    word-wrap: break-word;
+  }
+  
+  .attainment-table thead th {
+    background-color: #4e67e3;
+    color: white;
+  }
+  
+  .attainment-table input[type="number"] {
+    width: 50px;
+    padding: 4px;
+    text-align: center;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  }
+  
+  .attainment-table input[type="number"]:focus {
+    border-color: #4e67e3;
+    outline: none;
+  }
+  
+  .attainment-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .attainment-table tbody tr td:first-child {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  
+  .save-button {
+    padding: 10px 20px;
+    background-color: #24a332;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .save-button:hover {
+    background-color: #0f6716;
+  }
+  

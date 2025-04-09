@@ -875,3 +875,34 @@ GET PO ACTION PLAN PAGE
     "message": "Action plans updated successfully",
 }
 ```
+## `/index/courseDet` Endpoint
+
+### Description
+
+Tells if CO Targets and PoPso Targets are set
+
+### HTTP Method
+
+`GET`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+{
+"courseId":"67f284aefae8a333cd2bf532"
+}
+```
+  
+### Response Type
+
+- `JSON`:Object
+
+### Example Response
+```
+{
+    "coSet": false,
+    "copoSet": false
+}
+```

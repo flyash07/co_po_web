@@ -12,7 +12,6 @@ const courseSectionSchema=mongoose.Schema({
     coAttainment:{
         type: [
             {
-                targetSet: { type: Number, default: 0 },
                 direct: {
                     inSem: { type: Number, default: 0 },
                     endSem: { type: Number, default: 0 },
@@ -34,7 +33,6 @@ const courseSectionSchema=mongoose.Schema({
     poAttainment: {
         type: [
             {
-                targetSet: { type: Number, default: 0 },
                 attained: {type:Number, default:0}
             }
         ],
@@ -43,7 +41,6 @@ const courseSectionSchema=mongoose.Schema({
     psoAttainment: {
         type: [
             {
-                targetSet: { type: Number, default: 0 },
                 attained: {type:Number, default:0}
             }
         ],

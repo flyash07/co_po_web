@@ -13,6 +13,26 @@ const courseSchema=mongoose.Schema({
     sem:String,
     year:Number,
     oddEven:String,
+    coTargetSet: {
+        type: [Number],
+        default: () => Array(8).fill(0)
+    },
+    poTargetSet: {
+        type: [Number],
+        default: () => Array(12).fill(0)
+    },
+    psoTargetSet: {
+        type: [Number],
+        default: () => Array(4).fill(0)
+    },
+    coSet: {
+        type: Boolean,
+        default: false
+    },
+    copoSet: {
+        type: Boolean,
+        default: false
+    },
     coStatements:{
         type:[
             {

@@ -44,3 +44,13 @@ module.exports.logout=async (req,res)=>{
     res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'None' });
     res.status(200).json({ message: 'Logged out successfully' });
 }
+
+module.exports.courseDet=async(req,res)=>{
+    const {courseId}=req.query
+    const course=await courseModel.findById(courseId)
+    data={
+        coSet:course.coSet,
+        copoSet:course.copoSet
+    }
+    res.status(200).json(data)
+}

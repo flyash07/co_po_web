@@ -19,17 +19,17 @@ module.exports.getTargets = async (req, res) => {
       };
   
       for (let i = 0; i < 8; i++) {
-        data.coTargets.push(course.coAttainment[i].targetSet);
+        data.coTargets.push(course.coTargetSet[i]);
         data.coPrevTargets.push(0);
         data.coPrevAttained.push(0);
       }
   
       for (let i = 0; i < 12; i++) {
-        data.poTargets.push(course.poAttainment[i].targetSet);
+        data.poTargets.push(course.poTargetSet[i]);
       }
   
       for (let i = 0; i < 4; i++) {
-        data.psoTargets.push(course.psoAttainment[i].targetSet);
+        data.psoTargets.push(course.psoTargetSet[i]);
       }
   
       return res.status(200).json(data);
@@ -52,17 +52,19 @@ module.exports.postTargets=async (req,res)=>{
         if(!course)
             res.status(404).json({message:"Course Not Found"})
 
-        course.coAttainment.forEach((item,index)=>{
-            item.targetSet=coTargets[index]
-        })
+        for (let i = 0; i < course.coTargetSet.length; i++) {
+          course.coTargetSet[i] = coTargets[i];
+        }
 
-        course.poAttainment.forEach((item,index)=>{
-            item.targetSet=poTargets[index]
-        })
+        for (let i = 0; i < course.poTargetSet.length; i++) {
+          course.poTargetSet[i] = poTargets[i];
+        }
 
-        course.psoAttainment.forEach((item,index)=>{
-            item.targetSet=psoTargets[index]
-        })
+        for (let i = 0; i < course.psoTargetSet.length; i++) {
+          course.psoTargetSet[i] = psoTargets[i];
+        }
+        
+        course.coSet=true
 
         await course.save()
         res.status(200).json({message:"Target Updated"})
@@ -156,5 +158,7 @@ console.log(inputArray)
       { new: true, upsert: true }
   );
 
+  course.copoSet=true
+  course.save()
   res.json({ message: 'Mappings saved successfully'});
 }

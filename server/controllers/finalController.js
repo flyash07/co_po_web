@@ -1,31 +1,38 @@
-const courseModel = require("../models/courseModel")
+const courseModel = require("../models/courseModel");
+const courseSection = require("../models/courseSection");
 
 module.exports.getCoAtt=async (req,res)=>{
     const {courseId}=req.query
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+    const course=courseModel.findById(courseId)
     let data=[]
     for(let i=0;i<8;i++){
-        let course=await courseModel.findById(courseId)
-        let temp=(60*course.coAttainment[i].direct.inSem+40*course.coAttainment[i].direct.endSem)/100
-        course.coAttainment[i].direct.finalCo=temp
-        course.coAttainment[i].overall.inSem=temp
-        let temp2=(80*temp+20*course.coAttainment[i].overall.endSem)/100
-        course.coAttainment[i].overall.finalCo=temp2
+        cs=await courseSection.findOne({
+            courseId,
+            sectionId
+        })
+        let temp=(60*cs.coAttainment[i].direct.inSem+40*cs.coAttainment[i].direct.endSem)/100
+        cs.coAttainment[i].direct.finalCo=temp
+        cs.coAttainment[i].overall.inSem=temp
+        let temp2=(80*temp+20*cs.coAttainment[i].overall.endSem)/100
+        cs.coAttainment[i].overall.finalCo=temp2
 
         data.push({
             direct:{
-                inSem:course.coAttainment[i].direct.inSem,
-                endSem:course.coAttainment[i].direct.endSem,
+                inSem:cs.coAttainment[i].direct.inSem,
+                endSem:cs.coAttainment[i].direct.endSem,
                 finalCo:temp
             },
             overall:{
                 direct:temp,
-                inDirect:course.coAttainment[i].overall.endSem,
+                inDirect:cs.coAttainment[i].overall.endSem,
                 overall:temp2
             },
-            target:course.coAttainment[i].targetSet
+            target:course.coTargetSet[i]
         })
 
-        await course.save()
+        await cs.save()
     }
 
     res.status(200).json(data)
@@ -35,14 +42,21 @@ module.exports.getCoPlan=async (req,res)=>{
     const {courseId}=req.query
     const course=await courseModel.findById(courseId)
 
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
+
     data=[]
     console.log(course.coStatements)
     for(let i=0;i<8;i++){
         data.push({
             stat:course.coStatements[i].description,
-            targetSet:course.coAttainment[i].targetSet,
-            attained:(80*course.coAttainment[i].overall.inSem+20*course.coAttainment[i].overall.endSem)/100,
-            action:course.coActionPlans[i]
+            targetSet:course.coTargetSet[i],
+            attained:(80*cs.coAttainment[i].overall.inSem+20*cs.coAttainment[i].overall.endSem)/100,
+            action:cs.coActionPlans[i]
         })
     }
 
@@ -53,20 +67,27 @@ module.exports.getPoPlan=async (req,res)=>{
     const {courseId}=req.query
     const course=await courseModel.findById(courseId)
 
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
+
     data=[]
     for(let i=0;i<12;i++){
         console.log(course.poActionPlans[i])
         data.push({
-            targetSet:course.poAttainment[i].targetSet,
-            attained:course.poAttainment[i].attained,
-            action:course.poActionPlans[i]
+            targetSet:course.poTargetSet[i],
+            attained:cs.poAttainment[i].attained,
+            action:cs.poActionPlans[i]
         })
     }
     for(let i=0;i<4;i++){
         data.push({
-            targetSet:course.psoAttainment[i].targetSet,
-            attained:course.psoAttainment[i].attained,
-            action:course.psoActionPlans[i]
+            targetSet:course.psoTargetSet,
+            attained:cs.psoAttainment[i].attained,
+            action:cs.psoActionPlans[i]
         })
     }
 
@@ -82,16 +103,22 @@ module.exports.getPoPlan=async (req,res)=>{
 // }
 
 module.exports.postCoPlan = async (req, res) => {
+    const { courseId, stats } = req.body;
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
     try {
-        const { courseId, stats } = req.body;
         let course = await courseModel.findById(courseId);
 
         if (!course) return res.status(404).json({ message: "Course not found" });
 
         // Ensure proper format
-        course.coActionPlans = stats.map(s => typeof s === 'string' ? { stat: s } : s);
+        cs.coActionPlans = stats.map(s => typeof s === 'string' ? { stat: s } : s);
 
-        await course.save();
+        await cs.save();
         res.json({ message: "Done" });
     } catch (err) {
         console.error(err);
@@ -100,7 +127,14 @@ module.exports.postCoPlan = async (req, res) => {
 };
 
 module.exports.postPoPlan=async(req,res)=>{
-    const { courseId, updates } = req.body;
+        const { courseId, updates } = req.body;
+
+        const secObj = req.user.section.find(sec => sec.course == courseId);
+        const sectionId = secObj ? secObj.section : null;
+        cs=await courseSection.findOne({
+            courseId,
+            sectionId
+        })
 
         if (!Array.isArray(updates) || updates.length !== 16) {
             return res.status(400).json({ message: 'Expected array of 16 strings' });
@@ -119,13 +153,15 @@ module.exports.postPoPlan=async(req,res)=>{
             psoActionPlans.push({ stat: updates[i] });
         }
 
-        const updatedCourse = await courseModel.findByIdAndUpdate(
-            courseId,
+        const updatedCourse = await courseSection.findOneAndUpdate(
+            { course: courseId, section: sectionId },  // filter by course & section
             {
+            $set: {
                 poActionPlans,
                 psoActionPlans
+            }
             },
-            { new: true, upsert: false }
+            { new: true }  // returns the updated document
         );
 
         if (!updatedCourse) {
@@ -139,6 +175,13 @@ module.exports.getPoAtt=async (req,res)=>{
     const {courseId}=req.query
     const course=await courseModel.findById(courseId)
 
+    const secObj = req.user.section.find(sec => sec.course == courseId);
+    const sectionId = secObj ? secObj.section : null;
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
+
     const directCo=[]
     const overallCo=[]
     const po=[]
@@ -151,8 +194,8 @@ module.exports.getPoAtt=async (req,res)=>{
     const overallPso=[]
 
     for(let i=0;i<8;i++){
-        directCo.push(course.coAttainment[i].direct.finalCo)
-        overallCo.push(course.coAttainment[i].overall.finalCo)
+        directCo.push(cs.coAttainment[i].direct.finalCo)
+        overallCo.push(cs.coAttainment[i].overall.finalCo)
     }
 
     for(let i=0;i<8;i++){
@@ -173,11 +216,11 @@ module.exports.getPoAtt=async (req,res)=>{
     }
 
     for(let i=0;i<12;i++){
-        targetPo.push(course.poAttainment[i].targetSet)
+        targetPo.push(course.poTargetSet[i])
     }
 
     for(let i=0;i<4;i++){
-        targetPso.push(course.psoAttainment[i].targetSet)
+        targetPso.push(course.psoTargetSet[i])
     }
 
     for(let i=0;i<12;i++){
@@ -189,8 +232,8 @@ module.exports.getPoAtt=async (req,res)=>{
         }
         directPo.push(mulP/cP)
         overallPo.push(mulPs/cP)
-        course.poAttainment[i].attained=mulPs/cP
-        await course.save()
+        cs.poAttainment[i].attained=mulPs/cP
+        await cs.save()
     }
 
     for(let i=0;i<4;i++){
@@ -202,8 +245,8 @@ module.exports.getPoAtt=async (req,res)=>{
         }
         directPso.push(mulP/cP)
         overallPso.push(mulPs/cP)
-        course.psoAttainment[i].attained=mulPs/cP
-        await course.save()
+        cs.psoAttainment[i].attained=mulPs/cP
+        await cs.save()
     }
 
     res.status(200).json({

@@ -263,19 +263,24 @@ module.exports.getSee = async (req, res) => {
         };
     });
 
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
+
     Object.keys(summary).forEach(co => {
         const index = parseInt(co);
         const coData = summary[co];
     
         // Make sure index is in bounds
-        if (index >= 0 && index < course.coAttainment.length) {
+        if (index >= 0 && index < cs.coAttainment.length) {
             console.log(index)
-            course.coAttainment[index-1].direct.endSem = parseFloat(coData.avgAla); // or coData.level1, etc.
+            cs.coAttainment[index-1].direct.endSem = parseFloat(coData.avgAla); // or coData.level1, etc.
         }
     });
     
     await course.save();
-
+    await cs.save()
     res.json({ students: result, summary });
 };
 

@@ -7,6 +7,10 @@ module.exports.getFeedback=async (req,res)=>{
 
     const secObj = req.user.section.find(sec => sec.course == courseId);
     const sectionId = secObj ? secObj.section : null;
+    cs=await courseSection.findOne({
+        courseId,
+        sectionId
+    })
 
     const students = await studentModel.find({ section: sectionId });
     const stuIds = students.map(student => ({
@@ -73,9 +77,9 @@ module.exports.getFeedback=async (req,res)=>{
     let course=await courseModel.findById(courseId)
     for(let i=0;i<summary.length;i++){
       console.log(summary[i].coNum)
-      course.coAttainment[summary[i].coNum-1].overall.endSem=summary[i].attainmentLevel
+      cs.coAttainment[summary[i].coNum-1].overall.endSem=summary[i].attainmentLevel
     }
-    await course.save()
+    await cs.save()
 
     // Course Weighted Average (CF)
     const courseCF = summary.length ? (cfSum / summary.length).toFixed(2) : 0;

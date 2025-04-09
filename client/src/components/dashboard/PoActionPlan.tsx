@@ -54,13 +54,13 @@ const PoActionPlan: React.FC = () => {
                 });
 
                 const responseData = response.data;
-                console.log(responseData[1].action.stat)
+                //console.log(responseData[1].action.stat)
                 const mappedPO = initialPO.map((po, i) => ({
                     ...po,
                     target: responseData[i].targetSet,
                     attained: responseData[i].attained,
                     achieved: (responseData[i].attained) >= (responseData[i].targetSet) ? "Y" : "N",
-                    actionPlan: responseData[i].action ? responseData[i].action.stat : " "
+                    actionPlan: responseData[i] ? responseData[i] : " "
                 }));
 
                 const mappedPSO = initialPSO.map((pso, i) => ({
@@ -68,7 +68,7 @@ const PoActionPlan: React.FC = () => {
                     target: responseData[i + 12].targetSet,
                     attained: responseData[i + 12].attained,
                     achieved: (responseData[i + 12].attained) >= (responseData[i + 12].targetSet) ? "Y" : "N",
-                    actionPlan: responseData[i].action ? responseData[i].action.stat : " "
+                    actionPlan: responseData[i] ? responseData[i] : " "
                 }));
 
                 setPOData(mappedPO);

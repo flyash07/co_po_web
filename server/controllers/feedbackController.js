@@ -1,6 +1,7 @@
 const marksModel = require("../models/marksModel");
 const studentModel = require("../models/studentModel");
 const courseModel = require("../models/courseModel")
+const courseSection=require("../models/courseSection")
 
 module.exports.getFeedback=async (req,res)=>{
     const { courseId } = req.query;

@@ -16,7 +16,7 @@ import PoPsoAttainment from "./PoPsoAttainment";
 import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
 import SetTargets from "./SetTargets";
-
+import MapCoPo from "./MapCoPo";
 interface Course {
   id: string;
   name: string;
@@ -46,19 +46,24 @@ const Dashboard: React.FC = () => {
     }
   }, []);
 
-  const fetchCourseDetails = async (courseId: string) => {
-    const token = localStorage.getItem("token"); // Make sure token is stored here
+  const fetchCourseDetails = async () => {
+    const token = document.cookie.split('; ')
+                .find(row => row.startsWith('jwtToken='))
+                ?.split('=')[1];
+
+    const courseId = localStorage.getItem('currentCourse');
     try {
-      const response = await axios.get("/index/courseDet", {
+      const response = await axios.get("http://localhost:8080/index/courseDet", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
-        data: {
+        params: {
           courseId,
         },
       });
       const { coSet, copoSet } = response.data;
-      console.log(response.data)
+      console.log(coSet)
+      console.log(copoSet)
       setCoSet(coSet);
       setCopoSet(copoSet);
     } catch (error) {
@@ -73,7 +78,7 @@ const Dashboard: React.FC = () => {
     } else if (course.role === "professor") {
       setUser("Professor");
     }
-    fetchCourseDetails(course.id);
+    fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };
 
@@ -248,7 +253,7 @@ const Dashboard: React.FC = () => {
           {selectedPage === "targets" && <Targets />}
           {selectedPage === "set-targets" && <SetTargets />}
           {selectedPage === "co-po-mapping" && <CoPoMapping />}
-          {selectedPage === "mapcopo" && <Targets />}
+          {selectedPage === "mapcopo" && <MapCoPo />}
           {selectedPage === "co-root-cause" && <CoRootCause />}
           {selectedPage === "po-root-cause" && <PoRootCause />}
           {selectedPage === "co-action-plan" && <CoActionPlan />}

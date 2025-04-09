@@ -5,7 +5,7 @@ module.exports.getCoAtt=async (req,res)=>{
     const {courseId}=req.query
     const secObj = req.user.section.find(sec => sec.course == courseId);
     const sectionId = secObj ? secObj.section : null;
-    const course=courseModel.findById(courseId)
+    const course=await courseModel.findById(courseId)
     let data=[]
     for(let i=0;i<8;i++){
         cs=await courseSection.findOne({
@@ -76,7 +76,7 @@ module.exports.getPoPlan=async (req,res)=>{
 
     data=[]
     for(let i=0;i<12;i++){
-        console.log(course.poActionPlans[i])
+        console.log(cs.poActionPlans[i])
         data.push({
             targetSet:course.poTargetSet[i],
             attained:cs.poAttainment[i].attained,

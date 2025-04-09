@@ -1,25 +1,36 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import './CieMarks.css';
+
+const assignmentLabelMap: Record<string, string> = {
+    ass1: 'Assignment 1',
+    ass2: 'Assignment 2',
+    ass3: 'Assignment 3',
+    ass4: 'Assignment 4',
+    midSem: 'Mid-Sem'
+};
 
 const CieMarks: React.FC = () => {
     const [assignmentType, setAssignmentType] = useState('ass1');
     const [students, setStudents] = useState<any[]>([]);
     const [summary, setSummary] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [asswiseData, setAsswiseData] = useState<any[]>([]);
+
     const fetchCieData = async () => {
         const token = document.cookie.split('; ')
             .find(row => row.startsWith('jwtToken='))
             ?.split('=')[1];
-    
+
         const courseId = localStorage.getItem('currentCourse');
-    
+        console.log(courseId)
+
         if (!token || !courseId) {
             console.error("Missing token or courseId");
             return;
         }
-    
+
         try {
             const res = await axios.get('http://localhost:8080/cie/getCie', {
                 headers: {
@@ -28,19 +39,18 @@ const CieMarks: React.FC = () => {
                 },
                 params: { courseId }
             });
-    
+
             setStudents(res.data.students || []);
             setSummary(res.data.summary || {});
+            setAsswiseData(res.data.asswise || []);
         } catch (err) {
             console.error("Failed to fetch CIE data:", err);
         }
     };
-    
+
     useEffect(() => {
         fetchCieData();
     }, []);
-    
-    
 
     const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setAssignmentType(e.target.value);
@@ -57,19 +67,19 @@ const CieMarks: React.FC = () => {
             alert('Please select a file before submitting.');
             return;
         }
-    
+
         const token = document.cookie.split('; ')
             .find(row => row.startsWith('jwtToken='))
             ?.split('=')[1];
-    
+
         const courseId = localStorage.getItem('currentCourse');
-    
+
         if (!token || !courseId) {
             console.error("Missing token or courseId");
             alert("You're missing token or courseId. Please re-authenticate or refresh.");
             return;
         }
-    
+
         const reader = new FileReader();
         reader.onload = async (evt) => {
             try {
@@ -78,20 +88,20 @@ const CieMarks: React.FC = () => {
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(sheet);
-    
+
                 const payload = {
                     data: jsonData,
                     courseId: courseId,
                     assignmentType: assignmentType
                 };
-    
+
                 const res = await axios.post('http://localhost:8080/cie/postCie', payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`
                     }
                 });
-                console.log(res.data.message)
+
                 alert(res.data.message || 'Upload successful');
                 await fetchCieData();
             } catch (error) {
@@ -99,22 +109,36 @@ const CieMarks: React.FC = () => {
                 alert('Upload failed');
             }
         };
-    
+
         reader.readAsBinaryString(selectedFile);
     };
-    
 
     const coKeys = students[0] ? Object.keys(students[0].cie) : [];
-
     const maxTotals = coKeys.reduce((acc: any, co) => {
         acc[co] = students[0]?.cie?.[co]?.total || '-';
         return acc;
     }, {});
 
+    const assignmentKeys = ['ass1', 'ass2', 'ass3', 'ass4', 'midSem'];
+    const allCOs = Array.from(
+        new Set(
+            asswiseData.flatMap(s =>
+                Object.values(s.coWiseMarks || {}).flatMap(coObj =>
+                    Object.keys(coObj as object)
+                )
+            )
+        )
+    );
+
+    const doesAssignmentHaveData = (assKey: string) => {
+        return asswiseData.some(s => s.coWiseMarks?.[assKey]);
+    };
+
     return (
         <div className="cie-container">
             <h2>Continuous In-Semester Evaluation (CIE)</h2>
 
+            {/* Main CIE Table */}
             <table className="cie-table">
                 <thead>
                     <tr>
@@ -166,6 +190,48 @@ const CieMarks: React.FC = () => {
                 </tbody>
             </table>
 
+            {/* Assignment-wise CO Marks */}
+            <h3>Assignment-wise CO Marks</h3>
+            <table className="asswise-table">
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Name</th>
+                        <th>Reg No</th>
+                        {assignmentKeys.map(ass => (
+                            <th key={ass} colSpan={allCOs.length}>
+                                {assignmentLabelMap[ass]}
+                            </th>
+                        ))}
+                    </tr>
+                    <tr>
+                        <td colSpan={3}></td>
+                        {assignmentKeys.map(() =>
+                            allCOs.map(co => (
+                                <th key={co}>{co}</th>
+                            ))
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {asswiseData.map((student, idx) => (
+                        <tr key={student.regNo}>
+                            <td>{idx + 1}</td>
+                            <td>{student.name}</td>
+                            <td>{student.regNo}</td>
+                            {assignmentKeys.map(ass =>
+                                allCOs.map(co => (
+                                    <td key={`${student.regNo}-${ass}-${co}`}>
+                                        {student.coWiseMarks?.[ass]?.[co] ?? '-'}
+                                    </td>
+                                ))
+                            )}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* CO Summary Table */}
             <h3>CO Summary</h3>
             <table className="summary-table">
                 <thead>
@@ -192,15 +258,22 @@ const CieMarks: React.FC = () => {
                 </tbody>
             </table>
 
+            {/* Upload Section */}
             <div className="excel-ip">
                 <label>
                     Assignment:
                     <select value={assignmentType} onChange={handleAssignmentChange}>
-                        <option value="ass1">Assessment 1</option>
-                        <option value="ass2">Assessment 2</option>
-                        <option value="ass3">Assessment 3</option>
-                        <option value="ass4">Assessment 4</option>
-                        <option value="midSem">Midsems</option>
+                        {assignmentKeys.map(ass => (
+                            <option
+                                key={ass}
+                                value={ass}
+                                style={{
+                                    backgroundColor: doesAssignmentHaveData(ass) ? 'green' : 'gray'
+                                }}
+                            >
+                                {assignmentLabelMap[ass]}
+                            </option>
+                        ))}
                     </select>
                 </label>
 

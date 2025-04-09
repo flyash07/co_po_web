@@ -240,7 +240,24 @@ Gives u entire data for the cie page
             "level3": 0,
             "count": 10
         }
-    }
+    },
+    "asswise": [
+        {
+            "regNo": 395820614,
+            "name": "Aanya",
+            "coWiseMarks": {
+                "ass1": {
+                    "CO1": 3.5
+                },
+                "ass2": {
+                    "CO2": 2.5,
+                    "CO3": 0.5,
+                    "CO4": 0.5,
+                    "CO5": 0
+                }
+            }
+        },
+    ]
 }
 ```
 

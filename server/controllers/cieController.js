@@ -1,4 +1,5 @@
 const courseModel = require("../models/courseModel");
+const courseSection = require("../models/courseSection");
 const marksModel = require("../models/marksModel")
 const studentModel = require("../models/studentModel")
 
@@ -91,7 +92,32 @@ module.exports.getCie = async (req, res) => {
                 cie: coResult
             });
         });
-    
+
+        asswise=[]
+        marks.forEach(markEntry => {
+            const studentId = markEntry.student.toString();
+            const studentInfo = studentMap[studentId];
+
+            const coWiseMarks = {};
+
+            allAssKeys.forEach(assignKey => {
+                const responses = markEntry[assignKey] || [];
+
+                responses.forEach(q => {
+                const co = `CO${q.co}`;
+                if (!coWiseMarks[assignKey]) coWiseMarks[assignKey] = {};
+                if (!coWiseMarks[assignKey][co]) coWiseMarks[assignKey][co] = 0;
+                coWiseMarks[assignKey][co] += q.maxMarks || 0;  // Use actual scored marks if available
+                });
+            });
+
+            asswise.push({
+                regNo: studentInfo.regNo,
+                name: studentInfo.name,
+                coWiseMarks
+            });
+        });
+
         const summary = {};
         Object.keys(maxPerCO).forEach(co => {
         summary[co] = {
@@ -102,21 +128,38 @@ module.exports.getCie = async (req, res) => {
                 count:coStudentCounts[co]
             };
         });
+
+        let cs=await courseSection.findOne({
+            courseId:courseId,
+            sectionId:sectionId
+        })
+        if(!cs){
+            const newCourseSection = await courseSection.create({
+                courseId:courseId,
+                sectionId:sectionId
+            });
+        }
+        cs=await courseSection.findOne({
+            courseId,
+            sectionId
+        })
+        console.log(cs)
         console.log("Updating coursee")
         Object.keys(summary).forEach(co => {
             const index = parseInt(co);
             const coData = summary[co];
         
             // Make sure index is in bounds
-            if (index >= 0 && index < course.coAttainment.length) {
+            if (index >= 0 && index < cs.coAttainment.length) {
                 console.log(index)
-                course.coAttainment[index-1].direct.inSem = parseFloat(coData.avgAla); // or coData.level1, etc.
+                cs.coAttainment[index-1].direct.inSem = parseFloat(coData.avgAla); // or coData.level1, etc.
             }
         });
         
-        await course.save();
+        await cs.save();
+        await course.save()
 
-        res.json({ students: result, summary });
+        res.json({ students: result, summary,asswise });
 };
 
 module.exports.getSee = async (req, res) => {
@@ -247,7 +290,7 @@ module.exports.postCie=async(req,res)=>{
     console.log(maxMarksRow)
     const qnosRow = data[1];
     const partsExist = Object.values(qnosRow).some(val => typeof val === 'string' && /[a-zA-Z]/.test(val));
-
+    console.log(req.user)
     const secObj = req.user.section.find(sec => sec.course == courseId);
     const sectionId = secObj ? secObj.section : null;
 

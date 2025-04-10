@@ -4,6 +4,7 @@ const Section =require('../models/sectionModel');
 const Course =require('../models/courseModel');
 const Students =require('../models/studentModel');
 const courseSection =require('../models/courseSection');
+const bcrypt=require('bcrypt')
 
 //Adding new faculty using Excel
 module.exports.addFaculty =  async (req, res) => {
@@ -53,7 +54,7 @@ module.exports.addFaculty =  async (req, res) => {
                 phoneNo: faculty.phoneNo,
                 designation: faculty.designation,
                 dept: department._id,
-                password: faculty.password,
+                password: await bcrypt.hash(faculty.password,10),
                 section: [],
                 hasTaught: []
             });

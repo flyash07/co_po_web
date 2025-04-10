@@ -399,6 +399,7 @@ module.exports.postCie=async(req,res)=>{
         }
 
         marksDoc[assignmentType] = marksData;
+        marksDoc["grade"] = row.grade
         await marksDoc.save();
     }
 

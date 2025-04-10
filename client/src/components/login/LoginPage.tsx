@@ -41,11 +41,16 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       localStorage.setItem("designation",output.designation);
       localStorage.setItem("empid",output.code);
 
+      if (output.designation === "admin") {
+        navigate("/admin");
+      }
+      //admin.university.edu -  password is admin
+      //add the role
       setUser("Professor"); // You can dynamically determine role here if needed
       if(onLogin){onLogin()}
       navigate("/dashboard");
 
-      console.log(token,output)
+      console.log(token,output);
 
       Cookies.set("jwtToken", token); // expires in 1 day
 

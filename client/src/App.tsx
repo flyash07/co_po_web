@@ -7,11 +7,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import Targets from "./components/dashboard/Targets";
 import CoRootCause from "./components/dashboard/CoRootCause";
-import PoRootCause from "./components/dashboard/PoRootCause"
+import PoRootCause from "./components/dashboard/PoRootCause";
 import PoActionPlan from "./components/dashboard/PoActionPlan";
 import CoActionPlan from "./components/dashboard/CoActionPlan";
 import CoAttainment from "./components/dashboard/CoAttainment";
 import CoPoMapping from "./components/dashboard/CoPoMapping";
+import AdminPage from "./components/admin/AdminPage"; // ✅ import AdminPage
+
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -25,85 +27,100 @@ const App: React.FC = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
 
+          {/* Dashboard Routes */}
           <Route
             path="/dashboard/*"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
                 <Dashboard />
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/dashboard/targets"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <Targets/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <Targets />
               </ProtectedRoute>
             }
           />
           <Route
             path="/dashboard/CoRootCause"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <CoRootCause/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <CoRootCause />
               </ProtectedRoute>
             }
           />
           <Route
             path="/dashboard/PoRootCause"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <PoRootCause/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <PoRootCause />
               </ProtectedRoute>
             }
           />
           <Route
             path="/dashboard/PoActionPlan"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <PoActionPlan/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <PoActionPlan />
               </ProtectedRoute>
             }
           />
           <Route
             path="/dashboard/CoActionPlan"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <CoActionPlan/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <CoActionPlan />
               </ProtectedRoute>
             }
           />
           <Route
             path="/dashboard/CoAttainment"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <CoAttainment/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <CoAttainment />
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/dashboard/CoPoMapping"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <CoPoMapping/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <CoPoMapping />
               </ProtectedRoute>
             }
           />
-            <Route
+          <Route
             path="/dashboard/CourseFeedback"
             element={
-              <ProtectedRoute requiredRole={["Professor", "Coordinator", "HOD"]}>
-                <CoPoMapping/>
+              <ProtectedRoute
+                requiredRole={["Professor", "Coordinator", "HOD"]}
+              >
+                <CoPoMapping />
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="smtg"
-            element={
-              <ProtectedRoute>{ call another component here okay}</ProtectedRoute>
-            }
-          /> */}
+
+          {/* Admin Page Route */}
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </AppLayout>
     </Router>

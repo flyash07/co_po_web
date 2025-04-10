@@ -10,7 +10,13 @@ module.exports.login=async (req,res)=>{
     let {email,password}=req.body
     console.log(email, password)
     if(email=="admin@univ.edu" && password=="admin"){
+        let user={
+            'email':email,
+            '_id':"admin"
+        }
+        let token=generateToken(user)
         return res.status(200).json({
+            "token":token,
             'name':"admin",
             'designation':"admin",
             'code':null,

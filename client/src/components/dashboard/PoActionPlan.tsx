@@ -60,15 +60,15 @@ const PoActionPlan: React.FC = () => {
                     target: responseData[i].targetSet,
                     attained: responseData[i].attained,
                     achieved: (responseData[i].attained) >= (responseData[i].targetSet) ? "Y" : "N",
-                    actionPlan: responseData[i] ? responseData[i] : " "
+                    actionPlan: responseData[i].action === undefined ? "" : responseData[i].action.stat
                 }));
-
+                console.log(responseData[0].action)
                 const mappedPSO = initialPSO.map((pso, i) => ({
                     ...pso,
                     target: responseData[i + 12].targetSet,
                     attained: responseData[i + 12].attained,
                     achieved: (responseData[i + 12].attained) >= (responseData[i + 12].targetSet) ? "Y" : "N",
-                    actionPlan: responseData[i] ? responseData[i] : " "
+                    actionPlan: responseData[i].action === undefined ? "" : responseData[i].action.stat
                 }));
 
                 setPOData(mappedPO);
@@ -96,8 +96,11 @@ const PoActionPlan: React.FC = () => {
 
     const handleSave = async () => {
         const updates = [...poData, ...psoData].map(item => item.actionPlan);
+        const courseId = localStorage.getItem('currentCourse');
+        console.log(courseId)
         console.log(updates)
         try {
+            console.log(updates)
             const response = await axios.post('http://localhost:8080/final/postPoPlan', {
                 "updates":updates,
                 "courseId":courseId

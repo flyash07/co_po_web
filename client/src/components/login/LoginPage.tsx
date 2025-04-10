@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
-import { data, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import "./LoginPage.css";
 
 interface LoginPageProps {
@@ -17,6 +17,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -26,35 +27,40 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/index/login",
-        { email, password }
-      );
+      const response = await axios.post("http://localhost:8080/index/login", {
+        email,
+        password,
+      });
 
-      const {token, output} = response.data;
+      const { token, output } = response.data;
       console.log("Login successful:", output);
 
-      // Store course names and user role/info
-      localStorage.setItem("courseNames", JSON.stringify(output.courseNames));
-      localStorage.setItem("userEmail", output.email);
-      localStorage.setItem("userName", output.name);
-      localStorage.setItem("designation",output.designation);
-      localStorage.setItem("empid",output.code);
-
-      if (output.designation === "admin") {
-        navigate("/admin");
-      }
-      //admin.university.edu -  password is admin
-      //add the role
-      setUser("Professor"); // You can dynamically determine role here if needed
-      if(onLogin){onLogin()}
-      navigate("/dashboard");
-
-      console.log(token,output);
-
+      // Save token
       Cookies.set("jwtToken", token); // expires in 1 day
 
-      // Reset
+      // Set user role
+      setUser(output.designation);
+      if (onLogin) onLogin();
+
+      // Only store extra info if available (i.e. not admin)
+      if (output.email) {
+        localStorage.setItem("userEmail", output.email);
+        localStorage.setItem("userName", output.name);
+        localStorage.setItem("designation", output.designation);
+        localStorage.setItem("empid", output.code);
+        localStorage.setItem("courseNames", JSON.stringify(output.courseNames));
+      }
+
+      // Route based on designation
+      if (output.designation === "admin") {
+        navigate("/admin");
+      } else {
+        console.log("here");
+        navigate("/dashboard");
+        console.log("here2");
+      }
+
+      // Reset fields
       setEmail("");
       setPassword("");
       setErrorMessage("");

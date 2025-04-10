@@ -61,6 +61,7 @@ module.exports.addFaculty =  async (req, res) => {
 
         // Insert all faculty members
         const result = await Professor.insertMany(processedFaculty);
+        console.log("faculty members added successfully");
         res.status(201).json({
             message: `${result.length} faculty members added successfully`,
         });
@@ -121,6 +122,7 @@ module.exports.addSection =  async (req, res) => {
 
         // Insert all faculty members
         const result = await Section.insertMany(processedSection);
+        console.log("sections added successfully");
         res.status(201).json({
             message: `${result.length} sections added successfully`,
         });
@@ -189,6 +191,7 @@ module.exports.addCourse =  async (req, res) => {
 
         // Insert all courses
         const result = await Course.insertMany(processedCourse);
+        console.log("courses added successfully");
         res.status(201).json({
             message: `${result.length} courses added successfully`,
         });
@@ -290,6 +293,7 @@ module.exports.addStudents =  async (req, res) => {
 
         // Insert all students
         const result = await Students.insertMany(processedStudent);
+        console.log("students added successfully");
         res.status(201).json({
             message: `${result.length} students added successfully`,
         });
@@ -375,6 +379,7 @@ module.exports.courseAllocation =  async (req, res) => {
 
         // Insert all courseSections
         const result = await courseSection.insertMany(processedCourseSection);
+        console.log("courseSections added successfully");
         res.status(201).json({
             message: `${result.length} courseSections added successfully`,
         });

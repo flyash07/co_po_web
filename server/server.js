@@ -16,7 +16,7 @@ const finalRouter=require('./routes/finalRouter')
 
 //for admin and hod
 const adminRouter = require('./routes/adminRouter')
-//const hodRouter = require('./routes/hodRouter')
+const hodRouter = require('./routes/hodRouter')
 
 const cors=require('cors')
 const corsParams={
@@ -40,7 +40,7 @@ app.use('/final',finalRouter)
 
 //for admin and hod
 app.use('/admin', adminRouter)
-//app.use('/hod', hodRouter)
+app.use('/hod', hodRouter)
 
 
 app.listen(8080)

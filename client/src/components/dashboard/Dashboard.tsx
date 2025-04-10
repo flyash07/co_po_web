@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
@@ -32,7 +31,6 @@ const Dashboard: React.FC = () => {
   const [courseNames, setCourseNames] = useState<Course[]>([]);
   const [coSet, setCoSet] = useState<boolean>(false);
   const [copoSet, setCopoSet] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");

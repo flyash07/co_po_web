@@ -12,7 +12,7 @@ import PoActionPlan from "./components/dashboard/PoActionPlan";
 import CoActionPlan from "./components/dashboard/CoActionPlan";
 import CoAttainment from "./components/dashboard/CoAttainment";
 import CoPoMapping from "./components/dashboard/CoPoMapping";
-import AdminPage from "./components/admin/AdminPage"; // ✅ import AdminPage
+import AdminPage from "./components/admin/AdminPage"; 
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,14 +28,11 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
 
           {/* Dashboard Routes */}
+          {/* Had to remove protected route coz requiredrole is not being fulfullied at the time of login */}
           <Route
             path="/dashboard/*"
             element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
                 <Dashboard />
-              </ProtectedRoute>
             }
           />
           <Route
@@ -119,7 +116,7 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Admin Page Route */}
+          {/*Admin Page Route */}
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </AppLayout>

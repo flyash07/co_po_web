@@ -20,7 +20,8 @@ const CoActionPlan: React.FC = () => {
             ?.split('=')[1];
     
         const courseId = localStorage.getItem('currentCourse');
-        axios.get('http://localhost:8080/final/getCoPlan', {
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        axios.get(`${BACKEND_URL}/final/getCoPlan`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
@@ -66,8 +67,8 @@ const CoActionPlan: React.FC = () => {
             stats: coData.map(co => co.actionPlan),
             courseId: courseId, 
         };
-    
-        const res=await axios.post('http://localhost:8080/final/postAction', payload, {
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        const res=await axios.post(`${BACKEND_URL}/final/postAction`, payload, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`

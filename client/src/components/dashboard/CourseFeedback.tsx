@@ -42,7 +42,8 @@ const CourseFeedback: React.FC = () => {
 
     const fetchFeedback = async () => {
         try {
-            const res = await axios.get<FeedbackResponse>('http://localhost:8080/feedback/getFeedback', {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+            const res = await axios.get<FeedbackResponse>(`${BACKEND_URL}/feedback/getFeedback`, {
                 headers: { Authorization: `${token}` },
                 params: { courseId },
             });
@@ -104,8 +105,8 @@ const CourseFeedback: React.FC = () => {
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
                 const payload = { data: jsonData, courseId };
-
-                const res = await axios.post('http://localhost:8080/feedback/postFeedback', payload, {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.post(`${BACKEND_URL}/feedback/postFeedback`, payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`,

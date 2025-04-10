@@ -24,13 +24,14 @@ const AdminPage: React.FC = () => {
         students: "Format : studentID, name, email, dept, sectionID"
     };
 
-    const getEndpoint = (type: string) => {
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const getEndpoint = (type: string): string => {
         const endpoints: { [key: string]: string } = {
-            faculties: 'http://localhost:8080/admin/uploadFaculties',
-            students: 'http://localhost:8080/admin/uploadStudents',
-            sections: 'http://localhost:8080/admin/uploadSections',
-            courses: 'http://localhost:8080/admin/uploadCourses',
-            allocations: 'http://localhost:8080/admin/uploadCourseAllocations',
+            faculties: `${BACKEND_URL}/admin/uploadFaculties`,
+            students: `${BACKEND_URL}/admin/uploadStudents`,
+            sections: `${BACKEND_URL}/admin/uploadSections`,
+            courses: `${BACKEND_URL}/admin/uploadCourses`,
+            allocations: `${BACKEND_URL}/admin/uploadCourseAllocations`,
         };
         return endpoints[type] || '';
     };

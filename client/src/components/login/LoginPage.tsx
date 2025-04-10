@@ -27,7 +27,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/index/login", {
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+      const response = await axios.post(`${BACKEND_URL}/index/login`, {
         email,
         password,
       });

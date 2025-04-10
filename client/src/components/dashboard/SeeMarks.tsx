@@ -18,8 +18,8 @@ const SeeMarks: React.FC = () => {
             console.error("Missing token or courseId");
             return;
         }
-    
-        axios.get('http://localhost:8080/cie/getSee', {
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        axios.get(`${BACKEND_URL}/cie/getSee`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
@@ -78,8 +78,8 @@ const SeeMarks: React.FC = () => {
                     courseId: courseId,
                     assignmentType: 'endSem'
                 };
-    
-                const res = await axios.post('http://localhost:8080/cie/postCie', payload, {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.post(`${BACKEND_URL}/cie/postCie`, payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`

@@ -24,8 +24,8 @@ const PoPsoAttainment = () => {
   useEffect(() => {
     const fetchPoAttainment = async () => {
       try {
-        
-        const response = await axios.get("http://localhost:8080/final/poAtt", {
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.get(`${BACKEND_URL}/final/poAtt`, {
           headers: {
             Authorization: `${token}`
           },

@@ -16,7 +16,8 @@ const CoPoMapping: React.FC = () => {
     useEffect(() => {
         const fetchMapping = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/course/getCoPo', {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${BACKEND_URL}/course/getCoPo`, {
                     headers: {
                         Authorization: `${token}`
                     },

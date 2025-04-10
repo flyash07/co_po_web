@@ -44,7 +44,8 @@ const PoActionPlan: React.FC = () => {
     
 
             try {
-                const response = await axios.get('http://localhost:8080/final/getPoPlan', {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${BACKEND_URL}/final/getPoPlan`, {
                     headers: {
                         Authorization: `${token}`
                     },
@@ -101,7 +102,8 @@ const PoActionPlan: React.FC = () => {
         console.log(updates)
         try {
             console.log(updates)
-            const response = await axios.post('http://localhost:8080/final/postPoPlan', {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+            const response = await axios.post(`${BACKEND_URL}/final/postPoPlan`, {
                 "updates":updates,
                 "courseId":courseId
             }, {

@@ -21,7 +21,8 @@ const CoAttainment: React.FC = () => {
             console.error("Missing token or courseId");
             return;
         }
-        axios.get('http://localhost:8080/final/coAtt', {
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+        axios.get(`${BACKEND_URL}/final/coAtt`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`

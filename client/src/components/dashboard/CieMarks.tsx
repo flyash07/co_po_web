@@ -32,7 +32,8 @@ const CieMarks: React.FC = () => {
         }
 
         try {
-            const res = await axios.get('http://localhost:8080/cie/getCie', {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+            const res = await axios.get(`${BACKEND_URL}/cie/getCie`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
@@ -94,8 +95,8 @@ const CieMarks: React.FC = () => {
                     courseId: courseId,
                     assignmentType: assignmentType
                 };
-
-                const res = await axios.post('http://localhost:8080/cie/postCie', payload, {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.post(`${BACKEND_URL}cie/postCie`, payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`

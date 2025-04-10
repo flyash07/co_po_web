@@ -16,7 +16,8 @@ const MapCoPo: React.FC = () => {
     useEffect(() => {
         const fetchMapping = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/course/getCoPo', {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${BACKEND_URL}/course/getCoPo`, {
                     headers: {
                         Authorization: `${token}`
                     },
@@ -78,8 +79,9 @@ const MapCoPo: React.FC = () => {
 
     const handleSubmit = async () => {
         try {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
             const response = await axios.post(
-                'http://localhost:8080/course/postPoCo',
+                `${BACKEND_URL}/course/postPoCo`,
                 {
                     inputArray: mappingMatrix,
                     courseId: courseId

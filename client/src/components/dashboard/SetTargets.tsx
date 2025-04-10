@@ -31,7 +31,8 @@ const Targets: React.FC = () => {
             console.log(token, courseId)
 
             try {
-                const response = await axios.get("http://localhost:8080/course/getTargets", {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${BACKEND_URL}/course/getTargets`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`
@@ -91,8 +92,9 @@ const Targets: React.FC = () => {
 
         try {
             // POST to /course/postTargets
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
             const response = await axios.post(
-                "http://localhost:8080/course/postTargets",
+                `${BACKEND_URL}/course/postTargets`,
                 {
                     courseId,
                     coTargets: coCurrent.co.map(val => parseInt(val) || 0),
@@ -109,7 +111,7 @@ const Targets: React.FC = () => {
             console.log(response.data.message); // Should log "Target Updated"
 
             // Fetch updated targets
-            const getResponse = await axios.get("http://localhost:8080/course/getTargets", {
+            const getResponse = await axios.get(`${BACKEND_URL}/course/getTargets`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`

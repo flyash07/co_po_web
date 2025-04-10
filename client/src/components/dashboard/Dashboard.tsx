@@ -51,7 +51,8 @@ const Dashboard: React.FC = () => {
 
     const courseId = localStorage.getItem('currentCourse');
     try {
-      const response = await axios.get("http://localhost:8080/index/courseDet", {
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+      const response = await axios.get(`${BACKEND_URL}/index/courseDet`, {
         headers: {
           Authorization: `${token}`,
         },

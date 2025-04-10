@@ -27,7 +27,8 @@ const Targets: React.FC = () => {
             }
 
             try {
-                const response = await axios.get("http://localhost:8080/course/getTargets", {
+                const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${BACKEND_URL}/course/getTargets`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`

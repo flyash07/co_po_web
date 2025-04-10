@@ -14,6 +14,10 @@ const cieRouter=require('./routes/cieRouter')
 const feedbackRouter=require('./routes/feedbackRouter')
 const finalRouter=require('./routes/finalRouter')
 
+//for admin and hod
+const adminRouter = require('./routes/adminRouter')
+//const hodRouter = require('./routes/hodRouter')
+
 const cors=require('cors')
 const corsParams={
     origin:"http://localhost:5173"
@@ -33,4 +37,10 @@ app.use('/course',courseRouter)
 app.use('/cie',cieRouter)
 app.use('/feedback',feedbackRouter)
 app.use('/final',finalRouter)
+
+//for admin and hod
+app.use('/admin', adminRouter)
+//app.use('/hod', hodRouter)
+
+
 app.listen(8080)

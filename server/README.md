@@ -923,3 +923,202 @@ Tells if CO Targets and PoPso Targets are set
     "copoSet": false
 }
 ```
+### ADMIN APIs
+
+## `/admin/addfaculty` Endpoint
+
+### Description
+
+Creating faculty profiles from Excel data
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "facultyID": "P014",
+    "email": "dice@univ.edu",
+    "name": "Dr. dice",
+    "phoneNo": 1234567892,
+    "dept": "CSE",
+    "password": "uiop",
+    "designation": "Associate Professor"
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "1 faculty members added successfully"
+}
+```
+
+## `/admin/addsection` Endpoint
+
+### Description
+
+Creating sections ('dept', 'program', 'batch', 'sem')  from Excel data
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "name": "A",
+    "dept": "CSE",
+    "program": "B.Tech",
+    "batch": 2026,
+    "sem": 6
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "1 sections added successfully"
+}
+```
+
+## `/admin/addcourse` Endpoint
+
+### Description
+
+Creating courses  from Excel data
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "name": "Operating Systems",
+    "courseID": "CS401",
+    "type": "Core",
+    "program": "Btech",
+    "sem": 4,
+    "year": 2025,
+    "oddEven": "Even",
+    "dept": "CSE",
+    "coStatements": "good theory-2, better lab-3"
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "1 courses added successfully"
+}
+```
+
+## `/admin/addstudents` Endpoint
+
+### Description
+
+Creating students from Excel data
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "name": "Aanya",
+    "regNo": 395820614,
+    "dept ": "CSE",
+    "program": "Btech",
+    "batch": 2026,
+    "sem": 4,
+    "section": "A",
+    "courses": "CSE301"
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "1 students added successfully"
+}
+```
+
+## `/admin/course-allocation` Endpoint
+
+### Description
+
+Creating courseSections and assigning sections to professors from Excel data. Assigning role of Course Coordinator if role is "coordinator".
+
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "facultyID": "P001",
+    "name": "Dr. Alice",
+    "courseID": "CS301",
+    "section": "A",
+    "dept": "CSE",
+    "program": "B.Tech",
+    "batch": 2026,
+    "sem": 6,
+    "role": "professor"
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message": "1 courseSections added successfully"
+}
+```

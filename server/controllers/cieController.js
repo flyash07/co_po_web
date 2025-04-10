@@ -248,7 +248,8 @@ module.exports.getSee = async (req, res) => {
         result.push({
             name: studentMap[studentId]?.name || "Unknown",
             regNo: studentMap[studentId]?.regNo || "Unknown",
-            cie: coResult
+            cie: coResult,
+            grade: entry["grade"]
         });
     });
 
@@ -399,6 +400,7 @@ module.exports.postCie=async(req,res)=>{
         }
 
         marksDoc[assignmentType] = marksData;
+        marksDoc["grade"] = row.grade
         await marksDoc.save();
     }
 

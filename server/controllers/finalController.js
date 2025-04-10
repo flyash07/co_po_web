@@ -154,7 +154,7 @@ module.exports.postPoPlan=async(req,res)=>{
         }
 
         const updatedCourse = await courseSection.findOneAndUpdate(
-            { course: courseId, section: sectionId },  // filter by course & section
+            { courseId: courseId, sectionId: sectionId },  // filter by course & section
             {
             $set: {
                 poActionPlans,

@@ -71,7 +71,10 @@ const marksSchema=mongoose.Schema({
             value:Number
         }
     ],
-    grade:String
+    grade:{
+        type:String,
+        default:" "
+    }
 })
 
 module.exports=mongoose.model("marks",marksSchema)

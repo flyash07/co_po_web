@@ -248,7 +248,8 @@ module.exports.getSee = async (req, res) => {
         result.push({
             name: studentMap[studentId]?.name || "Unknown",
             regNo: studentMap[studentId]?.regNo || "Unknown",
-            cie: coResult
+            cie: coResult,
+            grade: entry["grade"]
         });
     });
 

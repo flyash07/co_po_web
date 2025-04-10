@@ -58,9 +58,18 @@ const courseSectionSchema=mongoose.Schema({
         stat:String
     }
     ],
-    rootCauseCo:String,
-    rootCausePo:String,
-    rootCausePso:String,
+    rootCauseCo:{
+        type:String,
+        default:" "
+    },
+    rootCausePo:{
+        type:String,
+        default:" "
+    },
+    rootCausePso:{
+        type:String,
+        default:" "
+    },
 })
 
 module.exports=mongoose.model("courseSection",courseSectionSchema)

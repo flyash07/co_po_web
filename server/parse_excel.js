@@ -2,7 +2,7 @@ const XLSX = require('xlsx');
 const path = require('path');
 
 // Load the Excel file
-const workbook = XLSX.readFile('../lab_sample/lab_grade.xlsx');
+const workbook = XLSX.readFile('./tempCourse.xlsx');
 
 // Get the first sheet name
 const sheetName = workbook.SheetNames[0];

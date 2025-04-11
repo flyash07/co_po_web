@@ -4,7 +4,8 @@ const Section =require('../models/sectionModel');
 const Course =require('../models/courseModel');
 const Students =require('../models/studentModel');
 const courseSection =require('../models/courseSection');
-const bcrypt=require('bcrypt')
+const bcrypt=require('bcrypt');
+const studentModel = require('../models/studentModel');
 
 //Adding new faculty using Excel
 module.exports.addFaculty =  async (req, res) => {
@@ -209,9 +210,9 @@ const processCOStatements = (inputString) => {
         
         // Only process if valid string input
         if (typeof inputString === 'string' && inputString.trim()) {
-            processed = inputString.split(', ')
+            processed = inputString.split('| ')
                 .map(pair => {
-                    const [description, bloomsLevel] = pair.split('-');
+                    const [description, bloomsLevel] = pair.split('#');
                     return {
                         description: (description || '').trim(),
                         bloomsLevel: (bloomsLevel || '').trim()
@@ -249,50 +250,56 @@ module.exports.addStudents =  async (req, res) => {
             });
         }
 
-        const processedStudent = await Promise.all(studentsData.map(async (student) => {
-            // Validate required fields
-            const requiredFields = ['name', 'regNo', 'dept', 'program', 'batch', 'sem', 'section', 'courses'];
-            const missingFields = requiredFields.filter(field => !(field in student));
-            
-            if (missingFields.length > 0) {
+        const processedStudent = await Promise.all(
+            studentsData.map(async (student) => {
+              const requiredFields = ['name', 'regNo', 'dept', 'program', 'batch', 'sem', 'section', 'courses'];
+          
+              // Skip if student already exists
+              const stu = await studentModel.findOne({ regNo: student.regNo });
+              if (stu) return;
+          
+              // Validate required fields
+              const missingFields = requiredFields.filter(field => !(field in student));
+              if (missingFields.length > 0) {
                 throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
-            }
-
-            // Convert department code to ObjectId
-            const department = await Dept.findOne({ name: student.dept });
-            if (!department) {
+              }
+          
+              // Get Department
+              const department = await Dept.findOne({ name: student.dept });
+              if (!department) {
                 throw new Error(`Invalid department name: ${student.dept}`);
-            }
-
-            const section = await Section.findOne({
+              }
+          
+              // Get Section
+              const section = await Section.findOne({
                 program: student.program,
-                batch: String(student.batch),  
-                sem: String(student.sem),      
-                name: student.section          
-            }).lean();
-
-
-            if (!section) {
+                batch: String(student.batch),
+                sem: String(student.sem),
+                name: student.section
+              }).lean();
+          
+              if (!section) {
                 throw new Error(`Section does not exist`);
-            }
-
-            const courseCodes = student.courses.split(',').map(code => code.trim()).filter(code => code !== '');
-            
-            const current_courses = []
-            for(let i = 0; i < courseCodes.length; i++)
-            {
-                courseCode = courseCodes[i];
+              }
+          
+              // Get Courses
+              const courseCodes = student.courses
+                .split(',')
+                .map(code => code.trim())
+                .filter(code => code !== '');
+          
+              const current_courses = [];
+              for (let i = 0; i < courseCodes.length; i++) {
+                const courseCode = courseCodes[i];
                 const course = await Course.findOne({ courseID: courseCode });
                 if (!course) {
-                    throw new Error(`Course not found for code: ${courseCode}`);
+                  throw new Error(`Course not found for code: ${courseCode}`);
                 }
-                current_courses.push(
-                    course._id,
-                );
-            }
-
-            // Prepare new student document
-            return new Students({
+                current_courses.push(course._id);
+              }
+          
+              // Return new student object
+              return new Students({
                 name: student.name,
                 regNo: student.regNo,
                 dept: department._id,
@@ -301,15 +308,25 @@ module.exports.addStudents =  async (req, res) => {
                 sem: student.sem,
                 section: section._id,
                 currentCourses: current_courses
-            });
-        }));
-
-        // Insert all students
-        const result = await Students.insertMany(processedStudent);
-        console.log("students added successfully");
-        res.status(201).json({
+              });
+            })
+          );
+          
+          // ❗ Filter out undefined students (those skipped due to already existing)
+          const validStudents = processedStudent.filter(Boolean);
+          
+          if (validStudents.length === 0) {
+            return res.status(200).json({ message: "No new students added. All students already exist." });
+          }
+          
+          // Insert only valid students
+          const result = await Students.insertMany(validStudents);
+          console.log("Students added successfully");
+          
+          res.status(201).json({
             message: `${result.length} students added successfully`,
-        });
+          });
+          
     }catch(err){
         console.log(err)
         res.status(500).json({'error':"InternalServerError"})

@@ -34,7 +34,10 @@ const Dashboard: React.FC = () => {
   const [coSet, setCoSet] = useState<boolean>(false);
   const [copoSet, setCopoSet] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  const prof_name=localStorage.getItem("userName");
+  const prof_mail=localStorage.getItem("userEmail");
+  const prof_desig=localStorage.getItem("designation");
+  const prof_id=localStorage.getItem("empid");
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
     if (storedCourses) {
@@ -183,7 +186,7 @@ const Dashboard: React.FC = () => {
 
         {!isCollapsed && (
           <>
-            <h2 className="prof-name">{user}</h2>
+            <h2 className="prof-name">{prof_name}<br />{prof_desig}<br />{prof_id}<br />{prof_mail}</h2>
             <div className="dropdown">
               <button className="dropdown-btn">Courses ▼</button>
               <div className="dropdown-content">
@@ -193,7 +196,7 @@ const Dashboard: React.FC = () => {
                       key={course.id}
                       onClick={() => handleCourseSelect(course)}
                     >
-                      {course.name}
+                      {course.name} <br />Sem:{course.sem}<br />Section:{course.secName}
                     </button>
                   ))
                 ) : (

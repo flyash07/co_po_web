@@ -46,18 +46,9 @@ const courseSectionSchema=mongoose.Schema({
         ],
         default: () => Array.from({ length: 4 }, () => ({ targetSet: 0 }))
     },
-    coActionPlans:[{
-        stat:String
-    }
-    ],
-    poActionPlans:[{
-        stat:String
-    }
-    ],
-    psoActionPlans:[{
-        stat:String
-    }
-    ],
+    coActionPlans: Array.from({ length: 8 }, () => ({ stat: ' ' })),
+poActionPlans: Array.from({ length: 12 }, () => ({ stat: ' ' })),
+psoActionPlans: Array.from({ length: 4 }, () => ({ stat: ' ' })),
     rootCauseCo:{
         type:String,
         default:" "

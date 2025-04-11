@@ -54,11 +54,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
       // Route based on designation
       if (output.designation === "admin") {
+        setUser("admin");
         navigate("/admin");
-      } else {
-        console.log("here");
+      } else if  (output.designation === "HOD"){
+        setUser("HOD");
         navigate("/dashboard");
-        console.log("here2");
+      } else {
+        setUser("Professor");
+        navigate("/dashboard");
       }
 
       // Reset fields

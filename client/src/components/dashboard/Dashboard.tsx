@@ -25,7 +25,7 @@ interface Course {
   sem: string;
   secName: string;
   role: string;
-  type:string;
+  type: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -38,10 +38,10 @@ const Dashboard: React.FC = () => {
   const [copoSet, setCopoSet] = useState<boolean>(false);
   const [isLabCourse, setIsLabCourse] = useState<boolean>(false);
   const navigate = useNavigate();
-  const prof_name=localStorage.getItem("userName");
-  const prof_mail=localStorage.getItem("userEmail");
-  const prof_desig=localStorage.getItem("designation");
-  const prof_id=localStorage.getItem("empid");
+  const prof_name = localStorage.getItem("userName");
+  const prof_mail = localStorage.getItem("userEmail");
+  const prof_desig = localStorage.getItem("designation");
+  const prof_id = localStorage.getItem("empid");
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
     if (storedCourses) {
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
     } else if (course.role === "professor") {
       setUser("Professor");
     }
-    setIsLabCourse(course.type==="Lab");
+    setIsLabCourse(course.type === "Lab");
     fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };
@@ -180,8 +180,9 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="dashboard">
-      <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+    <div className="dashboard-layout">
+      {/* Sidebar */}
+      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
         <button
           className="toggle-btn"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -191,7 +192,15 @@ const Dashboard: React.FC = () => {
 
         {!isCollapsed && (
           <>
-            <h2 className="prof-name">{prof_name}<br />{prof_desig}<br />{prof_id}<br />{prof_mail}</h2>
+            <h2 className="prof-name">
+              {prof_name}
+              <br />
+              {prof_desig}
+              <br />
+              {prof_id}
+              <br />
+              {prof_mail}
+            </h2>
             <div className="dropdown">
               <button className="dropdown-btn">Courses ▼</button>
               <div className="dropdown-content">
@@ -201,7 +210,11 @@ const Dashboard: React.FC = () => {
                       key={course.id}
                       onClick={() => handleCourseSelect(course)}
                     >
-                      {course.name} <br />Sem:{course.sem}<br />Section:{course.secName}
+                      {course.name}
+                      <br />
+                      Sem: {course.sem}
+                      <br />
+                      Section: {course.secName}
                     </button>
                   ))
                 ) : (
@@ -211,91 +224,79 @@ const Dashboard: React.FC = () => {
             </div>
           </>
         )}
-      </div>
+      </aside>
 
-      <div className="main-content">
-        {selectedPage && (
-          <div className="back-button-container">
-            <button
-              className="back-button"
-              onClick={() => setSelectedPage(null)}
-            >
-              ← Back
-            </button>
-          </div>
-        )}
-        {hod === true && (
-          <div style={{ textAlign: "right", marginBottom: "1rem" }}>
-            <button
-              onClick={() => navigate("/department-details")}
-              style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Click for Department Details
-            </button>
-          </div>
-        )}
-        <div className="content-wrapper">
-          {!selectedPage && (
-            <>
-              <h1>Dashboard</h1>
-              <table className="dashboard-table">
-                <tbody>
-                  {links.map((link) => {
-                    const isVisible = link.visibleTo.includes(user);
-                    const isEnabled = link.enabled();
+      {/* Main Content */}
+      <main className="main-content">
+        <div className="main-header">
+          <button
+            className="back-button"
+            onClick={() => setSelectedPage(null)}
+            style={{ visibility: selectedPage ? "visible" : "hidden" }}
+          >
+            ← Back
+          </button>
 
-                    if (!isVisible) return null;
-
-                    const shouldDisable = !isEnabled && user === "Professor"; // Only lock for professors
-
-                    return (
-                      <tr key={link.key}>
-                        <td>
-                          <button
-                            onClick={() => {
-                              if (!shouldDisable) setSelectedPage(link.key);
-                            }}
-                            disabled={shouldDisable}
-                            style={{
-                              opacity: shouldDisable ? 0.6 : 1,
-                              cursor: shouldDisable ? "not-allowed" : "pointer",
-                            }}
-                          >
-                            {link.name} {shouldDisable && "🔒"}
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </>
-          )}
-
-          {/* Page rendering based on selection */}
-          {/* {selectedPage === "general-instructions" && <GeneralInstructions />} */}
-          {selectedPage === "targets" && <Targets />}
-          {selectedPage === "set-targets" && <SetTargets />}
-          {selectedPage === "co-po-mapping" && <CoPoMapping />}
-          {selectedPage === "mapcopo" && <MapCoPo />}
-          {selectedPage === "co-root-cause" && <CoRootCause />}
-          {selectedPage === "po-root-cause" && <PoRootCause />}
-          {selectedPage === "co-action-plan" && <CoActionPlan />}
-          {selectedPage === "po-action-plan" && <PoActionPlan />}
-          {selectedPage === "co-attainment" && <CoAttainment />}
-          {selectedPage === "course-feedback" && <CourseFeedback />}
-          {selectedPage === "cie-marks" &&(isLabCourse ? <CieLab /> : <CieMarks />)}
-          {selectedPage === "see-marks" &&(isLabCourse ? <SeeLab /> : <SeeMarks />)}
-          {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
+          <button
+            className="department-btn"
+            onClick={() => navigate("/department-details")}
+            style={{ visibility: hod ? "visible" : "hidden" }}
+          >
+            Click for Department Details
+          </button>
         </div>
-      </div>
+
+        {!selectedPage && (
+          <>
+            <h1>Dashboard</h1>
+            <table className="dashboard-table">
+              <tbody>
+                {links.map((link) => {
+                  const isVisible = link.visibleTo.includes(user);
+                  const isEnabled = link.enabled();
+
+                  if (!isVisible) return null;
+
+                  const shouldDisable = !isEnabled && user === "Professor";
+
+                  return (
+                    <tr key={link.key}>
+                      <td>
+                        <button
+                          onClick={() =>
+                            !shouldDisable && setSelectedPage(link.key)
+                          }
+                          disabled={shouldDisable}
+                          className={shouldDisable ? "disabled" : ""}
+                        >
+                          {link.name} {shouldDisable && "🔒"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {/* Render dynamic pages */}
+        {selectedPage === "targets" && <Targets />}
+        {selectedPage === "set-targets" && <SetTargets />}
+        {selectedPage === "co-po-mapping" && <CoPoMapping />}
+        {selectedPage === "mapcopo" && <MapCoPo />}
+        {selectedPage === "co-root-cause" && <CoRootCause />}
+        {selectedPage === "po-root-cause" && <PoRootCause />}
+        {selectedPage === "co-action-plan" && <CoActionPlan />}
+        {selectedPage === "po-action-plan" && <PoActionPlan />}
+        {selectedPage === "co-attainment" && <CoAttainment />}
+        {selectedPage === "course-feedback" && <CourseFeedback />}
+        {selectedPage === "cie-marks" &&
+          (isLabCourse ? <CieLab /> : <CieMarks />)}
+        {selectedPage === "see-marks" &&
+          (isLabCourse ? <SeeLab /> : <SeeMarks />)}
+        {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
+      </main>
     </div>
   );
 };

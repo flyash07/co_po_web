@@ -36,7 +36,7 @@ const App: React.FC = () => {
           <Route
             path="/department-details"
             element={
-              <ProtectedRoute requiredRole={["HOD"]}>
+              <ProtectedRoute requireHOD={true}>
                 <DepartmentDetails />
               </ProtectedRoute>
             }

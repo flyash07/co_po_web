@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {Link} from "react-router-dom";
 import axios from "axios";
 import "./DepartmentDetails.css"; // ← import the CSS here
 
@@ -51,7 +52,14 @@ const DepartmentDetails: React.FC = () => {
   if (loading) return <p>Loading department details...</p>;
 
   return (
+    <>
+    <div className="back-button-container">
+        <Link to="/dashboard" className="back-button">
+          ← Back
+        </Link>
+      </div>
     <div className="department-container">
+      
       <h1 className="department-title">Department Details</h1>
       <div className="section">
         <h2 className="section-title">Faculty Members</h2>
@@ -93,6 +101,7 @@ const DepartmentDetails: React.FC = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 

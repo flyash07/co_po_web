@@ -3,21 +3,33 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 interface ProtectedRouteProps {
-  requiredRole: string[];
+  requiredRole?: string[]; // optional
+  requireHOD?: boolean;    // optional
   children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole, children }) => {
-  const { user } = useUser();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  requiredRole = [],
+  requireHOD = false,
+  children,
+}) => {
+  const { user, hod } = useUser();
 
   if (user === "") {
-    // Optional: Show loading indicator while restoring user
     return <div>Loading...</div>;
   }
 
-  return requiredRole.includes(user) ? children : <Navigate to="/login" />;
+  // HOD-only routes
+  if (requireHOD && !hod) {
+    return <Navigate to="/login" />;
+  }
 
+  // Role-based access
+  if (requiredRole.length > 0 && !requiredRole.includes(user)) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 };
-
 
 export default ProtectedRoute;

@@ -320,7 +320,7 @@ module.exports.postSeeLab=async(req,res)=>{
     const {courseId,data}=req.body
     for(let i=0;i<data.length;i++){
         let stu=await studentModel.findOne({regNo:data[i].regno})
-        let marks=await marksModel.find({course:courseId,student:stu._id})
+        let marks=await marksModel.findOne({course:courseId,student:stu._id})
         marks["grade"]=data[i].grade
         await marks.save()
     }

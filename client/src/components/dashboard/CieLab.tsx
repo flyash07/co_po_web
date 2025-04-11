@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
-import './CieMarks.css';
+import './CieLab.css';
 
-const assignmentLabelMap: Record<string, string> = {
-    ass1: 'Assignment 1',
-    ass2: 'Assignment 2',
-    ass3: 'Assignment 3',
-    ass4: 'Assignment 4',
-    midSem: 'Mid-Sem'
-};
-
-const CieMarks: React.FC = () => {
+const CieLab: React.FC = () => {
     const [assignmentType, setAssignmentType] = useState('ass1');
     const [students, setStudents] = useState<any[]>([]);
     const [summary, setSummary] = useState<any>({});
@@ -33,17 +25,16 @@ const CieMarks: React.FC = () => {
 
         try {
             const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-            const res = await axios.get(`${BACKEND_URL}/cie/getCie`, {
+            const res = await axios.get(`${BACKEND_URL}/lab/getCie`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
                 },
                 params: { courseId }
             });
-
+            console.log(res.data)
             setStudents(res.data.students || []);
             setSummary(res.data.summary || {});
-            setAsswiseData(res.data.asswise || []);
         } catch (err) {
             console.error("Failed to fetch CIE data:", err);
         }
@@ -52,10 +43,6 @@ const CieMarks: React.FC = () => {
     useEffect(() => {
         fetchCieData();
     }, []);
-
-    const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setAssignmentType(e.target.value);
-    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
@@ -93,10 +80,10 @@ const CieMarks: React.FC = () => {
                 const payload = {
                     data: jsonData,
                     courseId: courseId,
-                    assignmentType: assignmentType
+                    assignmentType:'ass1',
                 };
                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.post(`${BACKEND_URL}/cie/postCie`, payload, {
+                const res = await axios.post(`${BACKEND_URL}/lab/postCie`, payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`
@@ -190,48 +177,6 @@ const CieMarks: React.FC = () => {
                     ))}
                 </tbody>
             </table>
-
-            {/* Assignment-wise CO Marks */}
-            <h3>Assignment-wise CO Marks</h3>
-            <table className="asswise-table">
-                <thead>
-                    <tr>
-                        <th>Sl No.</th>
-                        <th>Name</th>
-                        <th>Reg No</th>
-                        {assignmentKeys.map(ass => (
-                            <th key={ass} colSpan={allCOs.length}>
-                                {assignmentLabelMap[ass]}
-                            </th>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td colSpan={3}></td>
-                        {assignmentKeys.map(() =>
-                            allCOs.map(co => (
-                                <th key={co}>{co}</th>
-                            ))
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {asswiseData.map((student, idx) => (
-                        <tr key={student.regNo}>
-                            <td>{idx + 1}</td>
-                            <td>{student.name}</td>
-                            <td>{student.regNo}</td>
-                            {assignmentKeys.map(ass =>
-                                allCOs.map(co => (
-                                    <td key={`${student.regNo}-${ass}-${co}`}>
-                                        {student.coWiseMarks?.[ass]?.[co] ?? '-'}
-                                    </td>
-                                ))
-                            )}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
             {/* CO Summary Table */}
             <h3>CO Summary</h3>
             <table className="summary-table">
@@ -262,20 +207,7 @@ const CieMarks: React.FC = () => {
             {/* Upload Section */}
             <div className="excel-ip">
                 <label>
-                    Assignment:
-                    <select value={assignmentType} onChange={handleAssignmentChange}>
-                        {assignmentKeys.map(ass => (
-                            <option
-                                key={ass}
-                                value={ass}
-                                style={{
-                                    backgroundColor: doesAssignmentHaveData(ass) ? 'green' : 'gray'
-                                }}
-                            >
-                                {assignmentLabelMap[ass]}
-                            </option>
-                        ))}
-                    </select>
+                    Excel file:
                 </label>
 
                 <input type="file" accept=".xlsx" onChange={handleFileChange} />
@@ -285,4 +217,4 @@ const CieMarks: React.FC = () => {
     );
 };
 
-export default CieMarks;
+export default CieLab;

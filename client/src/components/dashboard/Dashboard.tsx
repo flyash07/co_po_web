@@ -18,13 +18,14 @@ import PoActionPlan from "./PoActionPlan";
 import SetTargets from "./SetTargets";
 import MapCoPo from "./MapCoPo";
 import CieLab from "./CieLab";
-// import SeeLab from "./SeeLab";
+import SeeLab from "./SeeLab";
 interface Course {
   id: string;
   name: string;
   sem: string;
   secName: string;
   role: string;
+  type:string;
 }
 
 const Dashboard: React.FC = () => {
@@ -87,7 +88,7 @@ const Dashboard: React.FC = () => {
     } else if (course.role === "professor") {
       setUser("Professor");
     }
-    setIsLabCourse(course.name.toLowerCase().includes("lab"));
+    setIsLabCourse(course.type==="Lab");
     fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };

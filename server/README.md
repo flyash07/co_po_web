@@ -1122,3 +1122,133 @@ Creating courseSections and assigning sections to professors from Excel data. As
     "message": "1 courseSections added successfully"
 }
 ```
+
+## `/root/getPo` Endpoint
+
+### Description
+Gives u root cause for Po
+
+### HTTP Method
+
+`get`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "courseID": "67f65f79f484d2f96cfdab40",
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "statPo": "helll",
+    "statPso": "helll"
+}
+```
+
+## `/root/getCo` Endpoint
+
+### Description
+Gives u root cause for Co
+
+### HTTP Method
+
+`Get`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "courseID": "67f65f79f484d2f96cfdab40",
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "statCo": "helll"
+}
+```
+
+## `/root/PostCo` Endpoint
+
+### Description
+Post co root cause
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "courseID": "67f65f79f484d2f96cfdab40",
+    "statCo":"kcbwu"
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message":"Done"
+}
+```
+
+## `/root/PostPo` Endpoint
+
+### Description
+Post Po and Pso root cause
+### HTTP Method
+
+`post`
+
+### Request Body
+
+- `header.Authorization`:JWT Token
+- `body`(Sample below)
+```
+[
+  {
+    "courseID": "67f65f79f484d2f96cfdab40",
+    "statPo":"kcbwu",
+    "statPso":"kcbwu",
+  }
+]
+```
+  
+### Response Type
+
+- `JSON`:Message
+
+### Example Response
+```
+{
+    "message":"Done"
+}
+```

@@ -13,6 +13,7 @@ const courseRouter=require('./routes/courseRouter')
 const cieRouter=require('./routes/cieRouter')
 const feedbackRouter=require('./routes/feedbackRouter')
 const finalRouter=require('./routes/finalRouter')
+const rootRouter=require('./routes/rootcauseRouter')
 
 //for admin and hod
 const adminRouter = require('./routes/adminRouter')
@@ -42,5 +43,6 @@ app.use('/final',finalRouter)
 app.use('/admin', adminRouter)
 app.use('/hod', hodRouter)
 
+app.use('/root',rootRouter)
 
 app.listen(8080)

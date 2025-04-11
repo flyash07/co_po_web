@@ -3,7 +3,7 @@ const courseSection = require("../models/courseSection");
 const marksModel = require("../models/marksModel")
 const studentModel = require("../models/studentModel")
 
-module.exports.getCie = async (req, res) => {
+module.exports.getCieLab = async (req, res) => {
         const { courseId } = req.query;
 
         const secObj = req.user.section.find(sec => sec.course == courseId);
@@ -18,7 +18,7 @@ module.exports.getCie = async (req, res) => {
         const stuIdList = stuIds.map(s => s.id);
 
         const course = await courseModel.findById(courseId);
-        const allAssKeys = ["ass1", "ass2", "ass3", "ass4", "midSem"];
+        const allAssKeys = ["ass1", "ass2", "ass3"];
 
         const maxPerCO = {};
         allAssKeys.forEach(key => {
@@ -64,7 +64,7 @@ module.exports.getCie = async (req, res) => {
                 const total = maxPerCO[co];
                 const percentage = (obtained / total) * 100;
                 let ala = 1;
-                if (percentage >= 75) ala = 3;
+                if (percentage >= 85) ala = 3;
                 else if (percentage >= 50) ala = 2;
         
                 coResult[co] = {
@@ -288,7 +288,7 @@ module.exports.getSee = async (req, res) => {
 module.exports.postCie=async(req,res)=>{
     //console.log(req.body)
     const {data,courseId,assignmentType}=req.body
-    if (!['ass1', 'ass2', 'ass3', 'ass4', 'midSem', 'endSem'].includes(assignmentType)) {
+    if (!['ass1', 'ass2', 'ass3'].includes(assignmentType)) {
         throw new Error('Invalid assignment type');
     }
 

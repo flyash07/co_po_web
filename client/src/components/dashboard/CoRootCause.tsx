@@ -1,7 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./CoRootCause.css";
 
 const CoRootCause: React.FC = () => {
+  const [rootCauseText, setRootCauseText] = useState("");
+
+  useEffect(() => {
+    const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+
+        const courseId = localStorage.getItem('currentCourse');
+
+        if (!token || !courseId) {
+            console.error("Missing token or courseId");
+            alert("You're missing token or courseId. Please re-authenticate or refresh.");
+            return;
+        }
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    axios.get(`${BACKEND_URL}/root/getCo`, {
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
+      },
+      params: {
+          "courseId":courseId,
+      }})
+      .then(response => {
+        setRootCauseText(response.data.statCo || "");
+      })
+      .catch(error => {
+        console.error("Error fetching root cause:", error);
+      });
+  }, []);
+
+  const handleSubmit = () => {
+    const token = document.cookie.split('; ')
+            .find(row => row.startsWith('jwtToken='))
+            ?.split('=')[1];
+
+    const courseId = localStorage.getItem('currentCourse');
+
+    if (!token || !courseId) {
+        console.error("Missing token or courseId");
+        alert("You're missing token or courseId. Please re-authenticate or refresh.");
+        return;
+    }
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const payload={"courseId":courseId,"statCo":rootCauseText};
+    console.log(payload);
+    axios.post(`${BACKEND_URL}/root/postCo`, payload, {
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
+      }
+  })
+      .then(response => {
+        alert("Root cause submitted successfully!");
+      })
+      .catch(error => {
+        console.error("Error submitting root cause:", error);
+        alert("Failed to submit root cause.");
+      });
+  };
+
   return (
     <div className="co-root-cause-container">
       <h1>Course Outcome (CO) Attainment Analysis (Root Cause Analysis)</h1>
@@ -46,6 +108,19 @@ const CoRootCause: React.FC = () => {
           <strong>Action taken:</strong> Project planning, monitoring, and evaluation included in rubrics related to these aspects.
         </p>
         <p><strong>POs Attainment Levels and Actions for improvement:</strong> CAYm1 only</p>
+      </div>
+
+      <div className="form-section">
+        <label htmlFor="rootCauseInput">Enter CO Root Cause:</label>
+        <textarea
+          id="rootCauseInput"
+          value={rootCauseText}
+          onChange={(e) => setRootCauseText(e.target.value)}
+          rows={4}
+          cols={50}
+        />
+        <br />
+        <button onClick={handleSubmit}>Submit</button>
       </div>
 
       <p className="closing-note">

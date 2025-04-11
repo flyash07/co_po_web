@@ -1,73 +1,102 @@
-
 .po-root-cause-container {
-    padding: 40px;
-    font-family: Arial, sans-serif;
     max-width: 900px;
     margin: 0 auto;
-    color: #333;
-    background: #fff;
-    padding-bottom: 80px;
-}
-
-
-.po-root-cause-container h1 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #002855;
-    margin-bottom: 15px;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
     text-align: center;
-}
-
-
-.subtitle {
-    font-size: 16px;
+    color: #333;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
     color: #444;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-
-.note {
-    font-size: 14px;
-    color: #333;
-    font-style: italic;
-    margin-bottom: 20px;
-}
-
-
-.head {
-    font-size: 22px;
-    font-weight: bold;
-    color: #a00000;
-    margin-top: 30px;
-}
-
-
-.example h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #d10000;
-    margin-top: 20px;
-    margin-bottom: 5px;
-}
-
-
-.example p {
-    font-size: 15px;
+  }
+  
+  .note {
+    background-color: #fff8e1;
+    border-left: 6px solid #ffc107;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 6px;
+    color: #5f4c00;
+  }
+  
+  .head {
+    margin-top: 2rem;
+    font-size: 1.3rem;
     color: #222;
-    line-height: 1.6;
-    margin-bottom: 10px;
-}
-
-
-.example p strong {
-    font-weight: bold;
-    color: #000;
-}
-
-
-.closing-note {
-    font-size: 14px;
+  }
+  
+  .example {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .example h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .example p {
+    margin: 0.3rem 0;
     color: #555;
-    border-top: 1px solid #ccc;
-}
+  }
+  
+  .form-section {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-section label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+  
+  button {
+    align-self: flex-start;
+    background-color: #007bff;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .closing-note {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  

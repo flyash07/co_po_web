@@ -219,83 +219,83 @@ async function populate() {
     });
 
     // 2. Create Sections
-    const sectionNames = ["A", "B", "C", "D"];
-    const sections = await Promise.all(sectionNames.map(name =>
-        Section.create({
-            name,
-            dept: cseDept._id,
-            program: "BTech CSE",
-            batch: "2022-2026",
-            sem: "4"
-        })
-    ));
+    // const sectionNames = ["A", "B", "C", "D"];
+    // const sections = await Promise.all(sectionNames.map(name =>
+    //     Section.create({
+    //         name,
+    //         dept: cseDept._id,
+    //         program: "BTech CSE",
+    //         batch: "2022-2026",
+    //         sem: "4"
+    //     })
+    // ));
 
-    // 3. Create Professors
-    const profData = [
-        { facultyID: "P001", name: "Dr. Alice", email: "alice@univ.edu", phoneNo: 1234567890, designation: "Associate Professor" },
-        { facultyID: "P002", name: "Dr. Bob", email: "bob@univ.edu", phoneNo: 1234567891, designation: "Assistant Professor" },
-        { facultyID: "P003", name: "Dr. Carol", email: "carol@univ.edu", phoneNo: 1234567892, designation: "Professor" },
-        { facultyID: "P004", name: "Dr. Dave", email: "dave@univ.edu", phoneNo: 1234567893, designation: "Lecturer" }
-    ];
+    // // 3. Create Professors
+    // const profData = [
+    //     { facultyID: "P001", name: "Dr. Alice", email: "alice@univ.edu", phoneNo: 1234567890, designation: "Associate Professor" },
+    //     { facultyID: "P002", name: "Dr. Bob", email: "bob@univ.edu", phoneNo: 1234567891, designation: "Assistant Professor" },
+    //     { facultyID: "P003", name: "Dr. Carol", email: "carol@univ.edu", phoneNo: 1234567892, designation: "Professor" },
+    //     { facultyID: "P004", name: "Dr. Dave", email: "dave@univ.edu", phoneNo: 1234567893, designation: "Lecturer" }
+    // ];
 
-    const hashedProfs = await Promise.all(profData.map(async (prof) => {
-        const password = await bcrypt.hash("password123", 10);
-        return Prof.create({
-            ...prof,
-            dept: cseDept._id,
-            password,
-            section: []
-        });
-    }));
+    // const hashedProfs = await Promise.all(profData.map(async (prof) => {
+    //     const password = await bcrypt.hash("password123", 10);
+    //     return Prof.create({
+    //         ...prof,
+    //         dept: cseDept._id,
+    //         password,
+    //         section: []
+    //     });
+    // }));
 
-    // 4. Create Course with 8 COs
-    const coStatements = Array.from({ length: 8 }, (_, i) => ({
-        description: `CO${i + 1} - Understand concept ${i + 1}`,
-        bloomsLevel: ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"][i % 6]
-    }));
+    // // 4. Create Course with 8 COs
+    // const coStatements = Array.from({ length: 8 }, (_, i) => ({
+    //     description: `CO${i + 1} - Understand concept ${i + 1}`,
+    //     bloomsLevel: ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"][i % 6]
+    // }));
 
-    const course = await Course.create({
-        courseID: "CS401",
-        name: "Operating Systems",
-        type: "Core",
-        coordinator: hashedProfs[0]._id,
-        program: "BTech CSE",
-        sem: "4",
-        year: 2025,
-        oddEven: "Even",
-        dept: cseDept._id,
-        coStatements
-    });
+    // const course = await Course.create({
+    //     courseID: "CS401",
+    //     name: "Operating Systems",
+    //     type: "Core",
+    //     coordinator: hashedProfs[0]._id,
+    //     program: "BTech CSE",
+    //     sem: "4",
+    //     year: 2025,
+    //     oddEven: "Even",
+    //     dept: cseDept._id,
+    //     coStatements
+    // });
 
-    // 5. Update department with the course
-    cseDept.courses.push(course._id);
-    await cseDept.save();
+    // // 5. Update department with the course
+    // cseDept.courses.push(course._id);
+    // await cseDept.save();
 
-    // 6. Assign each professor to a section
-    for (let i = 0; i < sections.length; i++) {
-        const role = i === 0 ? "coordinator" : "professor";
-        hashedProfs[i].section.push({
-            course: course._id,
-            section: sections[i]._id,
-            role
-        });
-        await hashedProfs[i].save();
-    }
+    // // 6. Assign each professor to a section
+    // for (let i = 0; i < sections.length; i++) {
+    //     const role = i === 0 ? "coordinator" : "professor";
+    //     hashedProfs[i].section.push({
+    //         course: course._id,
+    //         section: sections[i]._id,
+    //         role
+    //     });
+    //     await hashedProfs[i].save();
+    // }
 
-    // Final output
-    console.log("\n🎓 Department:");
-    console.log(await Dept.findById(cseDept._id).populate("courses"));
+    // // Final output
+    // console.log("\n🎓 Department:");
+    // console.log(await Dept.findById(cseDept._id).populate("courses"));
 
-    console.log("\n📚 Course:");
-    console.log(await Course.findById(course._id).populate("coordinator"));
+    // console.log("\n📚 Course:");
+    // console.log(await Course.findById(course._id).populate("coordinator"));
 
-    console.log("\n👨‍🏫 Professors:");
-    for (let prof of hashedProfs) {
-        console.log(await Prof.findById(prof._id).populate("section.course section.section"));
-    }
+    // console.log("\n👨‍🏫 Professors:");
+    // for (let prof of hashedProfs) {
+    //     console.log(await Prof.findById(prof._id).populate("section.course section.section"));
+    // }
 
-    console.log("\n🏫 Sections:");
-    console.log(await Section.find({ dept: cseDept._id }));
+    // console.log("\n🏫 Sections:");
+    // console.log(await Section.find({ dept: cseDept._id }));
 
     await mongoose.disconnect();
 }

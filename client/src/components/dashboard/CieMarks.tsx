@@ -96,7 +96,7 @@ const CieMarks: React.FC = () => {
                     assignmentType: assignmentType
                 };
                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.post(`${BACKEND_URL}cie/postCie`, payload, {
+                const res = await axios.post(`${BACKEND_URL}/cie/postCie`, payload, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `${token}`

@@ -114,6 +114,7 @@ const SeeMarks: React.FC = () => {
                         <th rowSpan={2}>Sl no.</th>
                         <th rowSpan={2}>Name</th>
                         <th rowSpan={2}>Reg No</th>
+                        <th rowSpan={2}>Grade</th>
                         {coKeys.map((co) => (
                             <th key={co} colSpan={3}>CO{co}</th>
                         ))}
@@ -128,7 +129,7 @@ const SeeMarks: React.FC = () => {
                         ))}
                     </tr>
                     <tr>
-                        <td colSpan={3}>Max Marks</td>
+                        <td colSpan={4}>Max Marks</td>
                         {coKeys.map((co) => (
                             <>
                                 <td key={`${co}-tot-obt`}>{maxTotals[co]}</td>
@@ -144,6 +145,7 @@ const SeeMarks: React.FC = () => {
                             <td>{index + 1}</td>
                             <td>{student.name}</td>
                             <td>{student.regNo}</td>
+                            <td>{student.grade}</td>
                             {coKeys.map((co) => {
                                 const data = student.cie[co] || {};
                                 return (

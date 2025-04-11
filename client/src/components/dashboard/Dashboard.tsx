@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
-import CoPoMapping from "./CoPoMapping"; 
+import CoPoMapping from "./CoPoMapping";
 import CieMarks from "./CieMarks";
 import SeeMarks from "./SeeMarks";
 import CourseFeedback from "./CourseFeedback";
@@ -26,11 +27,13 @@ interface Course {
 
 const Dashboard: React.FC = () => {
   const { user, setUser } = useUser();
+  const { hod } = useUser();
   const [selectedPage, setSelectedPage] = useState<null | string>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [courseNames, setCourseNames] = useState<Course[]>([]);
   const [coSet, setCoSet] = useState<boolean>(false);
   const [copoSet, setCopoSet] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
@@ -45,11 +48,12 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const fetchCourseDetails = async () => {
-    const token = document.cookie.split('; ')
-                .find(row => row.startsWith('jwtToken='))
-                ?.split('=')[1];
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("jwtToken="))
+      ?.split("=")[1];
 
-    const courseId = localStorage.getItem('currentCourse');
+    const courseId = localStorage.getItem("currentCourse");
     try {
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
       const response = await axios.get(`${BACKEND_URL}/index/courseDet`, {
@@ -61,8 +65,8 @@ const Dashboard: React.FC = () => {
         },
       });
       const { coSet, copoSet } = response.data;
-      console.log(coSet)
-      console.log(copoSet)
+      console.log(coSet);
+      console.log(copoSet);
       setCoSet(coSet);
       setCopoSet(copoSet);
     } catch (error) {
@@ -170,7 +174,10 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
       <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <button
+          className="toggle-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           {isCollapsed ? "➤" : "✖"}
         </button>
 
@@ -201,12 +208,31 @@ const Dashboard: React.FC = () => {
       <div className="main-content">
         {selectedPage && (
           <div className="back-button-container">
-            <button className="back-button" onClick={() => setSelectedPage(null)}>
+            <button
+              className="back-button"
+              onClick={() => setSelectedPage(null)}
+            >
               ← Back
             </button>
           </div>
         )}
-
+        {hod === true && (
+          <div style={{ textAlign: "right", marginBottom: "1rem" }}>
+            <button
+              onClick={() => navigate("/department-details")}
+              style={{
+                padding: "0.5rem 1rem",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Click for Department Details
+            </button>
+          </div>
+        )}
         <div className="content-wrapper">
           {!selectedPage && (
             <>
@@ -219,8 +245,7 @@ const Dashboard: React.FC = () => {
 
                     if (!isVisible) return null;
 
-                    const shouldDisable =
-                      !isEnabled && user === "Professor"; // Only lock for professors
+                    const shouldDisable = !isEnabled && user === "Professor"; // Only lock for professors
 
                     return (
                       <tr key={link.key}>
@@ -243,7 +268,6 @@ const Dashboard: React.FC = () => {
                   })}
                 </tbody>
               </table>
-
             </>
           )}
 

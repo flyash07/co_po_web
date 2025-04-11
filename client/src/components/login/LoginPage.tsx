@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
@@ -12,7 +10,7 @@ interface LoginPageProps {
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-  const { setUser } = useUser();
+  const { setUser, setHod } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,7 +38,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       Cookies.set("jwtToken", token); // expires in 1 day
 
       // Set user role
-      setUser(output.designation);
       if (onLogin) onLogin();
 
       // Only store extra info if available (i.e. not admin)
@@ -55,12 +52,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       // Route based on designation
       if (output.designation === "admin") {
         setUser("admin");
+        setHod(false);
         navigate("/admin");
       } else if  (output.designation === "HOD"){
         setUser("HOD");
+        setHod(true);
         navigate("/dashboard");
       } else {
         setUser("Professor");
+        setHod(false);
         navigate("/dashboard");
       }
 

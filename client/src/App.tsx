@@ -5,14 +5,8 @@ import LoginPage from "./components/login/LoginPage";
 import LandingPage from "./LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/dashboard/Dashboard";
-import Targets from "./components/dashboard/Targets";
-import CoRootCause from "./components/dashboard/CoRootCause";
-import PoRootCause from "./components/dashboard/PoRootCause";
-import PoActionPlan from "./components/dashboard/PoActionPlan";
-import CoActionPlan from "./components/dashboard/CoActionPlan";
-import CoAttainment from "./components/dashboard/CoAttainment";
-import CoPoMapping from "./components/dashboard/CoPoMapping";
-import AdminPage from "./components/admin/AdminPage"; 
+import AdminPage from "./components/admin/AdminPage";
+import DepartmentDetails from "./components/hod/DepartmentDetails";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,99 +27,30 @@ const App: React.FC = () => {
             path="/dashboard/*"
             element={
               <ProtectedRoute
-              requiredRole={["Professor", "Coordinator", "HOD"]}
-            >
-              <Dashboard />
-            </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/targets"
-            element={
-              <ProtectedRoute
                 requiredRole={["Professor", "Coordinator", "HOD"]}
               >
-                <Targets />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/dashboard/CoRootCause"
+            path="/department-details"
             element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <CoRootCause />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/PoRootCause"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <PoRootCause />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/PoActionPlan"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <PoActionPlan />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/CoActionPlan"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <CoActionPlan />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/CoAttainment"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <CoAttainment />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/CoPoMapping"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <CoPoMapping />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/CourseFeedback"
-            element={
-              <ProtectedRoute
-                requiredRole={["Professor", "Coordinator", "HOD"]}
-              >
-                <CoPoMapping />
+              <ProtectedRoute requiredRole={["HOD"]}>
+                <DepartmentDetails />
               </ProtectedRoute>
             }
           />
 
           {/*Admin Page Route */}
-          <Route path="/admin" element={<ProtectedRoute
-                requiredRole={["admin"]}
-              >
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole={["admin"]}>
                 <AdminPage />
-              </ProtectedRoute>} />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AppLayout>
     </Router>

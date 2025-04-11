@@ -17,6 +17,8 @@ import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
 import SetTargets from "./SetTargets";
 import MapCoPo from "./MapCoPo";
+import CieLab from "./CieLab";
+import SeeLab from "./SeeLab";
 interface Course {
   id: string;
   name: string;
@@ -33,6 +35,7 @@ const Dashboard: React.FC = () => {
   const [courseNames, setCourseNames] = useState<Course[]>([]);
   const [coSet, setCoSet] = useState<boolean>(false);
   const [copoSet, setCopoSet] = useState<boolean>(false);
+  const [isLabCourse, setIsLabCourse] = useState<boolean>(false);
   const navigate = useNavigate();
   const prof_name=localStorage.getItem("userName");
   const prof_mail=localStorage.getItem("userEmail");
@@ -84,6 +87,7 @@ const Dashboard: React.FC = () => {
     } else if (course.role === "professor") {
       setUser("Professor");
     }
+    setIsLabCourse(course.name.toLowerCase().includes("lab"));
     fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };
@@ -286,8 +290,8 @@ const Dashboard: React.FC = () => {
           {selectedPage === "po-action-plan" && <PoActionPlan />}
           {selectedPage === "co-attainment" && <CoAttainment />}
           {selectedPage === "course-feedback" && <CourseFeedback />}
-          {selectedPage === "cie-marks" && <CieMarks />}
-          {selectedPage === "see-marks" && <SeeMarks />}
+          {selectedPage === "cie-marks" &&(isLabCourse ? <CieLab /> : <CieMarks />)}
+          {selectedPage === "see-marks" &&(isLabCourse ? <SeeLab /> : <SeeMarks />)}
           {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
         </div>
       </div>

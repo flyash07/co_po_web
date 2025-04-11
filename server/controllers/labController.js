@@ -308,6 +308,16 @@ module.exports.getSeeLab = async (req, res) => {
             });
         });
 
+        let c=0,s=0
+        for(let j=1;j<4;j++){
+            c+=j*alaSummary[j]
+            s+=alaSummary[j]
+        }
+        let att=c/s
+        let cs=await courseSection.findOne({courseId,sectionId})
+        for(let j=0;j<8;j++)
+            cs.coAttainment[j].direct.endSem=att
+        await cs.save()
         res.json({ students: result, alaSummary });
 
     } catch (err) {

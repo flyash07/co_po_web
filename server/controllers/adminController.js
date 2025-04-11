@@ -205,22 +205,34 @@ module.exports.addCourse =  async (req, res) => {
 //helper for pre-processing CO statments for course
 const processCOStatements = (inputString) => {
     try {
-        if (!inputString || typeof inputString !== 'string') {
-            return [];
+        let processed = [];
+        
+        // Only process if valid string input
+        if (typeof inputString === 'string' && inputString.trim()) {
+            processed = inputString.split(', ')
+                .map(pair => {
+                    const [description, bloomsLevel] = pair.split('-');
+                    return {
+                        description: (description || '').trim(),
+                        bloomsLevel: (bloomsLevel || '').trim()
+                    };
+                })
+                .filter(item => item.description && item.bloomsLevel);
         }
 
-        return inputString.split(', ')
-            .map(pair => {
-                const [description, bloomsLevel] = pair.split('-');
-                return {
-                    description: (description || '').trim(),
-                    bloomsLevel: (bloomsLevel || '').trim()
-                };
-            })
-            .filter(item => item.description && item.bloomsLevel);
+        // Ensure minimum 8 pairs with empty defaults
+        while (processed.length < 8) {
+            processed.push({ 
+                description: '', 
+                bloomsLevel: '' 
+            });
+        }
+
+        return processed;
     } catch (error) {
         console.error('Error processing CO statements:', error);
-        return [];
+        // Return empty array with 8 pairs even on error
+        return Array(8).fill({ description: '', bloomsLevel: '' });
     }
 };
 

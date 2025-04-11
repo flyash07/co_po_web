@@ -21,7 +21,7 @@ const hodRouter = require('./routes/hodRouter')
 
 const cors=require('cors')
 const corsParams={
-    origin:"http://localhost:5173"
+    origin:"http://localhost:5173", credentials:true,
 }
 app.use(cors(corsParams))
 app.use(express.json());

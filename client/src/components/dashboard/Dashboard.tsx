@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
-import CoPoMapping from "./CoPoMapping"; 
+import CoPoMapping from "./CoPoMapping";
 import CieMarks from "./CieMarks";
 import SeeMarks from "./SeeMarks";
 import CourseFeedback from "./CourseFeedback";
@@ -16,6 +17,8 @@ import PoRootCause from "./PoRootCause";
 import PoActionPlan from "./PoActionPlan";
 import SetTargets from "./SetTargets";
 import MapCoPo from "./MapCoPo";
+import CieLab from "./CieLab";
+import SeeLab from "./SeeLab";
 interface Course {
   id: string;
   name: string;
@@ -26,12 +29,18 @@ interface Course {
 
 const Dashboard: React.FC = () => {
   const { user, setUser } = useUser();
+  const { hod } = useUser();
   const [selectedPage, setSelectedPage] = useState<null | string>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [courseNames, setCourseNames] = useState<Course[]>([]);
   const [coSet, setCoSet] = useState<boolean>(false);
   const [copoSet, setCopoSet] = useState<boolean>(false);
-
+  const [isLabCourse, setIsLabCourse] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const prof_name=localStorage.getItem("userName");
+  const prof_mail=localStorage.getItem("userEmail");
+  const prof_desig=localStorage.getItem("designation");
+  const prof_id=localStorage.getItem("empid");
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
     if (storedCourses) {
@@ -45,11 +54,12 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const fetchCourseDetails = async () => {
-    const token = document.cookie.split('; ')
-                .find(row => row.startsWith('jwtToken='))
-                ?.split('=')[1];
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("jwtToken="))
+      ?.split("=")[1];
 
-    const courseId = localStorage.getItem('currentCourse');
+    const courseId = localStorage.getItem("currentCourse");
     try {
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
       const response = await axios.get(`${BACKEND_URL}/index/courseDet`, {
@@ -61,8 +71,8 @@ const Dashboard: React.FC = () => {
         },
       });
       const { coSet, copoSet } = response.data;
-      console.log(coSet)
-      console.log(copoSet)
+      console.log(coSet);
+      console.log(copoSet);
       setCoSet(coSet);
       setCopoSet(copoSet);
     } catch (error) {
@@ -77,6 +87,7 @@ const Dashboard: React.FC = () => {
     } else if (course.role === "professor") {
       setUser("Professor");
     }
+    setIsLabCourse(course.name.toLowerCase().includes("lab"));
     fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };
@@ -170,13 +181,16 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
       <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <button
+          className="toggle-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           {isCollapsed ? "➤" : "✖"}
         </button>
 
         {!isCollapsed && (
           <>
-            <h2 className="prof-name">{user}</h2>
+            <h2 className="prof-name">{prof_name}<br />{prof_desig}<br />{prof_id}<br />{prof_mail}</h2>
             <div className="dropdown">
               <button className="dropdown-btn">Courses ▼</button>
               <div className="dropdown-content">
@@ -186,7 +200,7 @@ const Dashboard: React.FC = () => {
                       key={course.id}
                       onClick={() => handleCourseSelect(course)}
                     >
-                      {course.name}
+                      {course.name} <br />Sem:{course.sem}<br />Section:{course.secName}
                     </button>
                   ))
                 ) : (
@@ -201,12 +215,31 @@ const Dashboard: React.FC = () => {
       <div className="main-content">
         {selectedPage && (
           <div className="back-button-container">
-            <button className="back-button" onClick={() => setSelectedPage(null)}>
+            <button
+              className="back-button"
+              onClick={() => setSelectedPage(null)}
+            >
               ← Back
             </button>
           </div>
         )}
-
+        {hod === true && (
+          <div style={{ textAlign: "right", marginBottom: "1rem" }}>
+            <button
+              onClick={() => navigate("/department-details")}
+              style={{
+                padding: "0.5rem 1rem",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Click for Department Details
+            </button>
+          </div>
+        )}
         <div className="content-wrapper">
           {!selectedPage && (
             <>
@@ -219,8 +252,7 @@ const Dashboard: React.FC = () => {
 
                     if (!isVisible) return null;
 
-                    const shouldDisable =
-                      !isEnabled && user === "Professor"; // Only lock for professors
+                    const shouldDisable = !isEnabled && user === "Professor"; // Only lock for professors
 
                     return (
                       <tr key={link.key}>
@@ -243,7 +275,6 @@ const Dashboard: React.FC = () => {
                   })}
                 </tbody>
               </table>
-
             </>
           )}
 
@@ -259,8 +290,8 @@ const Dashboard: React.FC = () => {
           {selectedPage === "po-action-plan" && <PoActionPlan />}
           {selectedPage === "co-attainment" && <CoAttainment />}
           {selectedPage === "course-feedback" && <CourseFeedback />}
-          {selectedPage === "cie-marks" && <CieMarks />}
-          {selectedPage === "see-marks" && <SeeMarks />}
+          {selectedPage === "cie-marks" &&(isLabCourse ? <CieLab /> : <CieMarks />)}
+          {selectedPage === "see-marks" &&(isLabCourse ? <SeeLab /> : <SeeMarks />)}
           {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
         </div>
       </div>

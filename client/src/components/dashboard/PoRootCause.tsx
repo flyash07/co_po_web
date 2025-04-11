@@ -59,7 +59,7 @@ const PoRootCause: React.FC = () => {
 
     const payload =
       {
-        courseID: courseId,
+        courseId: courseId,
         statPo: poRootCause,
         statPso: psoRootCause,
       };

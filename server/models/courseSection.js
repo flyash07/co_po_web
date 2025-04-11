@@ -2,11 +2,11 @@ const mongoose=require('mongoose')
 
 const courseSectionSchema=mongoose.Schema({
     courseId:{
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"course"
     },
     sectionId:{
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"section"
     },
     coAttainment:{
@@ -46,9 +46,30 @@ const courseSectionSchema=mongoose.Schema({
         ],
         default: () => Array.from({ length: 4 }, () => ({ targetSet: 0 }))
     },
-    coActionPlans: Array.from({ length: 8 }, () => ({ stat: ' ' })),
-poActionPlans: Array.from({ length: 12 }, () => ({ stat: ' ' })),
-psoActionPlans: Array.from({ length: 4 }, () => ({ stat: ' ' })),
+    coActionPlans: {
+        type: [
+            {
+                stat: { type: String, default: ' ' }
+            }
+        ],
+        default: () => Array.from({ length: 8 }, () => ({ stat: ' ' }))
+    },
+    poActionPlans: {
+        type: [
+            {
+                stat: { type: String, default: ' ' }
+            }
+        ],
+        default: () => Array.from({ length: 12 }, () => ({ stat: ' ' }))
+    },
+    psoActionPlans: {
+        type: [
+            {
+                stat: { type: String, default: ' ' }
+            }
+        ],
+        default: () => Array.from({ length: 4 }, () => ({ stat: ' ' }))
+    },    
     rootCauseCo:{
         type:String,
         default:" "

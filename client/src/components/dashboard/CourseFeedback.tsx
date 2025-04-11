@@ -129,16 +129,6 @@ const CourseFeedback: React.FC = () => {
             <h1 className="feedback-title">MANIPAL INSTITUTE OF TECHNOLOGY, MANIPAL</h1>
             <h2 className="feedback-subtitle">Course Feedback (Course End Survey(CES))</h2>
 
-            {/* Header Table */}
-            <table className="feedback-table">
-                <tbody>
-                    <tr><td className="label">Department:</td><td>Computer Science and Engineering</td><td className="label">Program:</td><td>B.Tech</td></tr>
-                    <tr><td className="label">Faculty Name:</td><td>Manamohana Krishna</td><td className="label">Semester:</td><td>IV</td></tr>
-                    <tr><td className="label">Course Code:</td><td>{courseId}</td><td className="label">Section:</td><td>C</td></tr>
-                    <tr><td className="label">Course Name:</td><td>Embedded Systems</td><td className="label">Odd/Even:</td><td>ODD</td></tr>
-                    <tr><td className="label">Type Of Course:</td><td>CORE</td><td className="label">Year:</td><td>2023-24</td></tr>
-                </tbody>
-            </table>
 
             {/* Attainment Level Table */}
             <table className="ces-table">

@@ -282,7 +282,7 @@ module.exports.addStudents =  async (req, res) => {
             // Prepare new student document
             return new Students({
                 name: student.name,
-                regno: student.regNo,
+                regNo: student.regNo,
                 dept: department._id,
                 program: student.program,
                 batch: student.batch,

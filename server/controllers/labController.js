@@ -18,7 +18,7 @@ module.exports.getCieLab = async (req, res) => {
         const stuIdList = stuIds.map(s => s.id);
 
         const course = await courseModel.findById(courseId);
-        const allAssKeys = ["ass1", "ass2", "ass3"];
+        const allAssKeys = ["ass1"];
 
         const maxPerCO = {};
         allAssKeys.forEach(key => {
@@ -93,31 +93,6 @@ module.exports.getCieLab = async (req, res) => {
             });
         });
 
-        asswise=[]
-        marks.forEach(markEntry => {
-            const studentId = markEntry.student.toString();
-            const studentInfo = studentMap[studentId];
-
-            const coWiseMarks = {};
-
-            allAssKeys.forEach(assignKey => {
-                const responses = markEntry[assignKey] || [];
-
-                responses.forEach(q => {
-                const co = `CO${q.co}`;
-                if (!coWiseMarks[assignKey]) coWiseMarks[assignKey] = {};
-                if (!coWiseMarks[assignKey][co]) coWiseMarks[assignKey][co] = 0;
-                coWiseMarks[assignKey][co] += q.maxMarks || 0;  // Use actual scored marks if available
-                });
-            });
-
-            asswise.push({
-                regNo: studentInfo.regNo,
-                name: studentInfo.name,
-                coWiseMarks
-            });
-        });
-
         const summary = {};
         Object.keys(maxPerCO).forEach(co => {
         summary[co] = {
@@ -159,136 +134,13 @@ module.exports.getCieLab = async (req, res) => {
         await cs.save();
         await course.save()
 
-        res.json({ students: result, summary,asswise });
+        res.json({ students: result, summary });
 };
 
-module.exports.getSee = async (req, res) => {
-    const { courseId } = req.query;
-
-    const secObj = req.user.section.find(sec => sec.course == courseId);
-    const sectionId = secObj ? secObj.section : null;
-
-    const students = await studentModel.find({ section: sectionId });
-    const stuIds = students.map(student => ({
-    id: student._id,
-    regNo: student.regNo,
-    name: student.name
-    }));
-    const stuIdList = stuIds.map(s => s.id);
-
-    const course = await courseModel.findById(courseId);
-    const allAssKeys = ["endSem"];
-
-    const maxPerCO = {};
-    allAssKeys.forEach(key => {
-    course[key]?.forEach(q => {
-        if (!maxPerCO[q.co]) maxPerCO[q.co] = 0;
-        maxPerCO[q.co] += q.maxMarks || 0;
-    });
-    });
-
-    const marks = await marksModel.find({
-    course: courseId,
-    student: { $in: stuIdList }
-    });
-
-    const studentMap = {};
-    stuIds.forEach(s => {
-    studentMap[s.id.toString()] = {
-        name: s.name,
-        regNo: s.regNo
-    };
-    });
-
-    const result = [];
-    const alaSums = {};
-    const levelCounts = {};
-    const coStudentCounts = {};
-
-    marks.forEach(entry => {
-        const studentId = entry.student.toString();
-        const coTotals = {};
-    
-        allAssKeys.forEach(key => {
-            entry[key]?.forEach(q => {
-                if (!coTotals[q.co])
-                    coTotals[q.co] = 0;
-                coTotals[q.co] += q.maxMarks || 0;
-            });
-        });
-        const coResult = {};
-    
-        Object.keys(maxPerCO).forEach(co => {
-            const obtained = coTotals[co] || 0;
-            const total = maxPerCO[co];
-            const percentage = (obtained / total) * 100;
-            let ala = 1;
-            if (percentage >= 75) ala = 3;
-            else if (percentage >= 50) ala = 2;
-    
-            coResult[co] = {
-                obtained,
-                total,
-                percentage: percentage.toFixed(2),
-                ala
-            };
-    
-            if (!alaSums[co])
-                alaSums[co] = 0;
-            alaSums[co] += ala;
-    
-            if (!levelCounts[co])
-                levelCounts[co] = { 1: 0, 2: 0, 3: 0 };
-            levelCounts[co][ala] += 1;
-    
-            if (!coStudentCounts[co]) coStudentCounts[co] = 0;
-            coStudentCounts[co] += 1;
-        });
-    
-        result.push({
-            name: studentMap[studentId]?.name || "Unknown",
-            regNo: studentMap[studentId]?.regNo || "Unknown",
-            cie: coResult,
-            grade: entry["grade"]
-        });
-    });
-
-    const summary = {};
-    Object.keys(maxPerCO).forEach(co => {
-    summary[co] = {
-            avgAla: (alaSums[co] / coStudentCounts[co]).toFixed(2),
-            level1: levelCounts[co][1],
-            level2: levelCounts[co][2],
-            level3: levelCounts[co][3],
-            count:coStudentCounts[co]
-        };
-    });
-
-    cs=await courseSection.findOne({
-        courseId,
-        sectionId
-    })
-
-    Object.keys(summary).forEach(co => {
-        const index = parseInt(co);
-        const coData = summary[co];
-    
-        // Make sure index is in bounds
-        if (index >= 0 && index < cs.coAttainment.length) {
-            console.log(index)
-            cs.coAttainment[index-1].direct.endSem = parseFloat(coData.avgAla); // or coData.level1, etc.
-        }
-    });
-    
-    await course.save();
-    await cs.save()
-    res.json({ students: result, summary });
-};
-
-module.exports.postCie=async(req,res)=>{
+module.exports.postCieLab=async(req,res)=>{
     //console.log(req.body)
     const {data,courseId,assignmentType}=req.body
-    if (!['ass1', 'ass2', 'ass3'].includes(assignmentType)) {
+    if (!['ass1'].includes(assignmentType)) {
         throw new Error('Invalid assignment type');
     }
 
@@ -400,11 +252,71 @@ module.exports.postCie=async(req,res)=>{
         }
 
         marksDoc[assignmentType] = marksData;
-        if(assignmentType=="endSem"){
-            marksDoc["grade"] = row.grade
-        }
         await marksDoc.save();
     }
 
     res.status(200).json({message:"Updated DB"})
+}
+
+module.exports.getSeeLab = async (req, res) => {
+    try {
+        const { courseId } = req.query;
+
+        // Get section ID from user based on course
+        const secObj = req.user.section.find(sec => sec.course == courseId);
+        const sectionId = secObj ? secObj.section : null;
+        if (!sectionId) return res.status(400).json({ message: "Section not found for user in this course" });
+
+        // Get students from section
+        const students = await studentModel.find({ section: sectionId });
+        const stuIds = students.map(student => student._id);
+
+        // Fetch marks of those students for the given course
+        const marks = await marksModel.find({
+            student: { $in: stuIds },
+            course: courseId
+        }).populate("student", "name regNo");
+
+        const result = [];
+        const alaSummary = {
+            1: 0,
+            2: 0,
+            3: 0
+        };
+
+        // Function to determine ALA value
+        const getAla = (grade) => {
+            const high = ['A+', 'A', 'B'];
+            const mid = ['C', 'D'];
+            const low = ['E', 'F'];
+            if (high.includes(grade)) return 3;
+            if (mid.includes(grade)) return 2;
+            if (low.includes(grade)) return 1;
+            return 0; // if grade is unknown/invalid
+        };
+
+        // Build result array and count ALA categories
+        marks.forEach(m => {
+            const ala = getAla(m.grade.trim());
+            if (ala) alaSummary[ala]++;
+
+            result.push({
+                name: m.student.name,
+                regNo: m.student.regNo,
+                grade: m.grade,
+                ala
+            });
+        });
+
+        res.json({ students: result, alaSummary });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+module.exports.postSeeLab=async(req,res)=>{
+    const {courseId,data}=req.body
+    
 }

@@ -48,7 +48,8 @@ module.exports.login = async (req, res) => {
             name: course.name,
             sem: course.sem,
             secName: section.name,
-            role: temp[i].role
+            role: temp[i].role,
+            type:course.type
         });
     }
 

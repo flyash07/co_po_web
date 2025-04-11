@@ -18,7 +18,7 @@ import PoActionPlan from "./PoActionPlan";
 import SetTargets from "./SetTargets";
 import MapCoPo from "./MapCoPo";
 import CieLab from "./CieLab";
-import SeeLab from "./SeeLab";
+// import SeeLab from "./SeeLab";
 interface Course {
   id: string;
   name: string;

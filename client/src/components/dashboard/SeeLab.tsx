@@ -109,10 +109,7 @@ const SeeLab: React.FC = () => {
                         <th rowSpan={2}>Name</th>
                         <th rowSpan={2}>Reg No</th>
                         <th rowSpan={2}>Grade</th>
-                        <th>ALA</th>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}>Max Marks</td>
+                        <th rowSpan={2}>ALA</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -53,7 +53,7 @@ const PoActionPlan: React.FC = () => {
                         courseId
                     }
                 });
-
+                console.log(response.data)
                 const responseData = response.data;
                 //console.log(responseData[1].action.stat)
                 const mappedPO = initialPO.map((po, i) => ({
@@ -146,7 +146,7 @@ const PoActionPlan: React.FC = () => {
                             <td>{po.name}</td>
                             <td>{po.statement}</td>
                             <td>{po.target}</td>
-                            <td>{po.attained}</td>
+                            <td>{po.attained.toFixed(2)}</td>
                             <td>{po.achieved}</td>
                             <td>
                                 <input
@@ -179,7 +179,7 @@ const PoActionPlan: React.FC = () => {
                             <td>{pso.name}</td>
                             <td>{pso.statement}</td>
                             <td>{pso.target}</td>
-                            <td>{pso.attained}</td>
+                            <td>{pso.attained.toFixed(2)}</td>
                             <td>{pso.achieved}</td>
                             <td>
                                 <input

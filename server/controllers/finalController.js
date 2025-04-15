@@ -85,7 +85,7 @@ module.exports.getPoPlan=async (req,res)=>{
     }
     for(let i=0;i<4;i++){
         data.push({
-            targetSet:course.psoTargetSet,
+            targetSet:course.psoTargetSet[i],
             attained:cs.psoAttainment[i].attained,
             action:cs.psoActionPlans[i]
         })

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import "./Dashboard.css";
 // import GeneralInstructions from "./GeneralInstructions";
 import Targets from "./Targets";
@@ -19,6 +21,7 @@ import SetTargets from "./SetTargets";
 import MapCoPo from "./MapCoPo";
 import CieLab from "./CieLab";
 import SeeLab from "./SeeLab";
+
 interface Course {
   id: string;
   name: string;
@@ -42,6 +45,7 @@ const Dashboard: React.FC = () => {
   const prof_mail = localStorage.getItem("userEmail");
   const prof_desig = localStorage.getItem("designation");
   const prof_id = localStorage.getItem("empid");
+
   useEffect(() => {
     const storedCourses = localStorage.getItem("courseNames");
     if (storedCourses) {
@@ -92,6 +96,75 @@ const Dashboard: React.FC = () => {
     fetchCourseDetails();
     alert(`Selected course: ${course.name}`);
   };
+  const handlePrintReport = async () => {
+    const pagesToPrint = [
+      "targets",
+      "co-po-mapping",
+      "cie-marks",
+      "see-marks",
+      "course-feedback",
+      "co-attainment",
+      "co-root-cause",
+      "co-action-plan",
+      "po-pso-attainment",
+      "po-root-cause",
+      "po-action-plan",
+    ];
+  
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    let isFirstPage = true;
+  
+    for (const pageKey of pagesToPrint) {
+      setSelectedPage(pageKey);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Give time for render
+  
+      const content = document.querySelector(".main-content");
+      if (!content) continue;
+  
+      const clone = content.cloneNode(true) as HTMLElement;
+  
+      // Clean up clone (remove inputs/buttons)
+      clone.querySelectorAll("input, textarea, select").forEach((el) => {
+        const text = document.createElement("div");
+        text.textContent = (el as HTMLInputElement).value || el.textContent || "";
+        el.replaceWith(text);
+      });
+  
+      clone.querySelectorAll("button, input[type='file']").forEach((el) =>
+        el.remove()
+      );
+  
+      // Wrap in a fixed width container for print layout
+      const wrapper = document.createElement("div");
+      wrapper.className = "print-container";
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper); // Temporarily add to DOM
+  
+      const canvas = await html2canvas(wrapper, {
+        scale: 2,
+        useCORS: true,
+        scrollY: 0,
+        scrollX: 0,
+      });
+  
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+      if (!isFirstPage) pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      isFirstPage = false;
+  
+      document.body.removeChild(wrapper); // Clean up
+    }
+  
+    pdf.save(`Report.pdf`);
+  };
+  
+  
+  
 
   const links = [
     /*{
@@ -277,6 +350,13 @@ const Dashboard: React.FC = () => {
                 })}
               </tbody>
             </table>
+            <button
+        className="print-btn"
+        onClick={handlePrintReport}
+        style={{ marginTop: "2rem" }}
+      >
+        Print Report
+      </button>
           </>
         )}
 
@@ -297,6 +377,8 @@ const Dashboard: React.FC = () => {
           (isLabCourse ? <SeeLab /> : <SeeMarks />)}
         {selectedPage === "po-pso-attainment" && <PoPsoAttainment />}
       </main>
+      
+
     </div>
   );
 };

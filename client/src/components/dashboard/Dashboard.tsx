@@ -112,60 +112,76 @@ const Dashboard: React.FC = () => {
     ];
   
     const pdf = new jsPDF("p", "pt", "a4");
-
-    let isFirstPage = true;
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+  
+    let buffer: string[] = [];
+    let bufferHeight = 0;
+  
+    const flushBufferToPDF = async () => {
+      if (buffer.length === 0) return;
+      const wrapper = document.createElement("div");
+      wrapper.className = "print-container";
+      wrapper.innerHTML = buffer.join("");
+      document.body.appendChild(wrapper);
+  
+      const canvas = await html2canvas(wrapper, {
+        scale: 2,
+        useCORS: true,
+      });
+  
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+      if (pdf.getNumberOfPages() > 0) {
+        pdf.addPage();
+      } else {
+      }
+  
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, imgHeight);
+  
+      document.body.removeChild(wrapper);
+      buffer = [];
+      bufferHeight = 0;
+    };
   
     for (const pageKey of pagesToPrint) {
       setSelectedPage(pageKey);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Give time for render
+      await new Promise((r) => setTimeout(r, 1200));
   
       const content = document.querySelector(".main-content");
       if (!content) continue;
   
       const clone = content.cloneNode(true) as HTMLElement;
   
-      // Clean up clone (remove inputs/buttons)
       clone.querySelectorAll("input, textarea, select").forEach((el) => {
-        const text = document.createElement("div");
-        text.textContent = (el as HTMLInputElement).value || el.textContent || "";
-        el.replaceWith(text);
+        const div = document.createElement("div");
+        div.textContent = (el as HTMLInputElement).value || el.textContent || "";
+        el.replaceWith(div);
       });
+      clone.querySelectorAll("button, input[type='file']").forEach((el) => el.remove());
   
-      clone.querySelectorAll("button, input[type='file']").forEach((el) =>
-        el.remove()
-      );
+      const measureContainer = document.createElement("div");
+      measureContainer.style.position = "absolute";
+      measureContainer.style.left = "-9999px";
+      measureContainer.style.top = "-9999px";
+      measureContainer.appendChild(clone);
+      document.body.appendChild(measureContainer);
+      const height = clone.offsetHeight;
+      document.body.removeChild(measureContainer);
   
-      // Wrap in a fixed width container for print layout
-      const wrapper = document.createElement("div");
-      wrapper.className = "print-container";
-      wrapper.appendChild(clone);
-      document.body.appendChild(wrapper); // Temporarily add to DOM
+      buffer.push(clone.outerHTML);
+      bufferHeight += height;
   
-      const canvas = await html2canvas(wrapper, {
-        scale: 2,
-        useCORS: true,
-        scrollY: 0,
-        scrollX: 0,
-      });
-  
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  
-      if (!isFirstPage) pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      isFirstPage = false;
-  
-      document.body.removeChild(wrapper); // Clean up
+      if (bufferHeight > pageHeight - 100) {
+        await flushBufferToPDF();
+      }
     }
+    await flushBufferToPDF();
   
-    pdf.save(`Report.pdf`);
+    pdf.save("Report.pdf");
   };
-  
-  
-  
-
   const links = [
     /*{
       name: "General Instructions",

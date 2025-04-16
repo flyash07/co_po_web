@@ -78,11 +78,12 @@ tbody tr:hover {
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1rem;
-    background-color: #fff;
+    
 }
 
 .excel-ip select option {
     font-weight: bold;
+    -moz-appearance: none;
 }
 
 /* Green-colored dropdown options (non-standard, but applied inline via React style) */
